@@ -9,6 +9,7 @@ import graph.Tour;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import util.SortableKeyValue;
 import util.WeightedRouletteWheelSelector;
@@ -21,6 +22,7 @@ import util.WeightedRouletteWheelSelector;
 public class Boid {
 	public static final double MINIMUM_DISTANCE_MARGIN = 0.01d;
 
+	protected Set<Boid> environment;
 	protected FlockingGraph graph;
 	protected Position pos;
 	protected Double speed;
@@ -32,6 +34,7 @@ public class Boid {
 	protected double occupancyChoiceWeight;
 
 	public Boid(Boid otherBoid) {
+		this.environment = otherBoid.environment;
 		this.graph = otherBoid.graph;
 		this.pos = otherBoid.pos;
 		this.speed = otherBoid.speed;
@@ -40,10 +43,13 @@ public class Boid {
 		this.distanceChoiceWeight = otherBoid.distanceChoiceWeight;
 		this.traveledDistance = otherBoid.traveledDistance;
 		this.pathTaken = otherBoid.pathTaken;
+
+		this.environment.add(this);
 	}
 
 	public Boid(FlockingGraph graph, Position position, Double speed, Double visionRange, Double distanceChoiceWeight,
-			Double occupancyChoiceWeight) {
+			Double occupancyChoiceWeight, Set<Boid> enviroment) {
+		this.environment = enviroment;
 		this.graph = graph;
 		this.pos = position;
 		this.speed = speed;
@@ -52,7 +58,9 @@ public class Boid {
 		this.distanceChoiceWeight = distanceChoiceWeight;
 		this.traveledDistance = 0d;
 		this.pathTaken = new Tour();
+
 		this.pathTaken.offer(this.pos.edge.getFrom());
+		this.environment.add(this);
 		// isAchiever = false;
 	}
 
@@ -61,7 +69,7 @@ public class Boid {
 	}
 
 	public void die() {
-		// TODO:
+		this.environment.remove(this);
 	}
 
 	public FlockingGraph getGraph() {
@@ -153,7 +161,6 @@ public class Boid {
 
 	private void becomeAchiever() {
 		// this.isAchiever = true;
-		// TODO: register in the main controller the new AchieverBoid created from this Boid
 		AchieverBoid achiever = new AchieverBoid(this);
 		achiever.respawn();
 	}
