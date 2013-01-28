@@ -5,12 +5,16 @@ import graph.Position;
 
 import java.util.List;
 
-import javax.swing.JFrame;
-
+/**
+ * 
+ * @author ewertbe
+ *
+ * The class {@link FlockingGraphViewer} handles the display of the graph. it does not 
+ * handle graphics itself, but has control over the frame.
+ *
+ */
 public class FlockingGraphViewer{
 
-	// FlockingGraph mGraph;
-	// JFrame mFrame;
 	
 	private int [][]  mGraph;
 	private int mGoal;
@@ -26,7 +30,6 @@ public class FlockingGraphViewer{
 	 * Creates an example of viewer for a 4 node fully connected graph. Window has size (600,600).
 	 */
 	public FlockingGraphViewer(){
-		// TODO: change to receive a flocking graph as parameter
 		
 		mHeight = 600;
 		mWidth = 600;
