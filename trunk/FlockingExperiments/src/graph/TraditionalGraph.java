@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.Formatter;
 import java.util.Locale;
 
+import util.SortableKeyValue;
+
 /**
  * Supporting class for graph representation.
  * 
@@ -121,16 +123,16 @@ public class TraditionalGraph {
 	public ArrayList<Integer> getClosestNeighborsSortedByDistance(int nodeIndex, int maxListSize) {
 		ArrayList<Integer> neighborIndexes = getNeighborsOf(nodeIndex);
 
-		ArrayList<SortableLocation> closestNeighbors = new ArrayList<SortableLocation>();
+		ArrayList<SortableKeyValue<Integer, Integer>> closestNeighbors = new ArrayList<SortableKeyValue<Integer, Integer>>();
 		for (Integer n : neighborIndexes) {
-			closestNeighbors.add(new SortableLocation(n, getEdgeLength(nodeIndex, n)));
+			closestNeighbors.add(new SortableKeyValue<Integer, Integer>(n, getEdgeLength(nodeIndex, n)));
 		}
 		Collections.sort(closestNeighbors);
 
 		neighborIndexes.clear();
-		for (SortableLocation c : closestNeighbors.subList(0,
+		for (SortableKeyValue<Integer, Integer> c : closestNeighbors.subList(0,
 				maxListSize > closestNeighbors.size() ? closestNeighbors.size() : maxListSize)) {
-			neighborIndexes.add(c.locationIndex);
+			neighborIndexes.add(c.keyObject);
 		}
 
 		return neighborIndexes;
