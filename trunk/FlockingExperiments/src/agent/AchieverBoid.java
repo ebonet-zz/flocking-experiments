@@ -1,18 +1,18 @@
 package agent;
 
-import java.util.LinkedList;
+import graph.Tour;
 
 public class AchieverBoid extends Boid {
 
-	//private Flock flock;
-	private LinkedList<Integer> pathToFollow;
-	
+	// private Flock flock;
+	Tour pathToFollow;
+
 	public AchieverBoid(Boid boid) {
 		super(boid);
 		this.pathToFollow = boid.pathTaken;
-		
+		this.pathToFollow.calculateCost(this.graph);
 	}
-	
+
 	@Override
 	public void decide() {
 		this.pathTaken.offer(this.getPos().edge.getTo());
@@ -28,7 +28,7 @@ public class AchieverBoid extends Boid {
 
 		moveToNextEdge(loadEdge(currentNode, nextNode));
 	}
-	
+
 	@Override
 	public boolean completedTour() {
 		return this.pathTaken.size() == this.pathToFollow.size();

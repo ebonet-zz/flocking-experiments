@@ -4,10 +4,10 @@ import graph.Edge;
 import graph.FlockingGraph;
 import graph.Position;
 import graph.Segment;
+import graph.Tour;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 import util.SortableKeyValue;
@@ -21,15 +21,15 @@ import util.WeightedRouletteWheelSelector;
 public class Boid {
 	public static final double MINIMUM_DISTANCE_MARGIN = 0.01d;
 
-	private FlockingGraph graph;
-	private Position pos;
-	private Double speed;
-	private Double visionRange;
-	private Double traveledDistance; // Tiredness
-	protected LinkedList<Integer> pathTaken;
+	protected FlockingGraph graph;
+	protected Position pos;
+	protected Double speed;
+	protected Double visionRange;
+	protected Double traveledDistance; // Tiredness
+	protected Tour pathTaken;
 	// private boolean isAchiever;
-	private double distanceChoiceWeight;
-	private double occupancyChoiceWeight;
+	protected double distanceChoiceWeight;
+	protected double occupancyChoiceWeight;
 
 	public Boid(Boid otherBoid) {
 		this.graph = otherBoid.graph;
@@ -39,7 +39,7 @@ public class Boid {
 		this.occupancyChoiceWeight = otherBoid.distanceChoiceWeight;
 		this.distanceChoiceWeight = otherBoid.distanceChoiceWeight;
 		this.traveledDistance = 0d;
-		this.pathTaken = new LinkedList<>();
+		this.pathTaken = new Tour();
 	}
 
 	public Boid(FlockingGraph graph, Position position, Double speed, Double visionRange, Double distanceChoiceWeight,
@@ -51,7 +51,7 @@ public class Boid {
 		this.occupancyChoiceWeight = occupancyChoiceWeight;
 		this.distanceChoiceWeight = distanceChoiceWeight;
 		this.traveledDistance = 0d;
-		this.pathTaken = new LinkedList<>();
+		this.pathTaken = new Tour();
 		// isAchiever = false;
 	}
 
@@ -115,7 +115,7 @@ public class Boid {
 		this.pathTaken.offer(this.pos.edge.getTo());
 
 		ArrayList<Integer> closestNeighbors = this.graph.getClosestNeighborsSortedByDistance(this.pos.edge.getTo());
-		for (int i : this.pathTaken) {
+		for (int i : this.pathTaken.locations) {
 			closestNeighbors.remove(i);
 		}
 
