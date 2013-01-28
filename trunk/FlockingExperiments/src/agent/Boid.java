@@ -22,8 +22,50 @@ public class Boid {
 	private Double speed;
 	private Double visionRange;
 	private Double traveledDistance; // Tiredness
-	private LinkedList<Integer> pathTaken;
-	private boolean isAchiever;
+	protected LinkedList<Integer> pathTaken;
+	//private boolean isAchiever;
+
+	public Boid(FlockingGraph graph, Position position, Double speed, Double visionRange) {
+		this.graph = graph;
+		this.pos = position;
+		this.speed = speed;
+		this.visionRange = visionRange;
+		this.traveledDistance = 0d;
+		pathTaken = new LinkedList<>();
+		//isAchiever = false;
+	}
+
+	public Boid(Boid otherBoid) {
+		this.graph = otherBoid.graph;
+		this.pos = otherBoid.pos;
+		this.speed = otherBoid.speed;
+		this.visionRange = otherBoid.visionRange;
+		this.traveledDistance = 0d;
+		this.pathTaken = new LinkedList<>();
+	}
+
+	public FlockingGraph getGraph() {
+		return graph;
+	}
+	public void setGraph(FlockingGraph graph) {
+		this.graph = graph;
+	}
+
+	public Position getPos() {
+		return pos;
+	}
+
+	public void setPos(Position pos) {
+		this.pos = pos;
+	}
+
+	public Double getSpeed() {
+		return speed;
+	}
+
+	public void setSpeed(Double speed) {
+		this.speed = speed;
+	}
 
 	private void moveDistance(double distance) {
 		Segment currentSegment = getSegment(this.pos);
@@ -37,7 +79,7 @@ public class Boid {
 		this.traveledDistance += distance;
 	}
 
-	private void moveToNextEdge(Edge edge) {
+	protected void moveToNextEdge(Edge edge) {
 		double distanceWithin = this.pos.getDistanceToEdgeEnd();
 		double distanceOnNext = getNextEdgeDistance(this.speed);
 
@@ -91,40 +133,27 @@ public class Boid {
 		moveDistance(diff);
 	}
 
-	private void decide() {
+	protected void decide() {
 		this.pathTaken.offer(this.pos.edge.getTo());
 
-		if (this.isAchiever) {
-			if (completedTour()) {
-				respawn();
-				return;
-			}
-
-			int currentNode = this.pos.edge.getTo();
-			int nodeIndex = this.pathTaken.indexOf(currentNode);
-			int nextNode = this.pathTaken.get(nodeIndex + 1);
-
-			moveToNextEdge(loadEdge(currentNode, nextNode));
-		} else {
-			ArrayList<Integer> closestNeighbors = this.graph.getClosestNeighborsSortedByDistance(this.pos.edge.getTo());
-			for (int i : this.pathTaken) {
-				closestNeighbors.remove(i);
-			}
-
-			if (closestNeighbors.isEmpty()) {
-				if (completedTour()) {
-					becomeAchiever();
-				} else {
-					die();
-				}
-			}
-
-			List<Edge> possibleEdges = generateEdges(closestNeighbors);
-
-			Edge nextEgde = selectNextEdge(possibleEdges);
-
-			moveToNextEdge(nextEgde);
+		ArrayList<Integer> closestNeighbors = this.graph.getClosestNeighborsSortedByDistance(this.pos.edge.getTo());
+		for (int i : this.pathTaken) {
+			closestNeighbors.remove(i);
 		}
+
+		if (closestNeighbors.isEmpty()) {
+			if (completedTour()) {
+				becomeAchiever();
+			} else {
+				die();
+			}
+		}
+
+		List<Edge> possibleEdges = generateEdges(closestNeighbors);
+
+		Edge nextEgde = selectNextEdge(possibleEdges);
+
+		moveToNextEdge(nextEgde);
 
 	}
 
@@ -133,7 +162,7 @@ public class Boid {
 		return null;
 	}
 
-	private Edge loadEdge(int from, int to) {
+	protected Edge loadEdge(int from, int to) {
 		return this.graph.getEdge(from, to);
 	}
 
@@ -155,12 +184,15 @@ public class Boid {
 	}
 
 	private void becomeAchiever() {
-		this.isAchiever = true;
-		respawn();
+		// this.isAchiever = true;
+		// TODO: register in the main controller the new AchieverBoid created from this Boid
+		AchieverBoid achiever = new AchieverBoid(this);
+		achiever.respawn();
 	}
 
 	public void respawn() {
 		this.setPosition(new Position(loadEdge(this.pathTaken.get(0), this.pathTaken.get(1)), 0d));
+		this.pathTaken.clear();
 	}
 
 	public void die() {
