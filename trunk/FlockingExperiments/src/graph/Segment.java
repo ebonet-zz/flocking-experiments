@@ -82,4 +82,9 @@ public class Segment implements Comparable<Segment> {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return String.format("[%.0f %.0f)", this.startLocation.distanceFromStart, this.exclusiveEndLocation.distanceFromStart);
+	}
+
 }

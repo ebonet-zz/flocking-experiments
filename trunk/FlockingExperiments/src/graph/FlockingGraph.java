@@ -31,7 +31,9 @@ public class FlockingGraph extends TraditionalGraph {
 		this.distanceMatrix = tGraph.distanceMatrix;
 		this.segmentLength = segmentLenght;
 		this.edgeSegments = new HashMap<Edge, LinkedList<Segment>>();
+		this.capacityMatrix = new int[this.numberOfNodes][this.numberOfNodes];
 		fillAll(segmentCapacity, this.capacityMatrix);
+		buildAllSegments();
 	}
 
 	/**
@@ -47,6 +49,7 @@ public class FlockingGraph extends TraditionalGraph {
 		super(numberOfNodes);
 		this.segmentLength = segmentLenght;
 		this.edgeSegments = new HashMap<Edge, LinkedList<Segment>>();
+		this.capacityMatrix = new int[this.numberOfNodes][this.numberOfNodes];
 		fillAll(segmentCapacity, this.capacityMatrix);
 	}
 
@@ -146,6 +149,8 @@ public class FlockingGraph extends TraditionalGraph {
 				segmentList.offer(s);
 				s = new Segment(s.exclusiveEndLocation, this.segmentLength, this.getEdgeCapacity(edge));
 			} while (!s.contains(segmentEnd));
+
+			segmentList.offer(s);
 
 			this.edgeSegments.put(edge, segmentList);
 		}

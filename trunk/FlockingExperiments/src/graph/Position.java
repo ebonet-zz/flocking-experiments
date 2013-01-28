@@ -1,5 +1,8 @@
 package graph;
 
+import java.util.Formatter;
+import java.util.Locale;
+
 /**
  * Class that represents a specific location in a graph edge
  * 
@@ -100,4 +103,12 @@ public class Position implements Cloneable, Comparable<Position> {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		Formatter formatter = new Formatter(sb, Locale.US);
+		sb.append(this.edge.toString() + " at ");
+		formatter.format("%.0f, ", this.distanceFromStart);
+		return sb.toString();
+	}
 }
