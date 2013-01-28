@@ -149,7 +149,7 @@ public class TraditionalGraph {
 		Formatter formatter = new Formatter(sb, Locale.US);
 		formatter.format("%3d [", lineNumber);
 		for (int i = 0; i < this.numberOfNodes; i++) {
-			formatter.format("%3.0f, ", this.distanceMatrix[lineNumber][i]);
+			formatter.format("%3d, ", this.distanceMatrix[lineNumber][i]);
 		}
 		formatter.close();
 		sb.deleteCharAt(sb.length() - 1);

@@ -82,4 +82,8 @@ public final class Edge implements Comparable<Edge> {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return this.getFrom() + "->" + this.getTo() + "[length:" + this.getLength() + "]";
+	}
 }

@@ -1,6 +1,7 @@
 package controller;
 
 import graph.FlockingGraph;
+import graph.Position;
 import graph.Tour;
 
 import java.util.ArrayList;
@@ -42,17 +43,27 @@ public class Problem {
 	/**
 	 * Weight of visibility (distances)
 	 */
-	float weightOfDistance = 2;
+	double weightOfDistance = 2;
 
 	/**
 	 * Weight of occupancy (crowdedness)
 	 */
-	float weightOfOccupancy = 1;
+	double weightOfOccupancy = 1;
 
 	/**
 	 * End of algorithm density threshold
 	 */
-	float occupancyDensityThreshold = 0.70f;
+	double occupancyDensityThreshold = 0.70f;
+
+	/**
+	 * boid vision range
+	 */
+	double visionRange = 2f;
+
+	/**
+	 * boid speed
+	 */
+	double speed = 1f;
 
 	/**
 	 * Constructor that instantiates a new problem based on a distance graph and max number of iterations
@@ -71,13 +82,9 @@ public class Problem {
 	/**
 	 * Attempts to solve the problem given the constant values below
 	 * 
-	 * @param m
-	 * @param B
-	 * @param p
-	 * @param e
 	 * @return The information about the best found Tour (path)
 	 */
-	public String solve(int m, float e, float B, float a) {
+	public String solve(int m, double e, double B, double a, double v, double s) {
 		// Number of boids spawned per time unit
 		this.multiplierForBoidSpawn = m;
 
@@ -85,15 +92,20 @@ public class Problem {
 		this.occupancyDensityThreshold = e;
 		this.weightOfDistance = B;
 		this.weightOfOccupancy = a;
+		this.visionRange = v;
+		this.speed = s;
 
 		// Random and seed
 		Random r = new Random();
 
 		Tour shortestTour = null;
 
+		Boid testBoid = new Boid(this.distanceGraph, new Position(this.distanceGraph.getEdge(0, 1), 0d), this.speed,
+				this.visionRange, this.weightOfDistance, this.weightOfOccupancy);
+
 		// Main Loop
 		for (int t = 1; t <= this.maxIterations; t++) { // In each iteration
-
+			testBoid.tryToMove(testBoid.getSpeed());
 		}
 
 		if (shortestTour != null)

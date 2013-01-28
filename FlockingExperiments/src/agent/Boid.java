@@ -38,8 +38,8 @@ public class Boid {
 		this.visionRange = otherBoid.visionRange;
 		this.occupancyChoiceWeight = otherBoid.distanceChoiceWeight;
 		this.distanceChoiceWeight = otherBoid.distanceChoiceWeight;
-		this.traveledDistance = 0d;
-		this.pathTaken = new Tour();
+		this.traveledDistance = otherBoid.traveledDistance;
+		this.pathTaken = otherBoid.pathTaken;
 	}
 
 	public Boid(FlockingGraph graph, Position position, Double speed, Double visionRange, Double distanceChoiceWeight,
@@ -52,6 +52,7 @@ public class Boid {
 		this.distanceChoiceWeight = distanceChoiceWeight;
 		this.traveledDistance = 0d;
 		this.pathTaken = new Tour();
+		this.pathTaken.offer(this.pos.edge.getFrom());
 		// isAchiever = false;
 	}
 
@@ -80,6 +81,7 @@ public class Boid {
 	}
 
 	public void respawn() {
+		System.out.println(this.pathTaken.toString());
 		this.setPosition(new Position(loadEdge(this.pathTaken.get(0), this.pathTaken.get(1)), 0d));
 		this.pathTaken.clear();
 	}
@@ -116,7 +118,7 @@ public class Boid {
 
 		ArrayList<Integer> closestNeighbors = this.graph.getClosestNeighborsSortedByDistance(this.pos.edge.getTo());
 		for (int i : this.pathTaken.locations) {
-			closestNeighbors.remove(i);
+			closestNeighbors.remove(new Integer(i));
 		}
 
 		if (closestNeighbors.isEmpty()) {
@@ -125,6 +127,7 @@ public class Boid {
 			} else {
 				die();
 			}
+			return;
 		}
 
 		List<Edge> possibleEdges = generateEdges(closestNeighbors);
