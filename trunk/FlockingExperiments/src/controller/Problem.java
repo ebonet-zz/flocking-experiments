@@ -27,32 +27,32 @@ public class Problem {
 	/**
 	 * Number of Boids spawned per time unit
 	 */
-	int m = 3;
+	int multiplierForBoidSpawn = 3;
 
 	/**
 	 * Number of cities
 	 */
-	int n = 10;
+	int numberOfCities = 10;
 
 	/**
 	 * Max number of iterations
 	 */
-	int tMax = 1000;
+	int maxIterations = 1000;
 
 	/**
 	 * Weight of visibility (distances)
 	 */
-	float B = 2;
+	float weightOfDistance = 2;
 
 	/**
 	 * Weight of occupancy (crowdedness)
 	 */
-	float a = 1;
+	float weightOfOccupancy = 1;
 
 	/**
 	 * End of algorithm density threshold
 	 */
-	float e = 0.70f;
+	float occupancyDensityThreshold = 0.70f;
 
 	/**
 	 * Constructor that instantiates a new problem based on a distance graph and max number of iterations
@@ -62,8 +62,8 @@ public class Problem {
 	 */
 	public Problem(FlockingGraph distanceGraph, int tMax) {
 		this.distanceGraph = distanceGraph;
-		this.n = distanceGraph.getNumberOfNodes();
-		this.tMax = tMax;
+		this.numberOfCities = distanceGraph.getNumberOfNodes();
+		this.maxIterations = tMax;
 
 		this.boids = new ArrayList<Boid>();
 	}
@@ -79,12 +79,12 @@ public class Problem {
 	 */
 	public String solve(int m, float e, float B, float a) {
 		// Number of boids spawned per time unit
-		this.m = m;
+		this.multiplierForBoidSpawn = m;
 
 		// Set constants
-		this.e = e;
-		this.B = B;
-		this.a = a;
+		this.occupancyDensityThreshold = e;
+		this.weightOfDistance = B;
+		this.weightOfOccupancy = a;
 
 		// Random and seed
 		Random r = new Random();
@@ -92,7 +92,7 @@ public class Problem {
 		Tour shortestTour = null;
 
 		// Main Loop
-		for (int t = 1; t <= this.tMax; t++) { // In each iteration
+		for (int t = 1; t <= this.maxIterations; t++) { // In each iteration
 
 		}
 
