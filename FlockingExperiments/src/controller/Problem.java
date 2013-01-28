@@ -110,6 +110,7 @@ public class Problem {
 
 		// Main Loop
 		for (int t = 1; t <= this.maxIterations; t++) { // In each iteration
+			
 			for (Boid b : enviroment) {
 				b.tryToMove(b.getSpeed());
 			}

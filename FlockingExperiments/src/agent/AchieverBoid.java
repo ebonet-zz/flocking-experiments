@@ -1,5 +1,6 @@
 package agent;
 
+import graph.Position;
 import graph.Tour;
 
 public class AchieverBoid extends Boid {
@@ -9,7 +10,7 @@ public class AchieverBoid extends Boid {
 
 	public AchieverBoid(Boid boid) {
 		super(boid);
-		this.pathToFollow = boid.pathTaken;
+		this.pathToFollow = new Tour(this.pathTaken);
 		this.pathToFollow.calculateCost(this.graph);
 	}
 
@@ -32,5 +33,13 @@ public class AchieverBoid extends Boid {
 	@Override
 	public boolean completedTour() {
 		return this.pathTaken.size() == this.pathToFollow.size();
+	}
+
+	@Override
+	public void respawn() {
+		System.out.println(this.pathTaken.toString());
+		this.pathTaken.clear();
+		this.pathTaken.offer(this.pathToFollow.get(0));
+		this.setPosition(new Position(loadEdge(this.pathToFollow.get(0), this.pathToFollow.get(1)), 0d));
 	}
 }
