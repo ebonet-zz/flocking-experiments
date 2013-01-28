@@ -7,6 +7,7 @@ import graph.Segment;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * TODO Put here a description of what this class does.
@@ -24,7 +25,7 @@ public class Boid {
 	private LinkedList<Integer> pathTaken;
 	private boolean isAchiever;
 
-	public void moveDistance(double distance) {
+	private void moveDistance(double distance) {
 		Segment currentSegment = getSegment(this.pos);
 		currentSegment.currentOccupancy--;
 
@@ -36,7 +37,7 @@ public class Boid {
 		this.traveledDistance += distance;
 	}
 
-	public void moveToNextEdge(Edge edge) {
+	private void moveToNextEdge(Edge edge) {
 		double distanceWithin = this.pos.getDistanceToEdgeEnd();
 		double distanceOnNext = getNextEdgeDistance(this.speed);
 
@@ -45,7 +46,7 @@ public class Boid {
 		tryToMove(distanceOnNext);
 	}
 
-	public void setPosition(Position pos) {
+	private void setPosition(Position pos) {
 		Segment currentSegment = getSegment(this.pos);
 		currentSegment.currentOccupancy--;
 
@@ -74,15 +75,15 @@ public class Boid {
 		return this.graph.getSegmentForPosition(pos);
 	}
 
-	public boolean checkEdgeBoundaries(double distance) {
+	private boolean checkEdgeBoundaries(double distance) {
 		return this.pos.canDeslocate(distance);
 	}
 
-	public boolean checkSegmentOccupation(Segment seg) {
-		return seg.isFull();
+	private boolean checkSegmentOccupation(Segment seg) {
+		return !seg.isFull();
 	}
 
-	public void moveToFarthestAvailableLocation(Segment current, Segment limit) {
+	private void moveToFarthestAvailableLocation(Segment current, Segment limit) {
 		Segment farthestAvailable = this.graph.getFarthestAvailableSegment(current, limit);
 		double endOfTheSegment = farthestAvailable.exclusiveEndLocation.distanceFromStart;
 		// get to right before the end of the segment
@@ -90,11 +91,10 @@ public class Boid {
 		moveDistance(diff);
 	}
 
-	public void decide() {
+	private void decide() {
 		this.pathTaken.offer(this.pos.edge.getTo());
 
 		if (this.isAchiever) {
-
 			if (completedTour()) {
 				respawn();
 				return;
@@ -104,9 +104,7 @@ public class Boid {
 			int nodeIndex = this.pathTaken.indexOf(currentNode);
 			int nextNode = this.pathTaken.get(nodeIndex + 1);
 
-			// TODO: finish this
-			moveToNextEdge(new Edge(currentNode, nextNode, this.graph.getEdgeLength(currentNode, nextNode)));
-
+			moveToNextEdge(loadEdge(currentNode, nextNode));
 		} else {
 			ArrayList<Integer> closestNeighbors = this.graph.getClosestNeighborsSortedByDistance(this.pos.edge.getTo());
 			for (int i : this.pathTaken) {
@@ -121,12 +119,34 @@ public class Boid {
 				}
 			}
 
-			// TODO more stuff
+			List<Edge> possibleEdges = generateEdges(closestNeighbors);
+
+			Edge nextEgde = selectNextEdge(possibleEdges);
+
+			moveToNextEdge(nextEgde);
 		}
 
 	}
 
-	public double getNextEdgeDistance(double overallDistance) {
+	private Edge selectNextEdge(List<Edge> possibleEdges) {
+		// TODO Auto-generated method stub.
+		return null;
+	}
+
+	private Edge loadEdge(int from, int to) {
+		return this.graph.getEdge(from, to);
+	}
+
+	private List<Edge> generateEdges(ArrayList<Integer> closestNeighbors) {
+		ArrayList<Edge> edges = new ArrayList<Edge>();
+		for (int neighbor : closestNeighbors) {
+			edges.add(loadEdge(this.pos.edge.getTo(), neighbor));
+		}
+
+		return edges;
+	}
+
+	private double getNextEdgeDistance(double overallDistance) {
 		return overallDistance - (this.pos.getDistanceToEdgeEnd());
 	}
 
@@ -134,18 +154,17 @@ public class Boid {
 		return this.pathTaken.size() == this.graph.getNumberOfNodes();
 	}
 
-	public void becomeAchiever() {
+	private void becomeAchiever() {
 		this.isAchiever = true;
 		respawn();
 	}
 
 	public void respawn() {
-		this.setPosition(new Position(new Edge(this.pathTaken.get(0), this.pathTaken.get(1), this.graph.getEdgeLength(
-				this.pathTaken.get(0), this.pathTaken.get(1))), 0d));
+		this.setPosition(new Position(loadEdge(this.pathTaken.get(0), this.pathTaken.get(1)), 0d));
 	}
 
 	public void die() {
-		// TODO: 
+		// TODO:
 	}
 
 }

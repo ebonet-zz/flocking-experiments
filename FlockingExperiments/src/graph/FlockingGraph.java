@@ -39,7 +39,11 @@ public class FlockingGraph extends TraditionalGraph {
 	}
 
 	public Edge getInverse(Edge edge) {
-		return new Edge(edge.getTo(), edge.getFrom(), getEdgeLength(edge.getTo(), edge.getFrom()));
+		return getEdge(edge.getTo(), edge.getFrom());
+	}
+	
+	public Edge getEdge(int from, int to) {
+		return new Edge(from, to, getEdgeLength(from, to));
 	}
 
 	public int getEdgeCapacity(int nodeIndexA, int nodeIndexB) {
@@ -93,7 +97,7 @@ public class FlockingGraph extends TraditionalGraph {
 			for (int to = 0; to < this.numberOfNodes; to++) {
 				int edgeValue = getEdgeLength(from, to);
 				if (edgeValue != INVALID_VALUE) {
-					Edge edge = new Edge(from, to, edgeValue);
+					Edge edge = getEdge(from, to);
 					buildSegmentsFor(edge);
 				}
 			}
