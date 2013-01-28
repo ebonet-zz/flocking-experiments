@@ -35,9 +35,8 @@ public class AchieverBoid extends Boid {
 		return this.pathTaken.size() == this.pathToFollow.size();
 	}
 
-	@Override
 	public void respawn() {
-		System.out.println(this.pathTaken.toString());
+		System.out.println(this.pathToFollow.toString());
 		this.pathTaken.clear();
 		this.pathTaken.offer(this.pathToFollow.get(0));
 		this.setPosition(new Position(loadEdge(this.pathToFollow.get(0), this.pathToFollow.get(1)), 0d));
