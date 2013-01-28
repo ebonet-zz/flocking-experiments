@@ -23,8 +23,8 @@ public class AchieverBoid extends Boid {
 		}
 
 		int currentNode = this.getPos().edge.getTo();
-		int nodeIndex = this.pathTaken.indexOf(currentNode);
-		int nextNode = this.pathTaken.get(nodeIndex + 1);
+		int nodeIndex = this.pathToFollow.indexOf(currentNode);
+		int nextNode = this.pathToFollow.get(nodeIndex + 1);
 
 		moveToNextEdge(loadEdge(currentNode, nextNode));
 	}
