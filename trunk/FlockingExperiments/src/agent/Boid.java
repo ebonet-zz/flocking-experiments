@@ -88,12 +88,6 @@ public class Boid {
 		return this.speed;
 	}
 
-	public void respawn() {
-		System.out.println(this.pathTaken.toString());
-		this.setPosition(new Position(loadEdge(this.pathTaken.get(0), this.pathTaken.get(1)), 0d));
-		this.pathTaken.clear();
-	}
-
 	public void setGraph(FlockingGraph graph) {
 		this.graph = graph;
 	}
