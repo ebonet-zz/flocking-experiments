@@ -102,7 +102,7 @@ public class FlockinGraphViewerFrame extends JFrame {
 
 
 			g.setColor(Color.black);
-			g.drawString(i+1+"", x-5,y+5);
+			g.drawString(i+"", x-5,y+5);
 		}
 
 	}
@@ -110,9 +110,10 @@ public class FlockinGraphViewerFrame extends JFrame {
 	private void drawPaths(Graphics g){
 		for (int i=0;i<mNumberOfNodes-1;i++){
 			for(int j=i+1;j<mNumberOfNodes;j++){
-				g.setColor(Color.black);
-				g.drawLine(mCenters[i][1], mCenters[i][0]+30, mCenters[j][1], mCenters[j][0]+30);
-
+				if(mGraph[i][j]>0){
+					g.setColor(Color.black);
+					g.drawLine(mCenters[i][1], mCenters[i][0]+30, mCenters[j][1], mCenters[j][0]+30);
+				}
 			}
 		}
 	}
@@ -169,7 +170,8 @@ public class FlockinGraphViewerFrame extends JFrame {
 	
 	public void paint(Graphics g){
 		super.paint(g);
-
+		//g.setColor(Color.white);
+		//g.fillRect(0,0,mWidth,mHeight+30);
 		drawPaths(g);
 		drawNodes(g);
 		
