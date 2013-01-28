@@ -1,7 +1,7 @@
 package graph;
 
 /**
- * TODO Put here a description of what this class does.
+ * Represents a subsection of an edge with limited space for Boid occupancy
  * 
  * @author Balthazar. Created Jan 22, 2013.
  */

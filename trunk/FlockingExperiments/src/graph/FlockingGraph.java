@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.Map;
 
 /**
- * TODO Put here a description of what this class does.
+ * Extension of a TraditionalGraph with all the complex attributes we need to run a flocking algorithm on top of it.
  * 
  * @author Balthazar. Created Jan 25, 2013.
  */

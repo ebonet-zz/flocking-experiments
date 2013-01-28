@@ -1,7 +1,7 @@
 package graph;
 
 /**
- * TODO Put here a description of what this class does.
+ * Represents an edge between two nodes in a graph
  * 
  * @author Balthazar. Created Jan 25, 2013.
  */
