@@ -22,7 +22,7 @@ public class MainController {
 		float a = 1f; // not changed (variance tests didn't have significant impact)
 
 		TraditionalGraph graph = GenerateSparseInstance.GenerateSparseGraph(n); // Sparse
-		// BackingGraph graph = GenerateInstance.GenerateFullyConnectedGraph(n); // Fully connected
+		// TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(n); // Fully connected
 
 		long startTime = System.nanoTime();
 		Problem problem = new Problem(new FlockingGraph(graph), maxT);
