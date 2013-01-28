@@ -161,8 +161,10 @@ public class Boid {
 
 	private void becomeAchiever() {
 		// this.isAchiever = true;
+		die();
 		AchieverBoid achiever = new AchieverBoid(this);
 		achiever.respawn();
+		
 	}
 
 	private boolean checkEdgeBoundaries(double distance) {
@@ -238,7 +240,7 @@ public class Boid {
 		return e;
 	}
 
-	private void setPosition(Position pos) {
+	protected void setPosition(Position pos) {
 		Segment currentSegment = getSegment(this.pos);
 		currentSegment.currentOccupancy--;
 

@@ -18,10 +18,16 @@ public class Tour {
 	 */
 	double lastCalculatedCost;
 
-//	/**
-//	 * The iteration when this tour was found
-//	 */
-//	int foundInIteration;
+	public Tour(Tour t) {
+		this.lastCalculatedCost = t.lastCalculatedCost;
+		this.locations = new ArrayList<Integer>();
+		this.locations.addAll(t.locations);
+	}
+
+	// /**
+	// * The iteration when this tour was found
+	// */
+	// int foundInIteration;
 
 	/**
 	 * Basic constructor
@@ -66,7 +72,7 @@ public class Tour {
 	public void clear() {
 		this.locations.clear();
 		this.lastCalculatedCost = 0;
-		//this.foundInIteration = 0;
+		// this.foundInIteration = 0;
 	}
 
 	/**
@@ -94,7 +100,7 @@ public class Tour {
 
 	/**
 	 * Calculates and stores the total cost of this tour using the given graph
-	 *
+	 * 
 	 * @param distanceGraph
 	 */
 	public void calculateCost(TraditionalGraph distanceGraph) {
@@ -164,9 +170,9 @@ public class Tour {
 		sb.append("Size: ");
 		sb.append(this.locations.size());
 		sb.append("\n");
-//		sb.append("Found in iteration: ");
-//		sb.append(this.foundInIteration);
-//		sb.append("\n");
+		// sb.append("Found in iteration: ");
+		// sb.append(this.foundInIteration);
+		// sb.append("\n");
 		return sb.toString();
 	}
 }
