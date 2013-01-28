@@ -1,5 +1,10 @@
 package viewer;
 
+import graph.FlockingGraph;
+import graph.Position;
+
+import java.util.List;
+
 import javax.swing.JFrame;
 
 public class FlockingGraphViewer{
@@ -10,8 +15,8 @@ public class FlockingGraphViewer{
 	private int [][]  mGraph;
 	private int mGoal;
 	private int mStart;
-	private int mHeight=600;
-	private int mWidth=600;
+	private int mHeight;
+	private int mWidth;
 	private int [][] mCenters;
 	private int mNumberOfNodes;
 	
@@ -21,9 +26,40 @@ public class FlockingGraphViewer{
 		// TODO: change to receive a flocking graph as parameter
 		createGraph1();
 		computeCenters();
+		mHeight = 600;
+		mWidth = 600;
 		
 		mFrame = new FlockinGraphViewerFrame(mHeight, mWidth, mGraph, mCenters, mNumberOfNodes, mGoal, mStart);
 		openViewer();
+	}
+	
+	public FlockingGraphViewer(int [][] graph, int start, int goal, int numberOfNodes){
+		mHeight = 600;
+		mWidth = 600;
+		
+		mGraph = graph;
+		mStart = start;
+		mGoal = goal;
+		mNumberOfNodes = numberOfNodes;		
+	}
+	
+	public FlockingGraphViewer(FlockingGraph graph){
+		
+		mHeight = 600;
+		mWidth = 600;
+		mGraph = graph.distanceMatrix;
+		mNumberOfNodes = graph.getNumberOfNodes();
+		mGoal = -1;
+		mStart = -1;
+	}
+	
+	public void setWindowSize(int width, int height){
+		mWidth = width;
+		mHeight = height;
+		
+		computeCenters();
+		
+		mFrame.setWindowSize(mWidth,mHeight,mCenters);			
 	}
 	
 	private void computeCenters() {
@@ -47,8 +83,10 @@ public class FlockingGraphViewer{
 		mFrame.setVisible(false);
 	}
 	
-	public void updateViewer(){
-		mFrame.repaint();
+	public void updateViewer(List<Position> movingObjects){
+		
+		
+		mFrame.update(movingObjects);
 	}
 	
 	private void createGraph1(){
