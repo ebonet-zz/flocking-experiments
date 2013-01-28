@@ -22,6 +22,18 @@ public class FlockingGraph extends TraditionalGraph {
 		this(numberOfNodes, DEFAULT_SEGMENT_LENGTH, DEFAULT_SEGMENT_CAPACITY);
 	}
 
+	public FlockingGraph(TraditionalGraph tGraph) {
+		this(tGraph, DEFAULT_SEGMENT_LENGTH, DEFAULT_SEGMENT_CAPACITY);
+	}
+
+	public FlockingGraph(TraditionalGraph tGraph, double segmentLenght, int segmentCapacity) {
+		super(tGraph.numberOfNodes);
+		this.distanceMatrix = tGraph.distanceMatrix;
+		this.segmentLength = segmentLenght;
+		this.edgeSegments = new HashMap<Edge, LinkedList<Segment>>();
+		fillAll(segmentCapacity, this.capacityMatrix);
+	}
+
 	/**
 	 * Constructor of a graph for our flocking problem
 	 * 
@@ -41,7 +53,7 @@ public class FlockingGraph extends TraditionalGraph {
 	public Edge getInverse(Edge edge) {
 		return getEdge(edge.getTo(), edge.getFrom());
 	}
-	
+
 	public Edge getEdge(int from, int to) {
 		return new Edge(from, to, getEdgeLength(from, to));
 	}
