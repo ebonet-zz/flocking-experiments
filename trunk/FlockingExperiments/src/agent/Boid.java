@@ -14,7 +14,7 @@ import util.SortableKeyValue;
 import util.WeightedRouletteWheelSelector;
 
 /**
- * TODO Put here a description of what this class does.
+ * Our explorational Bird-like object agent
  * 
  * @author Balthazar. Created Jan 22, 2013.
  */
@@ -31,78 +31,69 @@ public class Boid {
 	private double distanceChoiceWeight;
 	private double occupancyChoiceWeight;
 
-	public Boid(FlockingGraph graph, Position position, Double speed, Double visionRange) {
-		this.graph = graph;
-		this.pos = position;
-		this.speed = speed;
-		this.visionRange = visionRange;
-		this.traveledDistance = 0d;
-		this.pathTaken = new LinkedList<>();
-		// isAchiever = false;
-	}
-
 	public Boid(Boid otherBoid) {
 		this.graph = otherBoid.graph;
 		this.pos = otherBoid.pos;
 		this.speed = otherBoid.speed;
 		this.visionRange = otherBoid.visionRange;
+		this.occupancyChoiceWeight = otherBoid.distanceChoiceWeight;
+		this.distanceChoiceWeight = otherBoid.distanceChoiceWeight;
 		this.traveledDistance = 0d;
 		this.pathTaken = new LinkedList<>();
+	}
+
+	public Boid(FlockingGraph graph, Position position, Double speed, Double visionRange, Double distanceChoiceWeight,
+			Double occupancyChoiceWeight) {
+		this.graph = graph;
+		this.pos = position;
+		this.speed = speed;
+		this.visionRange = visionRange;
+		this.occupancyChoiceWeight = occupancyChoiceWeight;
+		this.distanceChoiceWeight = distanceChoiceWeight;
+		this.traveledDistance = 0d;
+		this.pathTaken = new LinkedList<>();
+		// isAchiever = false;
+	}
+
+	public boolean completedTour() {
+		return this.pathTaken.size() == this.graph.getNumberOfNodes();
+	}
+
+	public void die() {
+		// TODO:
 	}
 
 	public FlockingGraph getGraph() {
 		return this.graph;
 	}
 
-	public void setGraph(FlockingGraph graph) {
-		this.graph = graph;
-	}
-
 	public Position getPos() {
 		return this.pos;
 	}
 
-	public void setPos(Position pos) {
-		this.pos = pos;
+	public Segment getSegment(Position pos) {
+		return this.graph.getSegmentForPosition(pos);
 	}
 
 	public Double getSpeed() {
 		return this.speed;
 	}
 
+	public void respawn() {
+		this.setPosition(new Position(loadEdge(this.pathTaken.get(0), this.pathTaken.get(1)), 0d));
+		this.pathTaken.clear();
+	}
+
+	public void setGraph(FlockingGraph graph) {
+		this.graph = graph;
+	}
+
+	public void setPos(Position pos) {
+		this.pos = pos;
+	}
+
 	public void setSpeed(Double speed) {
 		this.speed = speed;
-	}
-
-	private void moveDistance(double distance) {
-		Segment currentSegment = getSegment(this.pos);
-		currentSegment.currentOccupancy--;
-
-		this.pos.deslocate(distance);
-
-		Segment nextSegment = getSegment(this.pos);
-		nextSegment.currentOccupancy++;
-
-		this.traveledDistance += distance;
-	}
-
-	protected void moveToNextEdge(Edge edge) {
-		double distanceWithin = this.pos.getDistanceToEdgeEnd();
-		double distanceOnNext = getNextEdgeDistance(this.speed);
-
-		moveDistance(distanceWithin);
-		this.setPosition(new Position(edge, 0d));
-		tryToMove(distanceOnNext);
-	}
-
-	private void setPosition(Position pos) {
-		Segment currentSegment = getSegment(this.pos);
-		currentSegment.currentOccupancy--;
-
-		this.pos = pos;
-
-		Segment nextSegment = getSegment(this.pos);
-		nextSegment.currentOccupancy++;
 	}
 
 	public void tryToMove(double distance) {
@@ -118,26 +109,6 @@ public class Boid {
 		} else {
 			decide();
 		}
-	}
-
-	public Segment getSegment(Position pos) {
-		return this.graph.getSegmentForPosition(pos);
-	}
-
-	private boolean checkEdgeBoundaries(double distance) {
-		return this.pos.canDeslocate(distance);
-	}
-
-	private boolean checkSegmentOccupation(Segment seg) {
-		return !seg.isFull();
-	}
-
-	private void moveToFarthestAvailableLocation(Segment current, Segment limit) {
-		Segment farthestAvailable = this.graph.getFarthestAvailableSegment(current, limit);
-		double endOfTheSegment = farthestAvailable.exclusiveEndLocation.distanceFromStart;
-		// get to right before the end of the segment
-		double diff = endOfTheSegment - MINIMUM_DISTANCE_MARGIN - this.pos.distanceFromStart;
-		moveDistance(diff);
 	}
 
 	protected void decide() {
@@ -164,6 +135,75 @@ public class Boid {
 
 	}
 
+	protected Edge loadEdge(int from, int to) {
+		return this.graph.getEdge(from, to);
+	}
+
+	protected void moveToNextEdge(Edge edge) {
+		double distanceWithin = this.pos.getDistanceToEdgeEnd();
+		double distanceOnNext = getNextEdgeDistance(this.speed);
+
+		moveDistance(distanceWithin);
+		this.setPosition(new Position(edge, 0d));
+		tryToMove(distanceOnNext);
+	}
+
+	private void becomeAchiever() {
+		// this.isAchiever = true;
+		// TODO: register in the main controller the new AchieverBoid created from this Boid
+		AchieverBoid achiever = new AchieverBoid(this);
+		achiever.respawn();
+	}
+
+	private boolean checkEdgeBoundaries(double distance) {
+		return this.pos.canDeslocate(distance);
+	}
+
+	private boolean checkSegmentOccupation(Segment seg) {
+		return !seg.isFull();
+	}
+
+	private List<Edge> generateEdges(ArrayList<Integer> closestNeighbors) {
+		ArrayList<Edge> edges = new ArrayList<Edge>();
+		for (int neighbor : closestNeighbors) {
+			edges.add(loadEdge(this.pos.edge.getTo(), neighbor));
+		}
+
+		return edges;
+	}
+
+	private double getNextEdgeDistance(double overallDistance) {
+		return overallDistance - (this.pos.getDistanceToEdgeEnd());
+	}
+
+	private Double getPartialChoiceProbability(Edge edge) {
+		Position p = new Position(edge, 0d);
+		Segment firstSegment = getSegment(p);
+
+		return Math.pow((firstSegment.maxOccupancy - firstSegment.currentOccupancy), this.occupancyChoiceWeight)
+				* Math.pow(1d / edge.getLength(), this.distanceChoiceWeight);
+	}
+
+	private void moveDistance(double distance) {
+		Segment currentSegment = getSegment(this.pos);
+		currentSegment.currentOccupancy--;
+
+		this.pos.deslocate(distance);
+
+		Segment nextSegment = getSegment(this.pos);
+		nextSegment.currentOccupancy++;
+
+		this.traveledDistance += distance;
+	}
+
+	private void moveToFarthestAvailableLocation(Segment current, Segment limit) {
+		Segment farthestAvailable = this.graph.getFarthestAvailableSegment(current, limit);
+		double endOfTheSegment = farthestAvailable.exclusiveEndLocation.distanceFromStart;
+		// get to right before the end of the segment
+		double diff = endOfTheSegment - MINIMUM_DISTANCE_MARGIN - this.pos.distanceFromStart;
+		moveDistance(diff);
+	}
+
 	private Edge selectNextEdge(List<Edge> possibleEdges) {
 		List<SortableKeyValue<?, Double>> edgeProbabilityPairs = new ArrayList<SortableKeyValue<?, Double>>();
 		Double totalSum = 0d;
@@ -188,49 +228,14 @@ public class Boid {
 		return e;
 	}
 
-	private Double getPartialChoiceProbability(Edge edge) {
-		Position p = new Position(edge, 0d);
-		Segment firstSegment = getSegment(p);
+	private void setPosition(Position pos) {
+		Segment currentSegment = getSegment(this.pos);
+		currentSegment.currentOccupancy--;
 
-		return Math.pow((firstSegment.maxOccupancy - firstSegment.currentOccupancy), this.occupancyChoiceWeight)
-				* Math.pow(1d / edge.getLength(), this.distanceChoiceWeight);
-	}
+		this.pos = pos;
 
-	protected Edge loadEdge(int from, int to) {
-		return this.graph.getEdge(from, to);
-	}
-
-	private List<Edge> generateEdges(ArrayList<Integer> closestNeighbors) {
-		ArrayList<Edge> edges = new ArrayList<Edge>();
-		for (int neighbor : closestNeighbors) {
-			edges.add(loadEdge(this.pos.edge.getTo(), neighbor));
-		}
-
-		return edges;
-	}
-
-	private double getNextEdgeDistance(double overallDistance) {
-		return overallDistance - (this.pos.getDistanceToEdgeEnd());
-	}
-
-	public boolean completedTour() {
-		return this.pathTaken.size() == this.graph.getNumberOfNodes();
-	}
-
-	private void becomeAchiever() {
-		// this.isAchiever = true;
-		// TODO: register in the main controller the new AchieverBoid created from this Boid
-		AchieverBoid achiever = new AchieverBoid(this);
-		achiever.respawn();
-	}
-
-	public void respawn() {
-		this.setPosition(new Position(loadEdge(this.pathTaken.get(0), this.pathTaken.get(1)), 0d));
-		this.pathTaken.clear();
-	}
-
-	public void die() {
-		// TODO:
+		Segment nextSegment = getSegment(this.pos);
+		nextSegment.currentOccupancy++;
 	}
 
 }
