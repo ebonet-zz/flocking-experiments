@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import viewer.FlockingGraphViewer;
 import agent.Boid;
 
 /**
@@ -18,6 +19,9 @@ import agent.Boid;
  * @author Balthazar. Created Dec 10, 2012.
  */
 public class Problem {
+
+	boolean graphics = false;
+
 	/**
 	 * Distances between nodes
 	 */
@@ -88,6 +92,16 @@ public class Problem {
 	 * @return The information about the best found Tour (path)
 	 */
 	public String solve(int m, double e, double B, double a, double v, double s) {
+
+		graphics = true;
+		
+		
+		FlockingGraphViewer viewer = null;
+		if (graphics) {
+			viewer = new FlockingGraphViewer(this.distanceGraph);
+			viewer.openViewer();
+		}
+
 		// Number of boids spawned per time unit
 		this.multiplierForBoidSpawn = m;
 
@@ -110,9 +124,19 @@ public class Problem {
 
 		// Main Loop
 		for (int t = 1; t <= this.maxIterations; t++) { // In each iteration
-			
+
 			for (Boid b : enviroment) {
 				b.tryToMove(b.getSpeed());
+			}
+
+			if (graphics) {
+				draw(viewer, enviroment);
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException exception) {
+					// TODO Auto-generated catch-block stub.
+					exception.printStackTrace();
+				}
 			}
 		}
 
@@ -120,6 +144,10 @@ public class Problem {
 			return shortestTour.toString();
 		else
 			return "No Tour found";
+	}
+
+	private void draw(FlockingGraphViewer viewer, Set<Boid> enviroment) {
+		viewer.updateViewer(extractBoidPositions(enviroment));
 	}
 
 	public List<Position> extractBoidPositions(Set<Boid> enviroment) {

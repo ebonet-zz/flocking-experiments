@@ -38,7 +38,6 @@ public class FlockingGraphViewer{
 		computeCenters();
 		
 		mFrame = new FlockinGraphViewerFrame(mHeight, mWidth, mGraph, mCenters, mNumberOfNodes, mGoal, mStart);
-		openViewer();
 	}
 	
 	/**
@@ -57,6 +56,9 @@ public class FlockingGraphViewer{
 		mStart = start;
 		mGoal = goal;
 		mNumberOfNodes = numberOfNodes;		
+		
+		computeCenters();
+		mFrame = new FlockinGraphViewerFrame(mHeight, mWidth, mGraph, mCenters, mNumberOfNodes, mGoal, mStart);
 	}
 	
 	/**
@@ -72,6 +74,8 @@ public class FlockingGraphViewer{
 		mNumberOfNodes = graph.getNumberOfNodes();
 		mGoal = -1;
 		mStart = -1;
+		computeCenters();
+		mFrame = new FlockinGraphViewerFrame(mHeight, mWidth, mGraph, mCenters, mNumberOfNodes, mGoal, mStart);
 	}
 	
 	/**
