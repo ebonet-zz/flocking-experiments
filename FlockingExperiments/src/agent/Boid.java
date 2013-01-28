@@ -6,8 +6,12 @@ import graph.Position;
 import graph.Segment;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+
+import util.SortableKeyValue;
+import util.WeightedRouletteWheelSelector;
 
 /**
  * TODO Put here a description of what this class does.
@@ -23,7 +27,9 @@ public class Boid {
 	private Double visionRange;
 	private Double traveledDistance; // Tiredness
 	protected LinkedList<Integer> pathTaken;
-	//private boolean isAchiever;
+	// private boolean isAchiever;
+	private double distanceChoiceWeight;
+	private double occupancyChoiceWeight;
 
 	public Boid(FlockingGraph graph, Position position, Double speed, Double visionRange) {
 		this.graph = graph;
@@ -31,8 +37,8 @@ public class Boid {
 		this.speed = speed;
 		this.visionRange = visionRange;
 		this.traveledDistance = 0d;
-		pathTaken = new LinkedList<>();
-		//isAchiever = false;
+		this.pathTaken = new LinkedList<>();
+		// isAchiever = false;
 	}
 
 	public Boid(Boid otherBoid) {
@@ -45,14 +51,15 @@ public class Boid {
 	}
 
 	public FlockingGraph getGraph() {
-		return graph;
+		return this.graph;
 	}
+
 	public void setGraph(FlockingGraph graph) {
 		this.graph = graph;
 	}
 
 	public Position getPos() {
-		return pos;
+		return this.pos;
 	}
 
 	public void setPos(Position pos) {
@@ -60,7 +67,7 @@ public class Boid {
 	}
 
 	public Double getSpeed() {
-		return speed;
+		return this.speed;
 	}
 
 	public void setSpeed(Double speed) {
@@ -158,8 +165,35 @@ public class Boid {
 	}
 
 	private Edge selectNextEdge(List<Edge> possibleEdges) {
-		// TODO Auto-generated method stub.
-		return null;
+		List<SortableKeyValue<?, Double>> edgeProbabilityPairs = new ArrayList<SortableKeyValue<?, Double>>();
+		Double totalSum = 0d;
+
+		// calculate
+		for (Edge e : possibleEdges) {
+			Double probability = getPartialChoiceProbability(e);
+			totalSum += probability;
+			edgeProbabilityPairs.add(new SortableKeyValue<Edge, Double>(e, probability));
+		}
+
+		// normalize
+		for (SortableKeyValue<?, Double> pair : edgeProbabilityPairs) {
+			pair.valueToUseOnSorting = pair.valueToUseOnSorting / totalSum;
+		}
+
+		Collections.sort(edgeProbabilityPairs);
+
+		WeightedRouletteWheelSelector selector = new WeightedRouletteWheelSelector(edgeProbabilityPairs);
+		Edge e = (Edge) selector.getRandom().keyObject;
+
+		return e;
+	}
+
+	private Double getPartialChoiceProbability(Edge edge) {
+		Position p = new Position(edge, 0d);
+		Segment firstSegment = getSegment(p);
+
+		return Math.pow((firstSegment.maxOccupancy - firstSegment.currentOccupancy), this.occupancyChoiceWeight)
+				* Math.pow(1d / edge.getLength(), this.distanceChoiceWeight);
 	}
 
 	protected Edge loadEdge(int from, int to) {
