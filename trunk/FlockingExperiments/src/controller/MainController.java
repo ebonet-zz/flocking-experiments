@@ -14,12 +14,12 @@ public class MainController {
 
 		// Constants I believe their optimal values depend on the number of cities
 		int n = 30;
-		int m = n / 2 + 1; // quorum
-		float e = 0.7f; // quorum
+		int m = n / 2 + 1; 
+		float e = 0.7f;
 
 		// Constants I believe do not depend on the number of cities
-		float B = 1; // was 2 before the tests
-		float a = 1f; // not changed (variance tests didn't have significant impact)
+		float B = 1; 
+		float a = 1f;
 
 		TraditionalGraph graph = GenerateSparseInstance.GenerateSparseGraph(n); // Sparse
 		// TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(n); // Fully connected
