@@ -15,7 +15,7 @@ import util.SortableKeyValue;
 public class TraditionalGraph {
 	public static final int INVALID_VALUE = -1;
 
-	int[][] distanceMatrix;
+	public int[][] distanceMatrix;
 	int numberOfNodes;
 
 	/**

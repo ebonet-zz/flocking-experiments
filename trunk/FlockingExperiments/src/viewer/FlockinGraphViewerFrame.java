@@ -1,9 +1,14 @@
 package viewer;
 
+import graph.Position;
+
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFrame;
+
 
 public class FlockinGraphViewerFrame extends JFrame {
 
@@ -12,8 +17,20 @@ public class FlockinGraphViewerFrame extends JFrame {
 	private int [][] mGraph;
 	private int mNumberOfNodes;
 	private int mGoal,mStart;
+	private List<Position> mMovingObjectsPositions;
 
-
+	
+	/**
+	 * Creates the frame that will display the graph.
+	 * 
+	 * @param height - height of the screen
+	 * @param width - width of the screen
+	 * @param graph - distance matrix
+	 * @param centers - center of the nodes
+	 * @param numberOfNodes - number of nodes in the graph
+	 * @param goal - -1 if there's no goal
+	 * @param start - -1 if there's no start
+	 */
 	public FlockinGraphViewerFrame(int height,int width,
 			int [][] graph,int [][] centers,
 			int numberOfNodes,int goal,int start){
@@ -25,6 +42,8 @@ public class FlockinGraphViewerFrame extends JFrame {
 		mNumberOfNodes = numberOfNodes;
 		mGoal = goal;
 		mStart = start;
+		
+		mMovingObjectsPositions = new ArrayList<>();
 
 		initializeComponents();
 	}
@@ -34,10 +53,9 @@ public class FlockinGraphViewerFrame extends JFrame {
 		this.setResizable(false);
 		this.setTitle("Flocking Graph Viewer");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
 	}
 
-	private void drawBoid(Graphics g, int from, int to, double position){
+	private void drawMovingObject(Graphics g, int from, int to, double position){
 		
 		int radius =14;
 		
@@ -98,6 +116,18 @@ public class FlockinGraphViewerFrame extends JFrame {
 			}
 		}
 	}
+	
+	private void drawMovingObjects(Graphics g){
+		
+		for(Position movingObjectPosition : mMovingObjectsPositions){
+			
+			drawMovingObject(g, 
+					movingObjectPosition.getFrom(), 
+					movingObjectPosition.getTo(), 
+					movingObjectPosition.getDistance());			
+		}
+		
+	}
 
 	private void drawStartNode(Graphics g,int x,int y){
 		int radius =30;
@@ -143,14 +173,36 @@ public class FlockinGraphViewerFrame extends JFrame {
 		drawPaths(g);
 		drawNodes(g);
 		
-		drawBoid(g,0,2,1);
+		drawMovingObjects(g);
 		
 	}
+	
+	/**
+	 * Updates the current list of positions
+	 * 
+	 * @param positions - the update positions (graph.Positions)
+	 */
+	public void update(List<Position> positions) {
+		mMovingObjectsPositions = positions;
+		this.repaint();
+	}
 
+	/**
+	 * Changes the window size. This method also requires the new centers of the nodes.
+	 * 
+	 * @param width
+	 * @param height
+	 * @param centers
+	 */
+	public void setWindowSize(int width, int height, int[][] centers) {
+		
 
-
-
-
-
+		mWidth = width;
+		mHeight = height;
+		mCenters = centers;
+		
+		this.setSize(width, height);
+		this.repaint();
+	}
 
 }

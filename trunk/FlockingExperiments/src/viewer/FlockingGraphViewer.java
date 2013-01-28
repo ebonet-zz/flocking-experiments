@@ -22,17 +22,30 @@ public class FlockingGraphViewer{
 	
 	private FlockinGraphViewerFrame mFrame;
 	
+	/**
+	 * Creates an example of viewer for a 4 node fully connected graph. Window has size (600,600).
+	 */
 	public FlockingGraphViewer(){
 		// TODO: change to receive a flocking graph as parameter
-		createGraph1();
-		computeCenters();
+		
 		mHeight = 600;
 		mWidth = 600;
+		
+		createGraph1();
+		computeCenters();
 		
 		mFrame = new FlockinGraphViewerFrame(mHeight, mWidth, mGraph, mCenters, mNumberOfNodes, mGoal, mStart);
 		openViewer();
 	}
 	
+	/**
+	 * Creates a window to display a graph. The window has a default bounding box of (600,600)
+	 * 
+	 * @param graph - the distance matrix
+	 * @param start - the start node (0 indexed)
+	 * @param goal - the goal node (0 indexed)
+	 * @param numberOfNodes - the number of nodes
+	 */
 	public FlockingGraphViewer(int [][] graph, int start, int goal, int numberOfNodes){
 		mHeight = 600;
 		mWidth = 600;
@@ -43,6 +56,11 @@ public class FlockingGraphViewer{
 		mNumberOfNodes = numberOfNodes;		
 	}
 	
+	/**
+	 * Creates a viewer for an object of the class Flocking Graph, with default (600,600) window size.
+	 * 
+	 * @param graph - The graph to be displayed
+	 */
 	public FlockingGraphViewer(FlockingGraph graph){
 		
 		mHeight = 600;
@@ -53,6 +71,12 @@ public class FlockingGraphViewer{
 		mStart = -1;
 	}
 	
+	/**
+	 * Sets a new size for the window
+	 * 
+	 * @param width
+	 * @param height
+	 */
 	public void setWindowSize(int width, int height){
 		mWidth = width;
 		mHeight = height;
@@ -74,15 +98,26 @@ public class FlockingGraphViewer{
  			mCenters[i][1] = (int)(mWidth/2 +radius*Math.sin(ratio*i));
 		}
 	}
-
+	
+	/**
+	 * Opens the frame and display the graph
+	 */
 	public void openViewer(){
 		mFrame.setVisible(true);
 	}
 	
+	/**
+	 * Closes the frame
+	 */
 	public void closeViewer(){
 		mFrame.setVisible(false);
 	}
 	
+	/**
+	 * Updates the position of the moving object, displaying the new ones in the viewer.
+	 * 
+	 * @param movingObjects - List of graph.Positions 
+	 */
 	public void updateViewer(List<Position> movingObjects){
 		
 		
