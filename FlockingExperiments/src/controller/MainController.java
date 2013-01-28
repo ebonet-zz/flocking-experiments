@@ -13,7 +13,7 @@ public class MainController {
 		int maxIterations = 100; // Max iterations
 
 		// Constants I believe their optimal values depend on the number of cities
-		int numberOfCities = 4;
+		int numberOfCities = 5;
 		int multiplierBoidSpawn = numberOfCities / 2 + 1;
 		float densityThreshold = 0.7f;
 

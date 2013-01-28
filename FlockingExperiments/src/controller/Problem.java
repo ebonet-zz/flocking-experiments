@@ -5,7 +5,10 @@ import graph.Position;
 import graph.Tour;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import agent.Boid;
 
@@ -100,18 +103,30 @@ public class Problem {
 
 		Tour shortestTour = null;
 
+		Set<Boid> enviroment = new HashSet<Boid>();
+
 		Boid testBoid = new Boid(this.distanceGraph, new Position(this.distanceGraph.getEdge(0, 1), 0d), this.speed,
-				this.visionRange, this.weightOfDistance, this.weightOfOccupancy);
+				this.visionRange, this.weightOfDistance, this.weightOfOccupancy, enviroment);
 
 		// Main Loop
 		for (int t = 1; t <= this.maxIterations; t++) { // In each iteration
-			testBoid.tryToMove(testBoid.getSpeed());
+			for (Boid b : enviroment) {
+				b.tryToMove(b.getSpeed());
+			}
 		}
 
 		if (shortestTour != null)
 			return shortestTour.toString();
 		else
 			return "No Tour found";
+	}
+
+	public List<Position> extractBoidPositions(Set<Boid> enviroment) {
+		List<Position> ps = new ArrayList<Position>();
+		for (Boid b : enviroment) {
+			ps.add(b.getPos());
+		}
+		return ps;
 	}
 
 }

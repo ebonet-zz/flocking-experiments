@@ -21,6 +21,18 @@ public class Position implements Cloneable, Comparable<Position> {
 		this.distanceFromStart += distance;
 	}
 
+	public double getDistance() {
+		return this.distanceFromStart;
+	}
+
+	public int getFrom() {
+		return this.edge.getFrom();
+	}
+
+	public int getTo() {
+		return this.edge.getTo();
+	}
+
 	public double getDistanceToEdgeEnd() {
 		return this.edge.getLength() - this.distanceFromStart;
 	}
