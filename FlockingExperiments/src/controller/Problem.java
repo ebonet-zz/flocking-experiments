@@ -93,11 +93,10 @@ public class Problem {
 	 */
 	public String solve(int m, double e, double B, double a, double v, double s) {
 
-		graphics = true;
-		
-		
+		this.graphics = true;
+
 		FlockingGraphViewer viewer = null;
-		if (graphics) {
+		if (this.graphics) {
 			viewer = new FlockingGraphViewer(this.distanceGraph);
 			viewer.openViewer();
 		}
@@ -129,7 +128,7 @@ public class Problem {
 				b.tryToMove(b.getSpeed());
 			}
 
-			if (graphics) {
+			if (this.graphics) {
 				draw(viewer, enviroment);
 				try {
 					Thread.sleep(1000);
