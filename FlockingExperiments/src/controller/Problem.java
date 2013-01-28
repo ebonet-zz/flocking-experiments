@@ -9,7 +9,7 @@ import java.util.Random;
 import agent.Boid;
 
 /**
- * Defines an ACS-TSP problem.
+ * Defines a Flocking-TSP problem.
  * 
  * @author Balthazar. Created Dec 10, 2012.
  */
@@ -45,7 +45,7 @@ public class Problem {
 	float B = 2;
 
 	/**
-	 * Weight of occupancy (distances)
+	 * Weight of occupancy (crowdedness)
 	 */
 	float a = 1;
 
@@ -55,7 +55,7 @@ public class Problem {
 	float e = 0.70f;
 
 	/**
-	 * Constructor that instboidiates a new problem based on a distance graph and max number of iterations
+	 * Constructor that instantiates a new problem based on a distance graph and max number of iterations
 	 * 
 	 * @param distanceGraph
 	 * @param tMax
@@ -69,7 +69,7 @@ public class Problem {
 	}
 
 	/**
-	 * Attempts to solve the problem given the constboid values below
+	 * Attempts to solve the problem given the constant values below
 	 * 
 	 * @param m
 	 * @param B
