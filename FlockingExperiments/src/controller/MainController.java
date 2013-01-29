@@ -21,7 +21,7 @@ public class MainController {
 		float weightOfDistance = 1f;
 		float weightOfOccupancy = 1f;
 		float boidVisionRange = 2f;
-		float boidSpeed = 1f;
+		float boidSpeed = 0.001f;
 
 		TraditionalGraph graph = GenerateBasicInstance.GenerateBasicGraph(); // Sparse
 		// TraditionalGraph graph = GenerateSparseInstance.GenerateSparseGraph(numberOfCities); // Sparse
