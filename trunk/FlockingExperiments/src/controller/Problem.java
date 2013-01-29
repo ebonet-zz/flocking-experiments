@@ -131,7 +131,7 @@ public class Problem {
 			if (this.graphics) {
 				draw(viewer, enviroment);
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(100);
 				} catch (InterruptedException exception) {
 					// TODO Auto-generated catch-block stub.
 					exception.printStackTrace();

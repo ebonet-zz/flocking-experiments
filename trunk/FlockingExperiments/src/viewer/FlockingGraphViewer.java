@@ -163,6 +163,7 @@ public class FlockingGraphViewer{
 	
 	public static void main(String [] args){
 		FlockingGraphViewer f = new FlockingGraphViewer();
+		f.openViewer();
 	}
 	
 }
