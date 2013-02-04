@@ -23,7 +23,7 @@ public class MainController {
 		float weightOfDistance = 1f;
 		float weightOfOccupancy = 1f;
 		float boidVisionRange = 2f;
-		float boidSpeed = 0.001f;
+		float boidSpeed = 0.1f;
 
 		TraditionalGraph graph = GenerateBasicInstance.GenerateBasicGraph(); // Sparse
 		// TraditionalGraph graph = GenerateSparseInstance.GenerateSparseGraph(numberOfCities); // Sparse
@@ -33,8 +33,8 @@ public class MainController {
 
 		long startTime = System.nanoTime();
 		Problem problem = new Problem(new FlockingGraph(graph), maxIterations);
-		System.out.println(problem.solve(multiplierBoidSpawn, densityThreshold, boidSpeed, boidVisionRange,
-				weightOfDistance, weightOfOccupancy, goal));
+		System.out.println(problem.solve(multiplierBoidSpawn, densityThreshold, weightOfDistance, weightOfOccupancy,
+				boidVisionRange, boidSpeed, goal));
 		long estimatedTime = System.nanoTime() - startTime;
 
 		System.out.println("Execution Time: " + estimatedTime / 1000000000.0f + " seconds.");
