@@ -144,7 +144,7 @@ public class Problem {
 					exception.printStackTrace();
 				}
 			}
-			System.out.println("NUmber of flocks:" + environment.getNumberOfFlocks());
+			// System.out.println("NUmber of flocks:" + environment.getNumberOfFlocks());
 		}
 
 		if (shortestTour != null)
