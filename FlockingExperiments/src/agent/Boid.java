@@ -264,4 +264,9 @@ public class Boid {
 
 	}
 
+	public Double getPathDistance() {
+		
+		return 10000000.0;
+	}
+
 }

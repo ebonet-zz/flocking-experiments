@@ -169,7 +169,7 @@ public class Problem {
 	}
 
 	private Double randomize(double value) {
-		return value + Math.random() * value * 0.4 - value * 0.2;
+		return value*(1+Math.random()*0.4-0.2);
 	}
 
 	private void draw(FlockingGraphViewer viewer, Set<Boid> boids) {

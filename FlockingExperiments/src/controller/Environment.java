@@ -1,23 +1,26 @@
 package controller;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import flock.Flock;
-import graph.FlockingGraph;
-
 import agent.AchieverBoid;
 import agent.Boid;
+import flock.Flock;
+import graph.FlockingGraph;
+import graph.Tour;
 
 public class Environment {
 	private Set<Boid> freeBoids;
 	private Set<Flock> flocks;
 	private FlockingGraph graph;
+	private HashMap<String,Integer> pathsTaken;
 
 	public Environment(FlockingGraph graph) {
 		this.freeBoids = new HashSet<>();
 		this.flocks = new HashSet<>();
 		this.graph = graph;
+		pathsTaken = new HashMap<>();
 	}
 	
 	public FlockingGraph getFlockingGraph() {
@@ -94,5 +97,36 @@ public class Environment {
 	public int getNumberOfFreeBoids() {
 		return this.freeBoids.size();
 	}
+
+	public void registerPath(Tour pathToFollow) {
+		if(pathsTaken.containsKey(pathToFollow.toString())){
+			pathsTaken.put(pathToFollow.toString(), pathsTaken.get(pathToFollow.toString())+1);
+		}
+		
+		else{
+			pathsTaken.put(pathToFollow.toString(), 1);
+		}
+		
+		System.out.println("Registering Boid");
+	    System.out.println(pathsTaken.toString());
+		System.out.println("");
+	}
+	
+	public void unregisterPath(Tour pathToFollow) {
+		if(pathsTaken.containsKey(pathToFollow.toString())){
+			if( pathsTaken.get(pathToFollow.toString())==1){
+				pathsTaken.remove(pathToFollow.toString());
+			}
+			
+			else pathsTaken.put(pathToFollow.toString(), pathsTaken.get(pathToFollow.toString())-1);
+		}
+		
+		System.out.println("Unregistering Boid");
+	    System.out.println(pathsTaken.toString());
+		System.out.println("");
+		
+	}
+	
+	
 	
 }

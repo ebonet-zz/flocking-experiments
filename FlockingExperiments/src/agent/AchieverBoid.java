@@ -16,6 +16,9 @@ public class AchieverBoid extends Boid {
 		super(boid);
 		this.pathToFollow = new Tour(this.pathTaken);
 		this.pathToFollow.calculateCost(this.graph);
+		
+		environment.registerPath(this.pathToFollow);
+		
 	}
 
 	@Override
@@ -27,8 +30,13 @@ public class AchieverBoid extends Boid {
 		// 2) Compare the traveled distance and 3) Update the path
 		for (Boid boid : boidsInSight) {
 
-			if (boid.traveledDistance < this.traveledDistance) {
-				this.pathTaken = new Tour(boid.pathTaken);
+			if (boid.getPathDistance() < this.getPathDistance()) {
+				environment.unregisterPath(this.pathToFollow);
+				
+				
+				this.pathToFollow  = new Tour(((AchieverBoid)boid).getPathToFollow());
+				
+				environment.registerPath(this.pathToFollow);
 			}
 
 		}
@@ -37,6 +45,12 @@ public class AchieverBoid extends Boid {
 
 		super.tryToMove(distance);
 	}
+	
+	@Override
+	public Double getPathDistance() {
+		return this.pathToFollow.getCost(getGraph())*1.0;
+	}
+	
 
 	private Set<AchieverBoid> getBoidsInSight() {
 
@@ -48,8 +62,6 @@ public class AchieverBoid extends Boid {
 				boidsInSight.add(b);
 			}
 		}
-
-		System.out.println("Number of boids on sight:"+boidsInSight.size());
 
 		return boidsInSight;
 	}
