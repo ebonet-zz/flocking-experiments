@@ -92,7 +92,8 @@ public class Problem {
 	 * 
 	 * @return The information about the best found Tour (path)
 	 */
-	public String solve(int m, double e, double B, double a, double v, double s, GoalEvaluator goal) {
+	public String solve(int boidsPerSecond, double densityThreshold, double wDist, double wOccup, double vision,
+			double speed, GoalEvaluator goal) {
 
 		this.graphics = true;
 
@@ -103,14 +104,14 @@ public class Problem {
 		}
 
 		// Number of boids spawned per time unit
-		this.multiplierForBoidSpawn = m;
+		this.multiplierForBoidSpawn = boidsPerSecond;
 
 		// Set constants
-		this.occupancyDensityThreshold = e;
-		this.weightOfDistance = B;
-		this.weightOfOccupancy = a;
-		this.visionRange = v;
-		this.speed = s;
+		this.occupancyDensityThreshold = densityThreshold;
+		this.weightOfDistance = wDist;
+		this.weightOfOccupancy = wOccup;
+		this.visionRange = vision;
+		this.speed = speed;
 
 		// Random and seed
 		Random r = new Random();
@@ -124,6 +125,12 @@ public class Problem {
 
 		// Main Loop
 		for (int t = 1; t <= this.maxIterations; t++) { // In each iteration
+
+			for (int i = 0; i < this.multiplierForBoidSpawn; i++) {
+				Boid b = new Boid(this.distanceGraph, new Position(this.distanceGraph.getEdge(0, 1),
+						this.distanceGraph.getEdgeLength(0, 1) * r.nextFloat()), this.speed, this.visionRange,
+						this.weightOfDistance, this.weightOfOccupancy, enviroment, goal);
+			}
 
 			for (Boid b : enviroment) {
 				b.tryToMove(b.getSpeed());
