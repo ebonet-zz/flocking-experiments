@@ -4,7 +4,7 @@ import graph.FlockingGraph;
 import graph.Tour;
 
 /**
- * TODO Put here a description of what this class does.
+ * Evaluates a solution for a shortest path problem that goes from 0 to goalNode
  * 
  * @author Balthazar. Created Feb 3, 2013.
  */
@@ -18,7 +18,7 @@ public class EndNodeGoalEvaluator implements GoalEvaluator {
 
 	@Override
 	public boolean isGoal(FlockingGraph graph, Tour pathTaken) {
-		return pathTaken.lastLocation() == endNode;
+		return pathTaken.lastLocation() == this.endNode;
 	}
 
 }
