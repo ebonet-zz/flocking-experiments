@@ -2,6 +2,7 @@ package controller;
 
 import graph.FlockingGraph;
 import graph.Position;
+import graph.Segment;
 import graph.Tour;
 
 import java.util.ArrayList;
@@ -120,17 +121,16 @@ public class Problem {
 
 		// Set<Boid> environment = new HashSet<Boid>();
 		Environment environment = new Environment(this.distanceGraph);
-		Boid testBoid = new Boid(new Position(this.distanceGraph.getEdge(0, 1), 0d), this.speed,
-				this.visionRange, this.weightOfDistance, this.weightOfOccupancy, environment, goal);
+		Boid testBoid = new Boid(new Position(this.distanceGraph.getEdge(0, 1), 0d), this.speed, this.visionRange,
+				this.weightOfDistance, this.weightOfOccupancy, environment, goal);
 
 		// Main Loop
 		for (int t = 1; t <= this.maxIterations; t++) { // In each iteration
 
 			for (int i = 0; i < this.multiplierForBoidSpawn; i++) {
-				Boid b = new Boid(new Position(this.distanceGraph.getEdge(0, 1),
-						this.distanceGraph.getEdgeLength(0, 1) * r.nextFloat()), this.speed, this.visionRange,
-						this.weightOfDistance, this.weightOfOccupancy, environment, goal);
+				spawnBoid(r, environment, goal);
 			}
+
 			Set<Boid> aliveBoids = environment.getAllBoids();
 			for (Boid b : aliveBoids) {
 				b.tryToMove(b.getSpeed());
@@ -141,7 +141,6 @@ public class Problem {
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException exception) {
-					// TODO Auto-generated catch-block stub.
 					exception.printStackTrace();
 				}
 			}
@@ -153,14 +152,29 @@ public class Problem {
 			return "No Tour found";
 	}
 
+	private void spawnBoid(Random r, Environment environment, GoalEvaluator goal) {
+		Position newWouldBePos = new Position(this.distanceGraph.getEdge(0, 1), this.distanceGraph.getEdgeLength(0, 1)
+				* r.nextFloat());
+		Segment nextWouldBeSegment = this.distanceGraph.getSegmentForPosition(newWouldBePos);
+
+		while ((nextWouldBeSegment.isFull())) {
+			newWouldBePos = new Position(this.distanceGraph.getEdge(0, 1), this.distanceGraph.getEdgeLength(0, 1)
+					* r.nextFloat());
+			nextWouldBeSegment = this.distanceGraph.getSegmentForPosition(newWouldBePos);
+		}
+
+		Boid newBoid = new Boid(newWouldBePos, this.speed, this.visionRange, this.weightOfDistance,
+				this.weightOfOccupancy, environment, goal);
+	}
+
 	private void draw(FlockingGraphViewer viewer, Set<Boid> boids) {
 		viewer.updateViewer(extractBoidPositions(boids));
 	}
-	
+
 	public List<MovingObject> extractBoidPositions(Set<Boid> boids) {
 		List<MovingObject> ps = new ArrayList<MovingObject>();
 		for (Boid b : boids) {
-			ps.add(new MovingObject(b.getPos(),b.getColor()));
+			ps.add(new MovingObject(b.getPos(), b.getColor()));
 		}
 		return ps;
 	}
