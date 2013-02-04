@@ -30,7 +30,7 @@ public class Boid {
 	protected Double visionRange;
 	protected Double traveledDistance; // Tiredness
 	protected Tour pathTaken;
-	
+
 	// private boolean isAchiever;
 	protected double distanceChoiceWeight;
 	protected double occupancyChoiceWeight;
@@ -76,7 +76,7 @@ public class Boid {
 	public Environment getEnvironment() {
 		return this.environment;
 	}
-	
+
 	public FlockingGraph getGraph() {
 		return this.graph;
 	}
@@ -119,13 +119,14 @@ public class Boid {
 			decide();
 		}
 	}
-	
-	protected boolean isInSight(Boid b){
+
+	protected boolean isInSight(Boid b) {
 		return false;
 	}
-	
+
 	protected void decide() {
-		this.pathTaken.offer(this.pos.edge.getTo());
+		if(this.pathTaken.lastLocation() != this.pos.edge.getTo())
+			this.pathTaken.offer(this.pos.edge.getTo());
 
 		if (this.goalEvaluator.isGoal(this.graph, this.pathTaken)) {
 			becomeAchiever();
@@ -155,12 +156,14 @@ public class Boid {
 	}
 
 	protected void moveToNextEdge(Edge edge) {
-		double distanceWithin = this.pos.getDistanceToEdgeEnd();
-		double distanceOnNext = getNextEdgeDistance(this.speed);
+		if (edge != null) {
+			double distanceWithin = this.pos.getDistanceToEdgeEnd();
+			double distanceOnNext = getNextEdgeDistance(this.speed);
 
-		moveDistance(distanceWithin);
-		this.setPosition(new Position(edge, 0d));
-		tryToMove(distanceOnNext);
+			moveDistance(distanceWithin);
+			this.setPosition(new Position(edge, 0d));
+			tryToMove(distanceOnNext);
+		}
 	}
 
 	private void becomeAchiever() {
@@ -229,6 +232,10 @@ public class Boid {
 			edgeProbabilityPairs.add(new SortableKeyValue<Edge, Double>(e, probability));
 		}
 
+		if (totalSum.equals(new Double(0d))) {
+			return null;
+		}
+
 		// normalize
 		for (SortableKeyValue<?, Double> pair : edgeProbabilityPairs) {
 			pair.valueToUseOnSorting = pair.valueToUseOnSorting / totalSum;
@@ -254,7 +261,7 @@ public class Boid {
 
 	public Color getColor() {
 		return Color.green;
-		
+
 	}
 
 }
