@@ -3,7 +3,7 @@ package controller;
 import graph.TraditionalGraph;
 
 /**
- * TODO Put here a description of what this class does.
+ * Generates the most basic shortest path problem graph
  * 
  * @author Balthazar. Created Jan 28, 2013.
  */
