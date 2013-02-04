@@ -122,8 +122,8 @@ public class Problem {
 
 		// Set<Boid> environment = new HashSet<Boid>();
 		Environment environment = new Environment(this.distanceGraph);
-		// Boid testBoid = new Boid(new Position(this.distanceGraph.getEdge(0, 1), 0d), this.speed, this.visionRange,
-		// this.weightOfDistance, this.weightOfOccupancy, environment, goal);
+//		 Boid testBoid = new Boid(new Position(this.distanceGraph.getEdge(0, 1), 0d), this.speed, this.visionRange,
+//		 this.weightOfDistance, this.weightOfOccupancy, environment, goal);
 
 		// Main Loop
 		for (int t = 1; t <= this.maxIterations; t++) { // In each iteration
@@ -135,6 +135,14 @@ public class Problem {
 			Set<Boid> aliveBoids = environment.getAllBoids();
 			for (Boid b : aliveBoids) {
 				b.tryToMove(b.getSpeed());
+//				if (this.graphics) {
+//					draw(viewer, aliveBoids);
+//					try {
+//						Thread.sleep(100);
+//					} catch (InterruptedException exception) {
+//						exception.printStackTrace();
+//					}
+//				}
 			}
 
 			SortableKeyValue<Tour, Double> mostDensePath = environment.getMostDensePath();
