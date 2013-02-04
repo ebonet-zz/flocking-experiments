@@ -16,7 +16,7 @@ public class MainController {
 
 		// Constants I believe their optimal values depend on the number of cities
 		int numberOfCities = 5;
-		int multiplierBoidSpawn = numberOfCities / 2 + 1;
+		int multiplierBoidSpawn = 1;
 		float densityThreshold = 0.7f;
 
 		// Constants I believe do not depend on the number of cities
