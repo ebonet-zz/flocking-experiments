@@ -3,10 +3,8 @@ package agent;
 import graph.FlockingGraph;
 import graph.Tour;
 
-import java.util.ArrayList;
-
 /**
- * TODO Put here a description of what this class does.
+ * Evaluates a solution for a TSP problem
  * 
  * @author Balthazar. Created Feb 3, 2013.
  */
