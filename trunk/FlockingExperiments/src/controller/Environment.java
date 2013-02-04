@@ -3,10 +3,13 @@ package controller;
 import graph.FlockingGraph;
 import graph.Tour;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import util.SortableKeyValue;
 import agent.AchieverBoid;
 import agent.Boid;
 
@@ -16,14 +19,14 @@ public class Environment {
 	private Set<AchieverBoid> achievers;
 
 	private FlockingGraph graph;
-	private HashMap<String, Integer> pathsTaken;
+	private HashMap<Tour, Integer> foundToursPopulations;
 
 	public Environment(FlockingGraph graph) {
 		this.freeBoids = new HashSet<>();
 		// this.flocks = new HashSet<>();
 		this.achievers = new HashSet<>();
 		this.graph = graph;
-		this.pathsTaken = new HashMap<>();
+		this.foundToursPopulations = new HashMap<>();
 	}
 
 	public FlockingGraph getFlockingGraph() {
@@ -109,33 +112,43 @@ public class Environment {
 	}
 
 	public void registerPath(Tour pathToFollow) {
-		if (this.pathsTaken.containsKey(pathToFollow.toString())) {
-			this.pathsTaken.put(pathToFollow.toString(), this.pathsTaken.get(pathToFollow.toString()) + 1);
+		if (this.foundToursPopulations.containsKey(pathToFollow)) {
+			this.foundToursPopulations.put(pathToFollow, this.foundToursPopulations.get(pathToFollow) + 1);
+		} else {
+			this.foundToursPopulations.put(pathToFollow, 1);
 		}
 
-		else {
-			this.pathsTaken.put(pathToFollow.toString(), 1);
-		}
-
-		System.out.println("Registering Boid");
-		System.out.println(this.pathsTaken.toString());
-		System.out.println("");
+		// System.out.println("Registering Boid");
+		// System.out.println(this.pathsTaken.toString());
+		// System.out.println("");
 	}
 
 	public void unregisterPath(Tour pathToFollow) {
-		if (this.pathsTaken.containsKey(pathToFollow.toString())) {
-			if (this.pathsTaken.get(pathToFollow.toString()) == 1) {
-				this.pathsTaken.remove(pathToFollow.toString());
+		if (this.foundToursPopulations.containsKey(pathToFollow)) {
+			if (this.foundToursPopulations.get(pathToFollow) == 1) {
+				this.foundToursPopulations.remove(pathToFollow);
+			} else {
+				this.foundToursPopulations.put(pathToFollow, this.foundToursPopulations.get(pathToFollow) - 1);
 			}
-
-			else
-				this.pathsTaken.put(pathToFollow.toString(), this.pathsTaken.get(pathToFollow.toString()) - 1);
 		}
 
-		System.out.println("Unregistering Boid");
-		System.out.println(this.pathsTaken.toString());
-		System.out.println("");
+		// System.out.println("Unregistering Boid");
+		// System.out.println(this.pathsTaken.toString());
+		// System.out.println("");
 
+	}
+
+	public SortableKeyValue<Tour,Double> getMostDensePath() {
+		ArrayList<SortableKeyValue<Tour, Double>> densities = new ArrayList<SortableKeyValue<Tour, Double>>();
+		for (Tour t : this.foundToursPopulations.keySet()) {
+			densities.add(new SortableKeyValue<Tour, Double>(t, this.foundToursPopulations.get(t)
+					/ t.lastCalculatedCost));
+		}
+		if (densities.isEmpty()) {
+			return null;
+		}
+		Collections.sort(densities);
+		return densities.get(densities.size() - 1);
 	}
 
 }

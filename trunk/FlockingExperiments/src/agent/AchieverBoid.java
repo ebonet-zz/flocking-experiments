@@ -16,8 +16,8 @@ public class AchieverBoid extends Boid {
 		super(boid);
 		this.pathToFollow = new Tour(this.pathTaken);
 		this.pathToFollow.calculateCost(this.graph);
-
 		this.environment.registerPath(this.pathToFollow);
+		// TODO: achiever's speed should be set to something inversely proportional to the distance flown
 
 	}
 
@@ -97,7 +97,7 @@ public class AchieverBoid extends Boid {
 	}
 
 	public void respawn() {
-		System.out.println(this.pathToFollow.toString());
+		//System.out.println(this.pathToFollow.toString());
 		this.pathTaken.clear();
 		this.pathTaken.offer(this.pathToFollow.get(0));
 		this.setPosition(new Position(loadEdge(this.pathToFollow.get(0), this.pathToFollow.get(1)), 0d));

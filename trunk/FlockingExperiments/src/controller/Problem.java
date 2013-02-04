@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import util.SortableKeyValue;
 import viewer.FlockingGraphViewer;
 import viewer.MovingObject;
 import agent.Boid;
@@ -117,7 +118,7 @@ public class Problem {
 		// Random and seed
 		Random r = new Random();
 
-		Tour shortestTour = null;
+		Tour expectedShortestTour = null;
 
 		// Set<Boid> environment = new HashSet<Boid>();
 		Environment environment = new Environment(this.distanceGraph);
@@ -136,6 +137,16 @@ public class Problem {
 				b.tryToMove(b.getSpeed());
 			}
 
+			SortableKeyValue<Tour, Double> mostDensePath = environment.getMostDensePath();
+			if (mostDensePath != null) {
+				expectedShortestTour = mostDensePath.keyObject;
+				Double density = mostDensePath.valueToUseOnSorting;
+
+				if (density.compareTo(new Double(this.occupancyDensityThreshold)) >= 0) {
+					break;
+				}
+			}
+
 			if (this.graphics) {
 				draw(viewer, aliveBoids);
 				try {
@@ -147,8 +158,8 @@ public class Problem {
 			// System.out.println("NUmber of flocks:" + environment.getNumberOfFlocks());
 		}
 
-		if (shortestTour != null)
-			return shortestTour.toString();
+		if (expectedShortestTour != null)
+			return "Tour found:" + expectedShortestTour.toString();
 		else
 			return "No Tour found";
 	}
@@ -169,7 +180,7 @@ public class Problem {
 	}
 
 	private Double randomize(double value) {
-		return value*(1+Math.random()*0.4-0.2);
+		return value * (1 + Math.random() * 0.4 - 0.2);
 	}
 
 	private void draw(FlockingGraphViewer viewer, Set<Boid> boids) {

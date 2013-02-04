@@ -6,7 +6,7 @@ import agent.EndNodeGoalEvaluator;
 import agent.GoalEvaluator;
 
 /**
- * TODO Put here a description of what this class does.
+ * Main program controller and entry point. Starts everything.
  * 
  * @author Balthazar. Created Jan 28, 2013.
  */
