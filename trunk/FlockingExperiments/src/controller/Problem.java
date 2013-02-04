@@ -11,6 +11,7 @@ import java.util.Random;
 import java.util.Set;
 
 import viewer.FlockingGraphViewer;
+import viewer.MovingObject;
 import agent.Boid;
 import agent.GoalEvaluator;
 
@@ -156,11 +157,11 @@ public class Problem {
 	private void draw(FlockingGraphViewer viewer, Set<Boid> boids) {
 		viewer.updateViewer(extractBoidPositions(boids));
 	}
-
-	public List<Position> extractBoidPositions(Set<Boid> boids) {
-		List<Position> ps = new ArrayList<Position>();
+	
+	public List<MovingObject> extractBoidPositions(Set<Boid> boids) {
+		List<MovingObject> ps = new ArrayList<MovingObject>();
 		for (Boid b : boids) {
-			ps.add(b.getPos());
+			ps.add(new MovingObject(b.getPos(),b.getColor()));
 		}
 		return ps;
 	}

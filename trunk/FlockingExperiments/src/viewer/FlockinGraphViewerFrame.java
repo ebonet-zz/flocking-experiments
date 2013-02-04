@@ -40,8 +40,8 @@ public class FlockinGraphViewerFrame extends JFrame {
 	 * 
 	 * @param positions - the update positions (graph.Positions)
 	 */
-	public void update(List<Position> positions) {
-		mPanel.update(positions);
+	public void update(List<MovingObject> movingObjects) {
+		mPanel.update(movingObjects);
 	}
 
 	/**

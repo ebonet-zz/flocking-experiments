@@ -6,6 +6,7 @@ import graph.Position;
 import graph.Segment;
 import graph.Tour;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -114,7 +115,11 @@ public class Boid {
 			decide();
 		}
 	}
-
+	
+	protected boolean isInSight(Boid b){
+		return false;
+	}
+	
 	protected void decide() {
 		this.pathTaken.offer(this.pos.edge.getTo());
 
@@ -241,6 +246,11 @@ public class Boid {
 
 		Segment nextSegment = getSegment(this.pos);
 		nextSegment.currentOccupancy++;
+	}
+
+	public Color getColor() {
+		return Color.green;
+		
 	}
 
 }
