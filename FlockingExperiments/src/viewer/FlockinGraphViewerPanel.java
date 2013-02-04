@@ -78,7 +78,7 @@ public class FlockinGraphViewerPanel extends JPanel {
 		if(x1>x0){
 			theta = Math.atan((y1-y0)/(x1-x0))-Math.PI/2;			
 			if(y1==y0){
-				theta = 0;
+				theta = -Math.PI/2;
 			}
 		}
 		
@@ -86,7 +86,7 @@ public class FlockinGraphViewerPanel extends JPanel {
 			theta = Math.atan((y1-y0)/(x1-x0))+Math.PI/2;
 			
 			if(y1==y0){
-				theta = Math.PI;
+				theta = +Math.PI/2;
 			}
 		}
 		
