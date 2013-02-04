@@ -73,12 +73,21 @@ public class Boid {
 		this.environment.boidDied(this);
 	}
 
+	public Color getColor() {
+		return Color.green;
+
+	}
+
 	public Environment getEnvironment() {
 		return this.environment;
 	}
 
 	public FlockingGraph getGraph() {
 		return this.graph;
+	}
+
+	public Double getPathDistance() {
+		return Double.MAX_VALUE;
 	}
 
 	public Position getPos() {
@@ -120,10 +129,6 @@ public class Boid {
 		}
 	}
 
-	protected boolean isInSight(Boid b) {
-		return false;
-	}
-
 	protected void decide() {
 		if (this.pathTaken.lastLocation() != this.pos.edge.getTo())
 			this.pathTaken.offer(this.pos.edge.getTo());
@@ -151,6 +156,10 @@ public class Boid {
 
 	}
 
+	protected boolean isInSight(Boid b) {
+		return false;
+	}
+
 	protected Edge loadEdge(int from, int to) {
 		return this.graph.getEdge(from, to);
 	}
@@ -164,6 +173,16 @@ public class Boid {
 			this.setPosition(new Position(edge, 0d));
 			tryToMove(distanceOnNext);
 		}
+	}
+
+	protected void setPosition(Position pos) {
+		Segment currentSegment = getSegment(this.pos);
+		currentSegment.currentOccupancy--;
+
+		this.pos = pos;
+
+		Segment nextSegment = getSegment(this.pos);
+		nextSegment.currentOccupancy++;
 	}
 
 	private void becomeAchiever() {
@@ -228,11 +247,13 @@ public class Boid {
 		// calculate
 		for (Edge e : possibleEdges) {
 			Double probability = getPartialChoiceProbability(e);
-			totalSum += probability;
-			edgeProbabilityPairs.add(new SortableKeyValue<Edge, Double>(e, probability));
+			if (probability.compareTo(new Double(0d)) > 0) {
+				totalSum += probability;
+				edgeProbabilityPairs.add(new SortableKeyValue<Edge, Double>(e, probability));
+			}
 		}
 
-		if (totalSum.equals(new Double(0d))) {
+		if (totalSum.compareTo(new Double(0d)) <= 0) {
 			return null;
 		}
 
@@ -247,25 +268,6 @@ public class Boid {
 		Edge e = (Edge) selector.getRandom().keyObject;
 
 		return e;
-	}
-
-	protected void setPosition(Position pos) {
-		Segment currentSegment = getSegment(this.pos);
-		currentSegment.currentOccupancy--;
-
-		this.pos = pos;
-
-		Segment nextSegment = getSegment(this.pos);
-		nextSegment.currentOccupancy++;
-	}
-
-	public Color getColor() {
-		return Color.green;
-
-	}
-
-	public Double getPathDistance() {
-		return Double.MAX_VALUE;
 	}
 
 }
