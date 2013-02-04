@@ -5,21 +5,23 @@ import graph.Tour;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import agent.AchieverBoid;
+import controller.Environment;
 
 public class Flock {
 	private Set<AchieverBoid> boidsInFlock;
 	private Tour pathToFollow;
+	private Environment environment;
 	private FlockingGraph graph;
 	
 	public Flock(AchieverBoid flockFounder) {
 		this.boidsInFlock = new HashSet<>();
 		this.boidsInFlock.add(flockFounder);
 		this.pathToFollow = flockFounder.getPathToFollow();
-		this.graph = flockFounder.getGraph();
+		this.environment = flockFounder.getEnvironment();
+		this.graph = this.environment.getFlockingGraph();
 	}
 	
 	public double getPathLength() {
@@ -50,6 +52,7 @@ public class Flock {
 	
 	public void disintegrate() {
 		// remove from environment
+		this.environment.flockDisintegrated(this);
 	}
 	
 	public void joinOtherFlock(Flock otherFlock) {

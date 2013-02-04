@@ -119,16 +119,16 @@ public class Problem {
 
 		Tour shortestTour = null;
 
-		// Set<Boid> enviroment = new HashSet<Boid>();
-		Environment environment = new Environment();
-		Boid testBoid = new Boid(this.distanceGraph, new Position(this.distanceGraph.getEdge(0, 1), 0d), this.speed,
+		// Set<Boid> environment = new HashSet<Boid>();
+		Environment environment = new Environment(this.distanceGraph);
+		Boid testBoid = new Boid(new Position(this.distanceGraph.getEdge(0, 1), 0d), this.speed,
 				this.visionRange, this.weightOfDistance, this.weightOfOccupancy, environment, goal);
 
 		// Main Loop
 		for (int t = 1; t <= this.maxIterations; t++) { // In each iteration
 
 			for (int i = 0; i < this.multiplierForBoidSpawn; i++) {
-				Boid b = new Boid(this.distanceGraph, new Position(this.distanceGraph.getEdge(0, 1),
+				Boid b = new Boid(new Position(this.distanceGraph.getEdge(0, 1),
 						this.distanceGraph.getEdgeLength(0, 1) * r.nextFloat()), this.speed, this.visionRange,
 						this.weightOfDistance, this.weightOfOccupancy, environment, goal);
 			}

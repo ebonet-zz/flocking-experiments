@@ -38,7 +38,7 @@ public class Boid {
 
 	public Boid(Boid otherBoid) {
 		this.environment = otherBoid.environment;
-		this.graph = otherBoid.graph;
+		this.graph = this.environment.getFlockingGraph();
 		this.pos = otherBoid.pos;
 		this.speed = otherBoid.speed;
 		this.visionRange = otherBoid.visionRange;
@@ -50,10 +50,10 @@ public class Boid {
 
 	}
 
-	public Boid(FlockingGraph graph, Position position, Double speed, Double visionRange, Double distanceChoiceWeight,
+	public Boid(Position position, Double speed, Double visionRange, Double distanceChoiceWeight,
 			Double occupancyChoiceWeight, Environment enviroment, GoalEvaluator goalEvaluator) {
 		this.environment = enviroment;
-		this.graph = graph;
+		this.graph = this.environment.getFlockingGraph();
 		this.pos = position;
 		this.speed = speed;
 		this.visionRange = visionRange;
@@ -73,6 +73,10 @@ public class Boid {
 		this.environment.boidDied(this);
 	}
 
+	public Environment getEnvironment() {
+		return this.environment;
+	}
+	
 	public FlockingGraph getGraph() {
 		return this.graph;
 	}

@@ -4,17 +4,24 @@ import java.util.HashSet;
 import java.util.Set;
 
 import flock.Flock;
+import graph.FlockingGraph;
 
 import agent.AchieverBoid;
 import agent.Boid;
 
 public class Environment {
-	Set<Boid> freeBoids;
-	Set<Flock> flocks;
-	
-	public Environment() {
+	private Set<Boid> freeBoids;
+	private Set<Flock> flocks;
+	private FlockingGraph graph;
+
+	public Environment(FlockingGraph graph) {
 		this.freeBoids = new HashSet<>();
 		this.flocks = new HashSet<>();
+		this.graph = graph;
+	}
+	
+	public FlockingGraph getFlockingGraph() {
+		return this.graph;
 	}
 	
 	public void addNewBoid(Boid boid) {
@@ -28,6 +35,7 @@ public class Environment {
 	public void turnIntoAchiever(Boid boid) {
 		this.freeBoids.remove(boid);
 		AchieverBoid achiever = new AchieverBoid(boid);
+		achiever.respawn();
 		Flock newFlock = new Flock(achiever);
 		this.registerNewFlock(newFlock);
 	}
@@ -42,6 +50,7 @@ public class Environment {
 	
 	public void flockDisintegrated(Flock flock) {
 		this.flocks.remove(flock);
+		// TODO: remove this flock's path from the Map of Tours
 	}
 	
 	public Set<Boid> getAllBoids() {
@@ -52,6 +61,14 @@ public class Environment {
 		}
 		
 		return allBoids;
+	}
+	
+	public int getNumberOfFlocks() {
+		return this.flocks.size();
+	}
+	
+	public int getNumberOfFreeBoids() {
+		return this.freeBoids.size();
 	}
 	
 }
