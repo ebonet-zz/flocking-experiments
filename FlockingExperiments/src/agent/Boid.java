@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import util.SortableKeyValue;
 import util.WeightedRouletteWheelSelector;
@@ -30,6 +31,7 @@ public class Boid {
 	protected Double visionRange;
 	protected Double traveledDistance; // Tiredness
 	protected Tour pathTaken;
+	protected Color color;
 
 	// private boolean isAchiever;
 	protected double distanceChoiceWeight;
@@ -47,7 +49,7 @@ public class Boid {
 		this.traveledDistance = otherBoid.traveledDistance;
 		this.pathTaken = otherBoid.pathTaken;
 		this.goalEvaluator = otherBoid.goalEvaluator;
-
+		this.color = otherBoid.color;
 	}
 
 	public Boid(Position position, Double speed, Double visionRange, Double distanceChoiceWeight,
@@ -67,6 +69,21 @@ public class Boid {
 		// isAchiever = false;
 
 		this.goalEvaluator = goalEvaluator;
+
+		// Random rand = new Random();
+		//
+		// float r = rand.nextFloat();
+		// float g = rand.nextFloat();
+		// float b = rand.nextFloat();
+		//
+		// // // Will produce only bright / light colours:
+		// // float r = rand.nextFloat() / 2f + 0.5f;
+		// // float g = rand.nextFloat() / 2f + 0.5f;
+		// // float b = rand.nextFloat() / 2f + 0.5f;
+		//
+		// this.color = new Color(r, g, b);
+
+		this.color = Color.GREEN;
 	}
 
 	public void die() {
@@ -74,8 +91,7 @@ public class Boid {
 	}
 
 	public Color getColor() {
-		return Color.green;
-
+		return this.color;
 	}
 
 	public Environment getEnvironment() {
@@ -237,7 +253,7 @@ public class Boid {
 		double endOfTheSegment = farthestAvailable.exclusiveEndLocation.distanceFromStart;
 		// get to right before the end of the segment
 		double diff = endOfTheSegment - MINIMUM_DISTANCE_MARGIN - this.pos.distanceFromStart;
-		moveDistance(diff);
+		moveDistance(diff < this.speed ? diff : this.speed);
 	}
 
 	private Edge selectNextEdge(List<Edge> possibleEdges) {

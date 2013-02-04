@@ -12,7 +12,6 @@ public class AchieverBoid extends Boid {
 
 	// private Flock flock;
 	private Tour pathToFollow;
-	private Color color;
 
 	public AchieverBoid(Boid boid) {
 		super(boid);
@@ -20,20 +19,8 @@ public class AchieverBoid extends Boid {
 		this.pathToFollow.calculateCost(this.graph);
 		this.environment.registerPath(this.pathToFollow);
 
-		Random rand = new Random();
-		
-		float r = rand.nextFloat();
-		float g = rand.nextFloat();
-		float b = rand.nextFloat();
-		
-//		// Will produce only bright / light colours:
-//		float r = rand.nextFloat() / 2f + 0.5f;
-//		float g = rand.nextFloat() / 2f + 0.5f;
-//		float b = rand.nextFloat() / 2f + 0.5f;
-
-		this.color = new Color(r, g, b);
+		this.color = Color.BLUE;
 		// TODO: achiever's speed should be set to something inversely proportional to the distance flown
-
 	}
 
 	@Override
@@ -122,8 +109,4 @@ public class AchieverBoid extends Boid {
 		this.setPosition(new Position(loadEdge(this.pathToFollow.get(0), this.pathToFollow.get(1)), 0d));
 	}
 
-	@Override
-	public Color getColor() {
-		return this.color;
-	}
 }
