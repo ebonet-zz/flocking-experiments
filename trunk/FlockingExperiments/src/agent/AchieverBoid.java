@@ -30,6 +30,7 @@ public class AchieverBoid extends Boid {
 		// 2) Compare the traveled distance and 3) Update the path
 		for (AchieverBoid boid : boidsInSight) {
 
+			// TODO: maybe this should consider only the current walked distance, aka visible current tiredness
 			if (boid.getPathDistance() < this.getPathDistance()) {
 				this.environment.unregisterPath(this.pathToFollow);
 
@@ -51,7 +52,7 @@ public class AchieverBoid extends Boid {
 	}
 
 	private Set<AchieverBoid> getBoidsInSight() {
-
+		// TODO: include neighboring edge's initial regions in sight range?
 		Set<AchieverBoid> boidsInSight = new HashSet<>();
 
 		for (AchieverBoid b : this.environment.getAllAchievers()) {
@@ -74,9 +75,9 @@ public class AchieverBoid extends Boid {
 		return this.pathToFollow;
 	}
 
-	public void setPathToFollow(Tour newPath) {
-		// what if path changes mid-move?
-	}
+//	public void setPathToFollow(Tour newPath) {
+//		// what if path changes mid-move?
+//	}
 
 	@Override
 	public void decide() {
