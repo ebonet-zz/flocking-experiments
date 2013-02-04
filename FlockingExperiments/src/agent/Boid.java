@@ -24,7 +24,6 @@ public class Boid {
 	public static final double MINIMUM_DISTANCE_MARGIN = 0.01d;
 
 	protected Environment environment;
-	protected FlockingGraph graph;
 	protected Position pos;
 	protected Double speed;
 	protected Double visionRange;
@@ -37,7 +36,6 @@ public class Boid {
 
 	public Boid(Boid otherBoid) {
 		this.environment = otherBoid.environment;
-		this.graph = this.environment.getFlockingGraph();
 		this.pos = otherBoid.pos;
 		this.speed = otherBoid.speed;
 		this.visionRange = otherBoid.visionRange;
@@ -52,7 +50,6 @@ public class Boid {
 	public Boid(Position position, Double speed, Double visionRange, Double distanceChoiceWeight,
 			Double occupancyChoiceWeight, Environment enviroment, GoalEvaluator goalEvaluator) {
 		this.environment = enviroment;
-		this.graph = this.environment.getFlockingGraph();
 		this.pos = position;
 		this.speed = speed;
 		this.visionRange = visionRange;
@@ -95,7 +92,7 @@ public class Boid {
 	}
 
 	public FlockingGraph getGraph() {
-		return this.graph;
+		return this.environment.getFlockingGraph();
 	}
 
 	public Double getPathDistance() {
@@ -107,19 +104,11 @@ public class Boid {
 	}
 
 	public Segment getSegment(Position pos) {
-		return this.graph.getSegmentForPosition(pos);
+		return getGraph().getSegmentForPosition(pos);
 	}
 
 	public Double getSpeed() {
 		return this.speed;
-	}
-
-	public void setGraph(FlockingGraph graph) {
-		this.graph = graph;
-	}
-
-	public void setPos(Position pos) {
-		this.pos = pos;
 	}
 
 	public void setSpeed(Double speed) {
@@ -145,12 +134,12 @@ public class Boid {
 		if (this.pathTaken.lastLocation() != this.pos.edge.getTo())
 			this.pathTaken.offer(this.pos.edge.getTo());
 
-		if (this.goalEvaluator.isGoal(this.graph, this.pathTaken)) {
+		if (this.goalEvaluator.isGoal(getGraph(), this.pathTaken)) {
 			becomeAchiever();
 			return;
 		}
 
-		ArrayList<Integer> closestNeighbors = this.graph.getClosestNeighborsSortedByDistance(this.pos.edge.getTo());
+		ArrayList<Integer> closestNeighbors = getGraph().getClosestNeighborsSortedByDistance(this.pos.edge.getTo());
 		for (int i : this.pathTaken.locations) {
 			closestNeighbors.remove(new Integer(i));
 		}
@@ -173,7 +162,7 @@ public class Boid {
 	}
 
 	protected Edge loadEdge(int from, int to) {
-		return this.graph.getEdge(from, to);
+		return getGraph().getEdge(from, to);
 	}
 
 	protected void moveToNextEdge(Edge edge) {
@@ -245,7 +234,7 @@ public class Boid {
 	}
 
 	private void moveToFarthestAvailableLocation(Segment current, Segment limit) {
-		Segment farthestAvailable = this.graph.getFarthestAvailableSegment(current, limit);
+		Segment farthestAvailable = getGraph().getFarthestAvailableSegment(current, limit);
 		double endOfTheSegment = farthestAvailable.exclusiveEndLocation.distanceFromStart;
 		// get to right before the end of the segment
 		double diff = endOfTheSegment - MINIMUM_DISTANCE_MARGIN - this.pos.distanceFromStart;
