@@ -1,7 +1,11 @@
 package agent;
 
+import java.awt.Color;
+import java.util.HashSet;
+
 import graph.Position;
 import graph.Tour;
+import java.util.Set;
 
 public class AchieverBoid extends Boid {
 
@@ -13,6 +17,51 @@ public class AchieverBoid extends Boid {
 		this.pathToFollow = new Tour(this.pathTaken);
 		this.pathToFollow.calculateCost(this.graph);
 	}
+	
+	@Override
+	public void tryToMove(double distance) {
+		
+		// 1) Check for other achiever boids around
+		Set<Boid> boidsInSight = getBoidsInSight();
+		
+		// 2) Compare the traveled distance and 3) Update the path
+		for (Boid boid:boidsInSight){
+			
+			if(boid.traveledDistance < this.traveledDistance){
+				this.pathTaken = new Tour(boid.pathTaken);
+			}
+			
+		}
+		
+		
+		// 4) Move as before
+				
+		super.tryToMove(distance);
+	}
+
+	
+	private Set<Boid> getBoidsInSight() {
+
+		Set<Boid> boidsInSight = new HashSet<>();
+		
+		for (Boid b : environment.getAllBoids()){
+			
+			if(b.isInSight(this)){
+				boidsInSight.add(b);
+			}			
+		}
+		
+		System.out.println(boidsInSight.size());
+		
+		return boidsInSight;
+	}
+	
+	
+	
+	public boolean isInSight(Boid b){
+		return b.pos.isSameEdge(pos) && (Math.abs(b.getPos().getDistance()-pos.getDistance())<b.visionRange);
+	}
+	
 
 	public Tour getPathToFollow() {
 		return this.pathToFollow;
@@ -37,11 +86,16 @@ public class AchieverBoid extends Boid {
 
 		moveToNextEdge(loadEdge(currentNode, nextNode));
 	}
-
+	
 	public void respawn() {
 		System.out.println(this.pathToFollow.toString());
 		this.pathTaken.clear();
 		this.pathTaken.offer(this.pathToFollow.get(0));
 		this.setPosition(new Position(loadEdge(this.pathToFollow.get(0), this.pathToFollow.get(1)), 0d));
+	}
+	
+	@Override
+	public Color getColor() {
+		return Color.blue;
 	}
 }

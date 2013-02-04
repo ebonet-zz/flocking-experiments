@@ -24,7 +24,7 @@ public class FlockinGraphViewerPanel extends JPanel {
 	private int [][] mGraph;
 	private int mNumberOfNodes;
 	private int mGoal,mStart;
-	private List<Position> mMovingObjectsPositions;
+	private List<MovingObject> mMovingObjects;
 	
 	/**
 	 * 
@@ -48,7 +48,7 @@ public class FlockinGraphViewerPanel extends JPanel {
 		mGoal = goal;
 		mStart = start;
 		
-		mMovingObjectsPositions = new ArrayList<>();
+		mMovingObjects = new ArrayList<>();
 
 		initializeComponents();
 	}
@@ -59,7 +59,7 @@ public class FlockinGraphViewerPanel extends JPanel {
 		this.setBackground(Color.white);
 	}
 
-	private void drawMovingObject(Graphics g, int from, int to, double position){
+	private void drawMovingObject(Graphics g, int from, int to, double position, Color color){
 		
 		int radius =14;
 		
@@ -112,7 +112,7 @@ public class FlockinGraphViewerPanel extends JPanel {
 			yP[i] = yP[i]+yCenter;
 		}
 		
-		g.setColor(Color.green);
+		g.setColor(color);
 		g.fillPolygon(xP,yP, 4);
 		g.setColor(Color.black);
 		g.drawPolygon(xP,yP, 4);
@@ -148,12 +148,13 @@ public class FlockinGraphViewerPanel extends JPanel {
 	
 	private void drawMovingObjects(Graphics g){
 		
-		for(Position movingObjectPosition : mMovingObjectsPositions){
+		for(MovingObject movingObject : mMovingObjects){
 			
 			drawMovingObject(g, 
-					movingObjectPosition.getFrom(), 
-					movingObjectPosition.getTo(), 
-					movingObjectPosition.getDistance());			
+					movingObject.getPosition().getFrom(), 
+					movingObject.getPosition().getTo(), 
+					movingObject.getPosition().getDistance(),
+					movingObject.getColor());			
 		}
 		
 	}
@@ -210,8 +211,8 @@ public class FlockinGraphViewerPanel extends JPanel {
 	 * 
 	 * @param positions - the update positions (graph.Positions)
 	 */
-	public void update(List<Position> positions) {
-		mMovingObjectsPositions = positions;
+	public void update(List<MovingObject> movingObjects) {
+		mMovingObjects = movingObjects;
 		this.repaint();
 	}
 

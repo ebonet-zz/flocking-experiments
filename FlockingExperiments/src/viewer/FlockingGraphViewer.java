@@ -75,6 +75,7 @@ public class FlockingGraphViewer{
 		mGoal = -1;
 		mStart = -1;
 		computeCenters();
+		
 		mFrame = new FlockinGraphViewerFrame(mHeight, mWidth, mGraph, mCenters, mNumberOfNodes, mGoal, mStart);
 	}
 	
@@ -125,7 +126,7 @@ public class FlockingGraphViewer{
 	 * 
 	 * @param movingObjects - List of graph.Positions 
 	 */
-	public void updateViewer(List<Position> movingObjects){
+	public void updateViewer(List<MovingObject> movingObjects){
 		
 		
 		mFrame.update(movingObjects);
