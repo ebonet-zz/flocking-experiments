@@ -14,7 +14,7 @@ public class AchieverBoid extends Boid {
 	public AchieverBoid(Boid boid) {
 		super(boid);
 		this.pathToFollow = new Tour(this.pathTaken);
-		this.pathToFollow.calculateCost(this.graph);
+		this.pathToFollow.calculateCost(getGraph());
 		this.environment.registerPath(this.pathToFollow);
 
 		this.color = Color.BLUE;
@@ -84,7 +84,7 @@ public class AchieverBoid extends Boid {
 		if (this.pathTaken.lastLocation() != this.pos.edge.getTo())
 			this.pathTaken.offer(this.getPos().edge.getTo());
 
-		if (this.goalEvaluator.isGoal(this.graph, this.pathTaken)) {
+		if (this.goalEvaluator.isGoal(getGraph(), this.pathTaken)) {
 			respawn();
 			return;
 		}
