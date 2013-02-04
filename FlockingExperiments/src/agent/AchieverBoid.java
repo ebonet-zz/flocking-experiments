@@ -5,12 +5,10 @@ import graph.Tour;
 
 import java.awt.Color;
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
 
 public class AchieverBoid extends Boid {
 
-	// private Flock flock;
 	private Tour pathToFollow;
 
 	public AchieverBoid(Boid boid) {
@@ -40,8 +38,8 @@ public class AchieverBoid extends Boid {
 
 				this.environment.registerPath(this.pathToFollow);
 			}
-			
-			if(boid.getPathDistance() <= this.getPathDistance()){
+
+			if (boid.getPathDistance() <= this.getPathDistance()) {
 				this.color = boid.color;
 			}
 
@@ -80,10 +78,6 @@ public class AchieverBoid extends Boid {
 	public Tour getPathToFollow() {
 		return this.pathToFollow;
 	}
-
-	// public void setPathToFollow(Tour newPath) {
-	// // what if path changes mid-move?
-	// }
 
 	@Override
 	public void decide() {
