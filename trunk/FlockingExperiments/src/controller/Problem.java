@@ -163,8 +163,12 @@ public class Problem {
 			nextWouldBeSegment = this.distanceGraph.getSegmentForPosition(newWouldBePos);
 		}
 
-		Boid newBoid = new Boid(newWouldBePos, this.speed, this.visionRange, this.weightOfDistance,
+		Boid newBoid = new Boid(newWouldBePos, randomize(this.speed), this.visionRange, this.weightOfDistance,
 				this.weightOfOccupancy, environment, goal);
+	}
+
+	private Double randomize(double value) {
+		return Math.random()*value*0.4-value*0.2;
 	}
 
 	private void draw(FlockingGraphViewer viewer, Set<Boid> boids) {

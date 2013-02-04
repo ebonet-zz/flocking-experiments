@@ -49,7 +49,7 @@ public class AchieverBoid extends Boid {
 			}
 		}
 
-		System.out.println(boidsInSight.size());
+		System.out.println("Number of boids on sight:"+boidsInSight.size());
 
 		return boidsInSight;
 	}
