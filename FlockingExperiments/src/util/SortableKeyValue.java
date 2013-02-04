@@ -35,4 +35,9 @@ public class SortableKeyValue<K, V extends Comparable<V>> implements Comparable<
 	public int compareTo(SortableKeyValue<K, V> o) {
 		return (this.valueToUseOnSorting.compareTo(o.valueToUseOnSorting));
 	}
+
+	@Override
+	public String toString() {
+		return "{ " + keyObject.toString() + " , " + valueToUseOnSorting.toString() + " }";
+	}
 }
