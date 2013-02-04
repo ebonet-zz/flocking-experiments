@@ -29,9 +29,11 @@ public class Boid {
 	protected Double visionRange;
 	protected Double traveledDistance; // Tiredness
 	protected Tour pathTaken;
+	
 	// private boolean isAchiever;
 	protected double distanceChoiceWeight;
 	protected double occupancyChoiceWeight;
+	protected GoalEvaluator goalEvaluator;
 
 	public Boid(Boid otherBoid) {
 		this.environment = otherBoid.environment;
@@ -43,12 +45,13 @@ public class Boid {
 		this.distanceChoiceWeight = otherBoid.distanceChoiceWeight;
 		this.traveledDistance = otherBoid.traveledDistance;
 		this.pathTaken = otherBoid.pathTaken;
+		this.goalEvaluator = otherBoid.goalEvaluator;
 
 		this.environment.add(this);
 	}
 
 	public Boid(FlockingGraph graph, Position position, Double speed, Double visionRange, Double distanceChoiceWeight,
-			Double occupancyChoiceWeight, Set<Boid> enviroment) {
+			Double occupancyChoiceWeight, Set<Boid> enviroment, GoalEvaluator goalEvaluator) {
 		this.environment = enviroment;
 		this.graph = graph;
 		this.pos = position;
@@ -62,10 +65,8 @@ public class Boid {
 		this.pathTaken.offer(this.pos.edge.getFrom());
 		this.environment.add(this);
 		// isAchiever = false;
-	}
 
-	public boolean completedTour() {
-		return this.pathTaken.size() == this.graph.getNumberOfNodes();
+		this.goalEvaluator = goalEvaluator;
 	}
 
 	public void die() {
@@ -118,17 +119,18 @@ public class Boid {
 	protected void decide() {
 		this.pathTaken.offer(this.pos.edge.getTo());
 
+		if (this.goalEvaluator.isGoal(this.graph, this.pathTaken)) {
+			becomeAchiever();
+			return;
+		}
+
 		ArrayList<Integer> closestNeighbors = this.graph.getClosestNeighborsSortedByDistance(this.pos.edge.getTo());
 		for (int i : this.pathTaken.locations) {
 			closestNeighbors.remove(new Integer(i));
 		}
 
 		if (closestNeighbors.isEmpty()) {
-			if (completedTour()) {
-				becomeAchiever();
-			} else {
-				die();
-			}
+			die();
 			return;
 		}
 
@@ -158,7 +160,7 @@ public class Boid {
 		die();
 		AchieverBoid achiever = new AchieverBoid(this);
 		achiever.respawn();
-		
+
 	}
 
 	private boolean checkEdgeBoundaries(double distance) {

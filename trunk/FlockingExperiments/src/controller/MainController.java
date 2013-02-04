@@ -2,6 +2,8 @@ package controller;
 
 import graph.FlockingGraph;
 import graph.TraditionalGraph;
+import agent.EndNodeGoalEvaluator;
+import agent.GoalEvaluator;
 
 /**
  * TODO Put here a description of what this class does.
@@ -27,10 +29,12 @@ public class MainController {
 		// TraditionalGraph graph = GenerateSparseInstance.GenerateSparseGraph(numberOfCities); // Sparse
 		// TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(n); // Fully connected
 
+		GoalEvaluator goal = new EndNodeGoalEvaluator(4);
+
 		long startTime = System.nanoTime();
 		Problem problem = new Problem(new FlockingGraph(graph), maxIterations);
 		System.out.println(problem.solve(multiplierBoidSpawn, densityThreshold, boidSpeed, boidVisionRange,
-				weightOfDistance, weightOfOccupancy));
+				weightOfDistance, weightOfOccupancy, goal));
 		long estimatedTime = System.nanoTime() - startTime;
 
 		System.out.println("Execution Time: " + estimatedTime / 1000000000.0f + " seconds.");
