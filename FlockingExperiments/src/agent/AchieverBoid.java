@@ -5,18 +5,33 @@ import graph.Tour;
 
 import java.awt.Color;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 public class AchieverBoid extends Boid {
 
 	// private Flock flock;
 	private Tour pathToFollow;
+	private Color color;
 
 	public AchieverBoid(Boid boid) {
 		super(boid);
 		this.pathToFollow = new Tour(this.pathTaken);
 		this.pathToFollow.calculateCost(this.graph);
 		this.environment.registerPath(this.pathToFollow);
+
+		Random rand = new Random();
+		
+		float r = rand.nextFloat();
+		float g = rand.nextFloat();
+		float b = rand.nextFloat();
+		
+//		// Will produce only bright / light colours:
+//		float r = rand.nextFloat() / 2f + 0.5f;
+//		float g = rand.nextFloat() / 2f + 0.5f;
+//		float b = rand.nextFloat() / 2f + 0.5f;
+
+		this.color = new Color(r, g, b);
 		// TODO: achiever's speed should be set to something inversely proportional to the distance flown
 
 	}
@@ -38,6 +53,10 @@ public class AchieverBoid extends Boid {
 
 				this.environment.registerPath(this.pathToFollow);
 			}
+			
+			if(boid.getPathDistance() <= this.getPathDistance()){
+				this.color = boid.color;
+			}
 
 		}
 
@@ -48,7 +67,7 @@ public class AchieverBoid extends Boid {
 
 	@Override
 	public Double getPathDistance() {
-		return this.pathToFollow.lastCalculatedCost * 1.0;
+		return this.pathToFollow.lastCalculatedCost;
 	}
 
 	private Set<AchieverBoid> getBoidsInSight() {
@@ -75,9 +94,9 @@ public class AchieverBoid extends Boid {
 		return this.pathToFollow;
 	}
 
-//	public void setPathToFollow(Tour newPath) {
-//		// what if path changes mid-move?
-//	}
+	// public void setPathToFollow(Tour newPath) {
+	// // what if path changes mid-move?
+	// }
 
 	@Override
 	public void decide() {
@@ -97,7 +116,7 @@ public class AchieverBoid extends Boid {
 	}
 
 	public void respawn() {
-		//System.out.println(this.pathToFollow.toString());
+		// System.out.println(this.pathToFollow.toString());
 		this.pathTaken.clear();
 		this.pathTaken.offer(this.pathToFollow.get(0));
 		this.setPosition(new Position(loadEdge(this.pathToFollow.get(0), this.pathToFollow.get(1)), 0d));
@@ -105,6 +124,6 @@ public class AchieverBoid extends Boid {
 
 	@Override
 	public Color getColor() {
-		return Color.blue;
+		return this.color;
 	}
 }
