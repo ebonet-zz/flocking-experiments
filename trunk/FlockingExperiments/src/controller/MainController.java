@@ -12,7 +12,7 @@ import agent.GoalEvaluator;
  */
 public class MainController {
 	public static void main(String[] args) {
-		int maxIterations = 100; // Max iterations
+		int maxIterations = 1000; // Max iterations
 
 		// Constants I believe their optimal values depend on the number of cities
 		int numberOfCities = 5;
