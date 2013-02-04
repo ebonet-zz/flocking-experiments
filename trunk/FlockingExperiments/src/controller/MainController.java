@@ -16,6 +16,8 @@ public class MainController {
 
 		// Constants I believe their optimal values depend on the number of cities
 		int numberOfCities = 5;
+		GoalEvaluator goal = new EndNodeGoalEvaluator(3);
+
 		int multiplierBoidSpawn = 1;
 		float densityThreshold = 0.7f;
 
@@ -29,12 +31,12 @@ public class MainController {
 		// TraditionalGraph graph = GenerateSparseInstance.GenerateSparseGraph(numberOfCities); // Sparse
 		// TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(n); // Fully connected
 
-		GoalEvaluator goal = new EndNodeGoalEvaluator(3);
-
 		long startTime = System.nanoTime();
+
 		Problem problem = new Problem(new FlockingGraph(graph), maxIterations);
 		System.out.println(problem.solve(multiplierBoidSpawn, densityThreshold, weightOfDistance, weightOfOccupancy,
 				boidVisionRange, boidSpeed, goal));
+
 		long estimatedTime = System.nanoTime() - startTime;
 
 		System.out.println("Execution Time: " + estimatedTime / 1000000000.0f + " seconds.");

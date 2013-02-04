@@ -73,7 +73,7 @@ public class Problem {
 	/**
 	 * boid speed
 	 */
-	double speed;
+	double boidSpeed;
 
 	/**
 	 * Constructor that instantiates a new problem based on a distance graph and max number of iterations
@@ -113,7 +113,7 @@ public class Problem {
 		this.weightOfDistance = wDist;
 		this.weightOfOccupancy = wOccup;
 		this.visionRange = vision;
-		this.speed = speed;
+		this.boidSpeed = speed;
 
 		// Random and seed
 		Random r = new Random();
@@ -173,8 +173,7 @@ public class Problem {
 	}
 
 	private void spawnBoid(Random r, Environment environment, GoalEvaluator goal) {
-		Position newWouldBePos = new Position(this.distanceGraph.getEdge(0, 1), this.distanceGraph.getEdgeLength(0, 1)
-				* r.nextFloat());
+		Position newWouldBePos = new Position(this.distanceGraph.getEdge(0, 1), 0d);
 		Segment nextWouldBeSegment = this.distanceGraph.getSegmentForPosition(newWouldBePos);
 
 		while ((nextWouldBeSegment.isFull())) {
@@ -183,7 +182,7 @@ public class Problem {
 			nextWouldBeSegment = this.distanceGraph.getSegmentForPosition(newWouldBePos);
 		}
 
-		Boid newBoid = new Boid(newWouldBePos, randomize(this.speed), this.visionRange, this.weightOfDistance,
+		Boid newBoid = new Boid(newWouldBePos, randomize(this.boidSpeed), this.visionRange, this.weightOfDistance,
 				this.weightOfOccupancy, environment, goal);
 	}
 

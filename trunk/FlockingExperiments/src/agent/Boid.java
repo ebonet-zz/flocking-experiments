@@ -10,7 +10,6 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import util.SortableKeyValue;
 import util.WeightedRouletteWheelSelector;
@@ -32,8 +31,6 @@ public class Boid {
 	protected Double traveledDistance; // Tiredness
 	protected Tour pathTaken;
 	protected Color color;
-
-	// private boolean isAchiever;
 	protected double distanceChoiceWeight;
 	protected double occupancyChoiceWeight;
 	protected GoalEvaluator goalEvaluator;
@@ -66,7 +63,6 @@ public class Boid {
 
 		this.pathTaken.offer(this.pos.edge.getFrom());
 		this.environment.addNewBoid(this);
-		// isAchiever = false;
 
 		this.goalEvaluator = goalEvaluator;
 
@@ -202,7 +198,6 @@ public class Boid {
 	}
 
 	private void becomeAchiever() {
-		// this.isAchiever = true;
 		this.environment.turnIntoAchiever(this);
 
 	}
@@ -229,6 +224,7 @@ public class Boid {
 	}
 
 	private Double getPartialChoiceProbability(Edge edge) {
+		// TODO: Maybe update this to include all the visible segments?
 		Position p = new Position(edge, 0d);
 		Segment firstSegment = getSegment(p);
 
