@@ -30,10 +30,10 @@ public class GenerateBasicInstance {
 		TraditionalGraph world = new TraditionalGraph(5);
 
 		world.setEdgeLength(0, 1, 5);
-		world.setEdgeLength(1, 2, 10);
-		world.setEdgeLength(1, 3, 5);
-		world.setEdgeLength(2, 4, 10);
-		world.setEdgeLength(3, 4, 5);
+		world.setEdgeLength(1, 4, 10);
+		world.setEdgeLength(1, 2, 5);
+		world.setEdgeLength(2, 3, 5);
+		world.setEdgeLength(4, 3, 10);
 
 		return world;
 	}

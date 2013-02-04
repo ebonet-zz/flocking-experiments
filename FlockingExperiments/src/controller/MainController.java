@@ -29,7 +29,7 @@ public class MainController {
 		// TraditionalGraph graph = GenerateSparseInstance.GenerateSparseGraph(numberOfCities); // Sparse
 		// TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(n); // Fully connected
 
-		GoalEvaluator goal = new EndNodeGoalEvaluator(4);
+		GoalEvaluator goal = new EndNodeGoalEvaluator(3);
 
 		long startTime = System.nanoTime();
 		Problem problem = new Problem(new FlockingGraph(graph), maxIterations);
