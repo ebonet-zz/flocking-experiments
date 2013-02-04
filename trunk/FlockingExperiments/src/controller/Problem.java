@@ -37,42 +37,42 @@ public class Problem {
 	/**
 	 * Number of Boids spawned per time unit
 	 */
-	int multiplierForBoidSpawn = 3;
+	int multiplierForBoidSpawn;
 
 	/**
 	 * Number of cities
 	 */
-	int numberOfCities = 10;
+	int numberOfCities;
 
 	/**
 	 * Max number of iterations
 	 */
-	int maxIterations = 1000;
+	int maxIterations;
 
 	/**
 	 * Weight of visibility (distances)
 	 */
-	double weightOfDistance = 2;
+	double weightOfDistance;
 
 	/**
 	 * Weight of occupancy (crowdedness)
 	 */
-	double weightOfOccupancy = 1;
+	double weightOfOccupancy;
 
 	/**
 	 * End of algorithm density threshold
 	 */
-	double occupancyDensityThreshold = 0.70f;
+	double occupancyDensityThreshold;
 
 	/**
 	 * boid vision range
 	 */
-	double visionRange = 2f;
+	double visionRange;
 
 	/**
 	 * boid speed
 	 */
-	double speed = 1f;
+	double speed;
 
 	/**
 	 * Constructor that instantiates a new problem based on a distance graph and max number of iterations
@@ -121,8 +121,8 @@ public class Problem {
 
 		// Set<Boid> environment = new HashSet<Boid>();
 		Environment environment = new Environment(this.distanceGraph);
-		Boid testBoid = new Boid(new Position(this.distanceGraph.getEdge(0, 1), 0d), this.speed, this.visionRange,
-				this.weightOfDistance, this.weightOfOccupancy, environment, goal);
+		// Boid testBoid = new Boid(new Position(this.distanceGraph.getEdge(0, 1), 0d), this.speed, this.visionRange,
+		// this.weightOfDistance, this.weightOfOccupancy, environment, goal);
 
 		// Main Loop
 		for (int t = 1; t <= this.maxIterations; t++) { // In each iteration
@@ -168,7 +168,7 @@ public class Problem {
 	}
 
 	private Double randomize(double value) {
-		return Math.random()*value*0.4-value*0.2;
+		return value + Math.random() * value * 0.4 - value * 0.2;
 	}
 
 	private void draw(FlockingGraphViewer viewer, Set<Boid> boids) {
