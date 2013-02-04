@@ -38,16 +38,14 @@ public class Flock {
 	
 	public void addNewBoids(Collection<AchieverBoid> newAchievers) {
 		this.boidsInFlock.addAll(newAchievers);
+		for (AchieverBoid boid : newAchievers) {
+			boid.setPathToFollow(this.getPathToFollow());
+		}
 	}
 	
 	public void meetFlock(Flock otherFlock) {
-		if (this.getPathLength() > otherFlock.getPathLength()) {
-			// join them
-			this.joinOtherFlock(otherFlock);
-		} else {
-			// they join this flock
-			otherFlock.joinOtherFlock(this);
-		}
+		this.environment.joinFlocks(this, otherFlock);
+
 	}
 	
 	public void disintegrate() {
@@ -55,12 +53,10 @@ public class Flock {
 		this.environment.flockDisintegrated(this);
 	}
 	
-	public void joinOtherFlock(Flock otherFlock) {
-		otherFlock.addNewBoids(this.boidsInFlock);
-		for (AchieverBoid boid : this.boidsInFlock) {
-			boid.setPathToFollow(otherFlock.getPathToFollow());
-		}
-		this.disintegrate();
+	public void acceptOtherFlock(Flock otherFlock) {
+		this.addNewBoids(otherFlock.boidsInFlock);
+
+		otherFlock.disintegrate();
 
 	}
 }

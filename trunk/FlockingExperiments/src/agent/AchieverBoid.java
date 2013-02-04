@@ -22,7 +22,7 @@ public class AchieverBoid extends Boid {
 	public void tryToMove(double distance) {
 
 		// 1) Check for other achiever boids around
-		Set<Boid> boidsInSight = getBoidsInSight();
+		Set<AchieverBoid> boidsInSight = getBoidsInSight();
 
 		// 2) Compare the traveled distance and 3) Update the path
 		for (Boid boid : boidsInSight) {
@@ -38,11 +38,11 @@ public class AchieverBoid extends Boid {
 		super.tryToMove(distance);
 	}
 
-	private Set<Boid> getBoidsInSight() {
+	private Set<AchieverBoid> getBoidsInSight() {
 
-		Set<Boid> boidsInSight = new HashSet<>();
+		Set<AchieverBoid> boidsInSight = new HashSet<>();
 
-		for (Boid b : environment.getAllBoids()) {
+		for (AchieverBoid b : environment.getAllAchievers()) {
 
 			if (b.isInSight(this)) {
 				boidsInSight.add(b);
