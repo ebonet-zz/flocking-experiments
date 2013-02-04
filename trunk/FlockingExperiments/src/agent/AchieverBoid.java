@@ -6,7 +6,7 @@ import graph.Tour;
 public class AchieverBoid extends Boid {
 
 	// private Flock flock;
-	Tour pathToFollow;
+	private Tour pathToFollow;
 
 	public AchieverBoid(Boid boid) {
 		super(boid);
@@ -14,6 +14,14 @@ public class AchieverBoid extends Boid {
 		this.pathToFollow.calculateCost(this.graph);
 	}
 
+	public Tour getPathToFollow() {
+		return this.pathToFollow;
+	}
+	
+	public void setPathToFollow(Tour newPath) {
+		// what if path changes mid-move?
+	}
+	
 	@Override
 	public void decide() {
 		this.pathTaken.offer(this.getPos().edge.getTo());

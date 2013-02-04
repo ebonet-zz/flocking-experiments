@@ -9,10 +9,10 @@ import graph.Tour;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import util.SortableKeyValue;
 import util.WeightedRouletteWheelSelector;
+import controller.Environment;
 
 /**
  * Our explorational Bird-like object agent
@@ -22,7 +22,7 @@ import util.WeightedRouletteWheelSelector;
 public class Boid {
 	public static final double MINIMUM_DISTANCE_MARGIN = 0.01d;
 
-	protected Set<Boid> environment;
+	protected Environment environment;
 	protected FlockingGraph graph;
 	protected Position pos;
 	protected Double speed;
@@ -47,11 +47,10 @@ public class Boid {
 		this.pathTaken = otherBoid.pathTaken;
 		this.goalEvaluator = otherBoid.goalEvaluator;
 
-		this.environment.add(this);
 	}
 
 	public Boid(FlockingGraph graph, Position position, Double speed, Double visionRange, Double distanceChoiceWeight,
-			Double occupancyChoiceWeight, Set<Boid> enviroment, GoalEvaluator goalEvaluator) {
+			Double occupancyChoiceWeight, Environment enviroment, GoalEvaluator goalEvaluator) {
 		this.environment = enviroment;
 		this.graph = graph;
 		this.pos = position;
@@ -63,14 +62,14 @@ public class Boid {
 		this.pathTaken = new Tour();
 
 		this.pathTaken.offer(this.pos.edge.getFrom());
-		this.environment.add(this);
+		this.environment.addNewBoid(this);
 		// isAchiever = false;
 
 		this.goalEvaluator = goalEvaluator;
 	}
 
 	public void die() {
-		this.environment.remove(this);
+		this.environment.boidDied(this);
 	}
 
 	public FlockingGraph getGraph() {
@@ -157,9 +156,7 @@ public class Boid {
 
 	private void becomeAchiever() {
 		// this.isAchiever = true;
-		die();
-		AchieverBoid achiever = new AchieverBoid(this);
-		achiever.respawn();
+		this.environment.turnIntoAchiever(this);
 
 	}
 

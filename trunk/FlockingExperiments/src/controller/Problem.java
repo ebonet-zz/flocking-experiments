@@ -118,10 +118,10 @@ public class Problem {
 
 		Tour shortestTour = null;
 
-		Set<Boid> enviroment = new HashSet<Boid>();
-
+		// Set<Boid> enviroment = new HashSet<Boid>();
+		Environment environment = new Environment();
 		Boid testBoid = new Boid(this.distanceGraph, new Position(this.distanceGraph.getEdge(0, 1), 0d), this.speed,
-				this.visionRange, this.weightOfDistance, this.weightOfOccupancy, enviroment, goal);
+				this.visionRange, this.weightOfDistance, this.weightOfOccupancy, environment, goal);
 
 		// Main Loop
 		for (int t = 1; t <= this.maxIterations; t++) { // In each iteration
@@ -129,15 +129,15 @@ public class Problem {
 			for (int i = 0; i < this.multiplierForBoidSpawn; i++) {
 				Boid b = new Boid(this.distanceGraph, new Position(this.distanceGraph.getEdge(0, 1),
 						this.distanceGraph.getEdgeLength(0, 1) * r.nextFloat()), this.speed, this.visionRange,
-						this.weightOfDistance, this.weightOfOccupancy, enviroment, goal);
+						this.weightOfDistance, this.weightOfOccupancy, environment, goal);
 			}
-
-			for (Boid b : enviroment) {
+			Set<Boid> aliveBoids = environment.getAllBoids();
+			for (Boid b : aliveBoids) {
 				b.tryToMove(b.getSpeed());
 			}
 
 			if (this.graphics) {
-				draw(viewer, enviroment);
+				draw(viewer, aliveBoids);
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException exception) {
@@ -153,13 +153,13 @@ public class Problem {
 			return "No Tour found";
 	}
 
-	private void draw(FlockingGraphViewer viewer, Set<Boid> enviroment) {
-		viewer.updateViewer(extractBoidPositions(enviroment));
+	private void draw(FlockingGraphViewer viewer, Set<Boid> boids) {
+		viewer.updateViewer(extractBoidPositions(boids));
 	}
 
-	public List<Position> extractBoidPositions(Set<Boid> enviroment) {
+	public List<Position> extractBoidPositions(Set<Boid> boids) {
 		List<Position> ps = new ArrayList<Position>();
-		for (Boid b : enviroment) {
+		for (Boid b : boids) {
 			ps.add(b.getPos());
 		}
 		return ps;
