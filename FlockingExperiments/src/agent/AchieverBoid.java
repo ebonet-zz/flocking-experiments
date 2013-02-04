@@ -18,7 +18,7 @@ public class AchieverBoid extends Boid {
 	public void decide() {
 		this.pathTaken.offer(this.getPos().edge.getTo());
 
-		if (completedTour()) {
+		if(this.goalEvaluator.isGoal(this.graph, this.pathTaken)){
 			respawn();
 			return;
 		}
@@ -28,11 +28,6 @@ public class AchieverBoid extends Boid {
 		int nextNode = this.pathToFollow.get(nodeIndex + 1);
 
 		moveToNextEdge(loadEdge(currentNode, nextNode));
-	}
-
-	@Override
-	public boolean completedTour() {
-		return this.pathTaken.size() == this.pathToFollow.size();
 	}
 
 	public void respawn() {

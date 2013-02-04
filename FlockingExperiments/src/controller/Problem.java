@@ -12,6 +12,7 @@ import java.util.Set;
 
 import viewer.FlockingGraphViewer;
 import agent.Boid;
+import agent.GoalEvaluator;
 
 /**
  * Defines a Flocking-TSP problem.
@@ -91,7 +92,7 @@ public class Problem {
 	 * 
 	 * @return The information about the best found Tour (path)
 	 */
-	public String solve(int m, double e, double B, double a, double v, double s) {
+	public String solve(int m, double e, double B, double a, double v, double s, GoalEvaluator goal) {
 
 		this.graphics = true;
 
@@ -119,7 +120,7 @@ public class Problem {
 		Set<Boid> enviroment = new HashSet<Boid>();
 
 		Boid testBoid = new Boid(this.distanceGraph, new Position(this.distanceGraph.getEdge(0, 1), 0d), this.speed,
-				this.visionRange, this.weightOfDistance, this.weightOfOccupancy, enviroment);
+				this.visionRange, this.weightOfDistance, this.weightOfOccupancy, enviroment, goal);
 
 		// Main Loop
 		for (int t = 1; t <= this.maxIterations; t++) { // In each iteration
