@@ -93,7 +93,7 @@ public class Problem {
 	 * 
 	 * @return The information about the best found Tour (path)
 	 */
-	public String solve(int boidsPerSecond, double densityThreshold, double wDist, double wOccup, double vision,
+	public String solve(int boidsPerIteration, double densityThreshold, double wDist, double wOccup, double vision,
 			double speed, GoalEvaluator goal) {
 
 		this.graphics = true;
@@ -105,7 +105,7 @@ public class Problem {
 		}
 
 		// Number of boids spawned per time unit
-		this.multiplierForBoidSpawn = boidsPerSecond;
+		this.multiplierForBoidSpawn = boidsPerIteration;
 
 		// Set constants
 		this.occupancyDensityThreshold = densityThreshold;
