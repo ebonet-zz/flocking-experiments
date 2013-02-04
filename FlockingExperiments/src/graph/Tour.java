@@ -16,7 +16,7 @@ public class Tour {
 	/**
 	 * The total cost of the tour
 	 */
-	double lastCalculatedCost;
+	public double lastCalculatedCost;
 
 	public Tour(Tour t) {
 		this.lastCalculatedCost = t.lastCalculatedCost;

@@ -125,7 +125,7 @@ public class Boid {
 	}
 
 	protected void decide() {
-		if(this.pathTaken.lastLocation() != this.pos.edge.getTo())
+		if (this.pathTaken.lastLocation() != this.pos.edge.getTo())
 			this.pathTaken.offer(this.pos.edge.getTo());
 
 		if (this.goalEvaluator.isGoal(this.graph, this.pathTaken)) {
@@ -265,8 +265,7 @@ public class Boid {
 	}
 
 	public Double getPathDistance() {
-		
-		return 10000000.0;
+		return Double.MAX_VALUE;
 	}
 
 }

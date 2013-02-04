@@ -16,9 +16,9 @@ public class AchieverBoid extends Boid {
 		super(boid);
 		this.pathToFollow = new Tour(this.pathTaken);
 		this.pathToFollow.calculateCost(this.graph);
-		
-		environment.registerPath(this.pathToFollow);
-		
+
+		this.environment.registerPath(this.pathToFollow);
+
 	}
 
 	@Override
@@ -28,15 +28,14 @@ public class AchieverBoid extends Boid {
 		Set<AchieverBoid> boidsInSight = getBoidsInSight();
 
 		// 2) Compare the traveled distance and 3) Update the path
-		for (Boid boid : boidsInSight) {
+		for (AchieverBoid boid : boidsInSight) {
 
 			if (boid.getPathDistance() < this.getPathDistance()) {
-				environment.unregisterPath(this.pathToFollow);
-				
-				
-				this.pathToFollow  = new Tour(((AchieverBoid)boid).getPathToFollow());
-				
-				environment.registerPath(this.pathToFollow);
+				this.environment.unregisterPath(this.pathToFollow);
+
+				this.pathToFollow = new Tour(boid.getPathToFollow());
+
+				this.environment.registerPath(this.pathToFollow);
 			}
 
 		}
@@ -45,18 +44,17 @@ public class AchieverBoid extends Boid {
 
 		super.tryToMove(distance);
 	}
-	
+
 	@Override
 	public Double getPathDistance() {
-		return this.pathToFollow.getCost(getGraph())*1.0;
+		return this.pathToFollow.lastCalculatedCost * 1.0;
 	}
-	
 
 	private Set<AchieverBoid> getBoidsInSight() {
 
 		Set<AchieverBoid> boidsInSight = new HashSet<>();
 
-		for (AchieverBoid b : environment.getAllAchievers()) {
+		for (AchieverBoid b : this.environment.getAllAchievers()) {
 
 			if (b.isInSight(this)) {
 				boidsInSight.add(b);
@@ -66,8 +64,10 @@ public class AchieverBoid extends Boid {
 		return boidsInSight;
 	}
 
+	@Override
 	public boolean isInSight(Boid b) {
-		return b.pos.isSameEdge(pos) && (Math.abs(b.getPos().getDistance() - pos.getDistance()) < b.visionRange);
+		return b.pos.isSameEdge(this.pos)
+				&& (Math.abs(b.getPos().getDistance() - this.pos.getDistance()) < b.visionRange);
 	}
 
 	public Tour getPathToFollow() {
