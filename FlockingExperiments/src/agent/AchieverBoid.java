@@ -57,6 +57,7 @@ public class AchieverBoid extends Boid {
 
 	private Set<AchieverBoid> getBoidsInSight() {
 		// TODO: include neighboring edge's initial regions in sight range?
+		// TODO: maybe they should only see forward, but not backward
 		Set<AchieverBoid> boidsInSight = new HashSet<>();
 
 		for (AchieverBoid b : this.environment.getAllAchievers()) {
