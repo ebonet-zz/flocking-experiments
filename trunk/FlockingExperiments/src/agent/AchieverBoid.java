@@ -29,7 +29,6 @@ public class AchieverBoid extends Boid {
 		this.color = new Color(r, g, b);
 		
 		//this.color = Color.BLUE;
-		// TODO: achiever's speed should be set to something inversely proportional to the distance flown
 		this.speed = this.speed * getSpeedModifier(this.pathToFollow.getCost(getGraph()));
 	}
 
