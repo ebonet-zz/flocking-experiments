@@ -38,7 +38,7 @@ public class Position implements Cloneable, Comparable<Position> {
 	}
 
 	public boolean canDeslocate(double distance) {
-		if (new Double(getDistanceToEdgeEnd()).compareTo(new Double(distance)) >= 0)
+		if (new Double(getDistanceToEdgeEnd()).compareTo(distance) >= 0)
 			return true;
 		return false;
 	}
@@ -57,11 +57,11 @@ public class Position implements Cloneable, Comparable<Position> {
 	}
 
 	public boolean isAfterOrEqual(double l) {
-		return new Double(this.distanceFromStart).compareTo(new Double(l)) >= 0;
+		return new Double(this.distanceFromStart).compareTo(l) >= 0;
 	}
 
 	public boolean isBefore(double l) {
-		return new Double(this.distanceFromStart).compareTo(new Double(l)) < 0;
+		return new Double(this.distanceFromStart).compareTo(l) < 0;
 	}
 
 	public boolean isAfterOrEqual(Position p) {

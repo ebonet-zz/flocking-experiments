@@ -1,10 +1,13 @@
 package agent;
 
+import graph.Edge;
 import graph.Position;
 import graph.Tour;
 
 import java.awt.Color;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 public class AchieverBoid extends Boid {
@@ -17,7 +20,15 @@ public class AchieverBoid extends Boid {
 		this.pathToFollow.calculateCost(getGraph());
 		this.environment.registerPath(this.pathToFollow);
 
-		this.color = Color.BLUE;
+		Random rand = new Random();
+				
+		float r = rand.nextFloat();
+		float g = rand.nextFloat();
+		float b = rand.nextFloat();
+		
+		this.color = new Color(r, g, b);
+		
+		//this.color = Color.BLUE;
 		// TODO: achiever's speed should be set to something inversely proportional to the distance flown
 	}
 
@@ -40,7 +51,7 @@ public class AchieverBoid extends Boid {
 			}
 
 			if (boid.getPathDistance() <= this.getPathDistance()) {
-				this.color = boid.color;
+				this.color = new Color(boid.color.getRed(), boid.color.getGreen(), boid.color.getBlue());
 			}
 
 		}
@@ -56,13 +67,11 @@ public class AchieverBoid extends Boid {
 	}
 
 	private Set<AchieverBoid> getBoidsInSight() {
-		// TODO: include neighboring edge's initial regions in sight range?
-		// TODO: maybe they should only see forward, but not backward
 		Set<AchieverBoid> boidsInSight = new HashSet<>();
 
 		for (AchieverBoid b : this.environment.getAllAchievers()) {
 
-			if (b.isInSight(this)) {
+			if (canSee(b)) {
 				boidsInSight.add(b);
 			}
 		}
@@ -71,9 +80,47 @@ public class AchieverBoid extends Boid {
 	}
 
 	@Override
-	public boolean isInSight(Boid b) {
-		return b.pos.isSameEdge(this.pos)
-				&& (Math.abs(b.getPos().getDistance() - this.pos.getDistance()) < b.visionRange);
+	public boolean canSee(Boid b) {
+		if (new Double(this.pos.getDistanceToEdgeEnd()).compareTo(this.visionRange) >= 0) {
+			// Vision is completely inside the edge
+
+			if (!b.pos.isSameEdge(this.pos)) {
+				return false;
+			}
+
+			Double difference = b.getPos().getDistance() - this.pos.getDistance();
+
+			if (difference.compareTo(0d) < 0) {
+				return false;
+			}
+
+			return difference.compareTo(this.visionRange) <= 0;
+
+		} else {
+			// Vision exceeds edge
+
+			if (b.pos.isSameEdge(this.pos)) {
+				Double difference = b.getPos().getDistance() - this.pos.getDistance();
+
+				if (difference.compareTo(0d) >= 0) {
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				List<Edge> neighbors = generatePossibleEdges();
+				Double visibleDistance = this.visionRange - this.pos.getDistanceToEdgeEnd();
+
+				for (Edge e : neighbors) {
+					if (b.pos.edge.isSameEdge(e)) {
+						if (visibleDistance.compareTo(b.pos.distanceFromStart) >= 0) {
+							return true;
+						}
+					}
+				}
+				return false;
+			}
+		}
 	}
 
 	public Tour getPathToFollow() {
