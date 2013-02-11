@@ -19,7 +19,7 @@ public class MainController {
 		GoalEvaluator goal = new EndNodeGoalEvaluator(3);
 
 		int maxAgents = numberOfCities * 5;
-		int multiplierBoidSpawn = 1;
+		float multiplierBoidSpawn = 1f;
 		float densityThreshold = 0.7f;
 
 		// Constants I believe do not depend on the number of cities

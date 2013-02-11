@@ -38,7 +38,7 @@ public class Problem {
 	/**
 	 * Number of Boids spawned per time unit
 	 */
-	int multiplierForBoidSpawn;
+	double multiplierForBoidSpawn;
 
 	/**
 	 * Number of cities
@@ -96,7 +96,7 @@ public class Problem {
 	 * 
 	 * @return The information about the best found Tour (path)
 	 */
-	public String solve(int boidsPerIteration, int maxBoids, double densityThreshold, double wDist, double wOccup,
+	public String solve(double boidsPerIteration, int maxBoids, double densityThreshold, double wDist, double wOccup,
 			double vision, double speed, GoalEvaluator goal) {
 
 		this.graphics = true;
@@ -128,12 +128,16 @@ public class Problem {
 		// Boid testBoid = new Boid(new Position(this.distanceGraph.getEdge(0, 1), 0d), this.speed, this.visionRange,
 		// this.weightOfDistance, this.weightOfOccupancy, environment, goal);
 
+		double currentBoidCreationProgress = 0d;
 		// Main Loop
 		for (int t = 1; t <= this.maxIterations; t++) { // In each iteration
 
-			for (int i = 0; i < this.multiplierForBoidSpawn; i++) {
-				if (environment.getAllBoids().size() < maxBoids) {
+			if (environment.getAllBoids().size() < maxBoids) {
+				currentBoidCreationProgress += this.multiplierForBoidSpawn;
+				
+				while (new Double(currentBoidCreationProgress).compareTo(1d) >= 0) {
 					spawnBoid(r, environment, goal);
+					currentBoidCreationProgress -= 1d;
 				}
 			}
 
