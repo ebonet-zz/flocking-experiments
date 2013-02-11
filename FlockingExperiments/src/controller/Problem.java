@@ -191,7 +191,11 @@ public class Problem {
 			nextWouldBeSegment = this.distanceGraph.getSegmentForPosition(newWouldBePos);
 		}
 
-		Boid newBoid = new Boid(newWouldBePos, randomize(this.boidSpeed), this.visionRange, this.weightOfDistance,
+		Boid newBoid = createNewBoid(newWouldBePos, randomize(this.boidSpeed), environment, goal);
+	}
+
+	protected Boid createNewBoid(Position newWouldBePos, Double speed, Environment environment, GoalEvaluator goal) {
+		return new Boid(newWouldBePos, speed, this.visionRange, this.weightOfDistance,
 				this.weightOfOccupancy, environment, goal);
 	}
 
