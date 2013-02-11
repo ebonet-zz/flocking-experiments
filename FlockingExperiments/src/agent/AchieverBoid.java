@@ -30,6 +30,7 @@ public class AchieverBoid extends Boid {
 		
 		//this.color = Color.BLUE;
 		// TODO: achiever's speed should be set to something inversely proportional to the distance flown
+		this.speed = this.speed * getSpeedModifier(this.pathToFollow.getCost(getGraph()));
 	}
 
 	@Override
@@ -48,6 +49,7 @@ public class AchieverBoid extends Boid {
 				this.pathToFollow = new Tour(boid.getPathToFollow());
 
 				this.environment.registerPath(this.pathToFollow);
+				this.speed = boid.speed;
 			}
 
 			if (boid.getPathDistance() <= this.getPathDistance()) {
@@ -151,4 +153,13 @@ public class AchieverBoid extends Boid {
 		this.setPosition(new Position(loadEdge(this.pathToFollow.get(0), this.pathToFollow.get(1)), 0d));
 	}
 
+	private static double getSpeedModifier(double pathLength) {
+		int magnitude = 1;
+		while (pathLength > magnitude) {
+			magnitude *= 10;
+		}
+		magnitude = magnitude / 10;
+		return (1 + magnitude/pathLength);
+	}
+	
 }
