@@ -18,6 +18,7 @@ public class MainController {
 		int numberOfCities = 5;
 		GoalEvaluator goal = new EndNodeGoalEvaluator(3);
 
+		int maxAgents = numberOfCities * 5;
 		int multiplierBoidSpawn = 1;
 		float densityThreshold = 0.7f;
 
@@ -34,7 +35,7 @@ public class MainController {
 		long startTime = System.nanoTime();
 
 		Problem problem = new Problem(new FlockingGraph(graph), maxIterations);
-		System.out.println(problem.solve(multiplierBoidSpawn, densityThreshold, weightOfDistance, weightOfOccupancy,
+		System.out.println(problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance, weightOfOccupancy,
 				boidVisionRange, boidSpeed, goal));
 
 		long estimatedTime = System.nanoTime() - startTime;

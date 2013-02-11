@@ -23,7 +23,7 @@ public class AchieverBoid extends Boid {
 		Random rand = new Random();
 				
 		float r = rand.nextFloat();
-		float g = rand.nextFloat();
+		float g = 0;
 		float b = rand.nextFloat();
 		
 		this.color = new Color(r, g, b);
