@@ -110,10 +110,19 @@ public class Tour {
 	/**
 	 * Retrieves the last location in the tour.
 	 * 
-	 * @return The las visited location
+	 * @return The last visited location
 	 */
 	public Integer lastLocation() {
 		return this.locations.get(this.locations.size() - 1);
+	}
+
+	/**
+	 * Retrieves the first location in the tour.
+	 * 
+	 * @return The first visited location
+	 */
+	public Integer firstLocation() {
+		return this.locations.get(0);
 	}
 
 	/**
