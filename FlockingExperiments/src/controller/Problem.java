@@ -128,9 +128,11 @@ public class Problem {
 		// Main Loop
 		for (int t = 1; t <= this.maxIterations; t++) { // In each iteration
 
-			for (int i = 0; i < this.multiplierForBoidSpawn; i++) {
-				spawnBoid(r, environment, goal);
-			}
+			//if(environment.getAllBoids().size() < 10){
+				for (int i = 0; i < this.multiplierForBoidSpawn; i++) {
+					spawnBoid(r, environment, goal);
+				}
+			//}
 
 			Set<Boid> aliveBoids = environment.getAllBoids();
 			for (Boid b : aliveBoids) {
@@ -150,7 +152,7 @@ public class Problem {
 				expectedShortestTour = mostDensePath.keyObject;
 				Double density = mostDensePath.valueToUseOnSorting;
 
-				if (density.compareTo(new Double(this.occupancyDensityThreshold)) >= 0) {
+				if (density.compareTo(this.occupancyDensityThreshold) >= 0) {
 					break;
 				}
 			}

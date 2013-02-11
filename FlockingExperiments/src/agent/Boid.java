@@ -139,17 +139,12 @@ public class Boid {
 			return;
 		}
 
-		ArrayList<Integer> closestNeighbors = getGraph().getClosestNeighborsSortedByDistance(this.pos.edge.getTo());
-		for (int i : this.pathTaken.locations) {
-			closestNeighbors.remove(new Integer(i));
-		}
+		List<Edge> possibleEdges = generatePossibleEdges();
 
-		if (closestNeighbors.isEmpty()) {
+		if (possibleEdges.isEmpty()) {
 			die();
 			return;
 		}
-
-		List<Edge> possibleEdges = generateEdges(closestNeighbors);
 
 		Edge nextEgde = selectNextEdge(possibleEdges);
 
@@ -157,7 +152,26 @@ public class Boid {
 
 	}
 
-	protected boolean isInSight(Boid b) {
+	protected List<Edge> generateEdges(ArrayList<Integer> closestNeighbors) {
+		ArrayList<Edge> edges = new ArrayList<Edge>();
+		for (int neighbor : closestNeighbors) {
+			edges.add(loadEdge(this.pos.edge.getTo(), neighbor));
+		}
+
+		return edges;
+	}
+
+	protected List<Edge> generatePossibleEdges() {
+		ArrayList<Integer> closestNeighbors = getGraph().getClosestNeighborsSortedByDistance(this.pos.edge.getTo());
+		for (int i : this.pathTaken.locations) {
+			closestNeighbors.remove(new Integer(i));
+		}
+
+		List<Edge> possibleEdges = generateEdges(closestNeighbors);
+		return possibleEdges;
+	}
+
+	protected boolean canSee(Boid b) {
 		return false;
 	}
 
@@ -197,15 +211,6 @@ public class Boid {
 
 	private boolean checkSegmentOccupation(Segment seg) {
 		return !seg.isFull();
-	}
-
-	private List<Edge> generateEdges(ArrayList<Integer> closestNeighbors) {
-		ArrayList<Edge> edges = new ArrayList<Edge>();
-		for (int neighbor : closestNeighbors) {
-			edges.add(loadEdge(this.pos.edge.getTo(), neighbor));
-		}
-
-		return edges;
 	}
 
 	private double getNextEdgeDistance(double overallDistance) {
@@ -248,13 +253,13 @@ public class Boid {
 		// calculate
 		for (Edge e : possibleEdges) {
 			Double probability = getPartialChoiceProbability(e);
-			if (probability.compareTo(new Double(0d)) > 0) {
+			if (probability.compareTo(0d) > 0) {
 				totalSum += probability;
 				edgeProbabilityPairs.add(new SortableKeyValue<Edge, Double>(e, probability));
 			}
 		}
 
-		if (totalSum.compareTo(new Double(0d)) <= 0) {
+		if (totalSum.compareTo(0d) <= 0) {
 			return null;
 		}
 
