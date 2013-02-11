@@ -75,6 +75,8 @@ public class Problem {
 	 */
 	double boidSpeed;
 
+	int maxBoids;
+
 	/**
 	 * Constructor that instantiates a new problem based on a distance graph and max number of iterations
 	 * 
@@ -94,8 +96,8 @@ public class Problem {
 	 * 
 	 * @return The information about the best found Tour (path)
 	 */
-	public String solve(int boidsPerIteration, double densityThreshold, double wDist, double wOccup, double vision,
-			double speed, GoalEvaluator goal) {
+	public String solve(int boidsPerIteration, int maxBoids, double densityThreshold, double wDist, double wOccup,
+			double vision, double speed, GoalEvaluator goal) {
 
 		this.graphics = true;
 
@@ -107,6 +109,7 @@ public class Problem {
 
 		// Number of boids spawned per time unit
 		this.multiplierForBoidSpawn = boidsPerIteration;
+		this.maxBoids = maxBoids;
 
 		// Set constants
 		this.occupancyDensityThreshold = densityThreshold;
@@ -121,30 +124,30 @@ public class Problem {
 		Tour expectedShortestTour = null;
 
 		// Set<Boid> environment = new HashSet<Boid>();
-		Environment environment = new Environment(this.distanceGraph);
-//		 Boid testBoid = new Boid(new Position(this.distanceGraph.getEdge(0, 1), 0d), this.speed, this.visionRange,
-//		 this.weightOfDistance, this.weightOfOccupancy, environment, goal);
+		Environment environment = new Environment(this.distanceGraph, this.maxBoids);
+		// Boid testBoid = new Boid(new Position(this.distanceGraph.getEdge(0, 1), 0d), this.speed, this.visionRange,
+		// this.weightOfDistance, this.weightOfOccupancy, environment, goal);
 
 		// Main Loop
 		for (int t = 1; t <= this.maxIterations; t++) { // In each iteration
 
-			//if(environment.getAllBoids().size() < 10){
-				for (int i = 0; i < this.multiplierForBoidSpawn; i++) {
+			for (int i = 0; i < this.multiplierForBoidSpawn; i++) {
+				if (environment.getAllBoids().size() < maxBoids) {
 					spawnBoid(r, environment, goal);
 				}
-			//}
+			}
 
 			Set<Boid> aliveBoids = environment.getAllBoids();
 			for (Boid b : aliveBoids) {
 				b.tryToMove(b.getSpeed());
-//				if (this.graphics) {
-//					draw(viewer, aliveBoids);
-//					try {
-//						Thread.sleep(100);
-//					} catch (InterruptedException exception) {
-//						exception.printStackTrace();
-//					}
-//				}
+				// if (this.graphics) {
+				// draw(viewer, aliveBoids);
+				// try {
+				// Thread.sleep(100);
+				// } catch (InterruptedException exception) {
+				// exception.printStackTrace();
+				// }
+				// }
 			}
 
 			SortableKeyValue<Tour, Double> mostDensePath = environment.getMostDensePath();
