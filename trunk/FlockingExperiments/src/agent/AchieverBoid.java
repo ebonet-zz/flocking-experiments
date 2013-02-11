@@ -5,6 +5,7 @@ import graph.Position;
 import graph.Tour;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -21,14 +22,14 @@ public class AchieverBoid extends Boid {
 		this.environment.registerPath(this.pathToFollow);
 
 		Random rand = new Random();
-				
+
 		float r = rand.nextFloat();
 		float g = 0;
 		float b = rand.nextFloat();
-		
+
 		this.color = new Color(r, g, b);
-		
-		//this.color = Color.BLUE;
+
+		// this.color = Color.BLUE;
 		this.speed = this.speed * getSpeedModifier(this.pathToFollow.getCost(getGraph()));
 	}
 
@@ -124,6 +125,14 @@ public class AchieverBoid extends Boid {
 		}
 	}
 
+	@Override
+	protected List<Edge> generatePossibleEdges() {
+		ArrayList<Integer> neighbors = getGraph().getNeighborsOf(this.pos.edge.getTo());
+
+		List<Edge> possibleEdges = generateEdges(neighbors);
+		return possibleEdges;
+	}
+
 	public Tour getPathToFollow() {
 		return this.pathToFollow;
 	}
@@ -158,7 +167,7 @@ public class AchieverBoid extends Boid {
 			magnitude *= 10;
 		}
 		magnitude = magnitude / 10;
-		return (1 + magnitude/pathLength);
+		return (1 + magnitude / pathLength);
 	}
-	
+
 }
