@@ -99,7 +99,7 @@ public class Problem {
 	public String solve(double boidsPerIteration, int maxBoids, double densityThreshold, double wDist, double wOccup,
 			double vision, double speed, GoalEvaluator goal) {
 
-		this.graphics = true;
+		// this.graphics = true;
 
 		FlockingGraphViewer viewer = null;
 		if (this.graphics) {
@@ -174,7 +174,19 @@ public class Problem {
 			}
 			// System.out.println("NUmber of flocks:" + environment.getNumberOfFlocks());
 		}
-
+		if (!this.graphics) {
+			// Show only the final positions of all the boids
+			viewer = new FlockingGraphViewer(this.distanceGraph);
+			viewer.openViewer();
+			Set<Boid> aliveBoids = environment.getAllBoids();
+			draw(viewer, aliveBoids);
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException exception) {
+				exception.printStackTrace();
+			}
+		}
+		environment.printDistancesMap();
 		if (expectedShortestTour != null)
 			return "Tour found:" + expectedShortestTour.toString();
 		else
@@ -182,16 +194,26 @@ public class Problem {
 	}
 
 	private void spawnBoid(Random r, Environment environment, GoalEvaluator goal) {
-		Position newWouldBePos = new Position(this.distanceGraph.getEdge(0, 1), 0d);
+		Position newWouldBePos = getSpawnPosition(r);
+		double speed = randomize(this.boidSpeed);
+		Boid newBoid = createNewBoid(newWouldBePos, speed, environment, goal);
+	}
+
+	protected Position getSpawnPosition(Random r) {
+		Integer startNode = 0;
+		Integer[] possibleEndNodes = this.distanceGraph.getArrayOfNeighborsOf(startNode);
+		int nextNodeIndex = r.nextInt(possibleEndNodes.length);
+		Integer endNode = possibleEndNodes[nextNodeIndex];
+		
+		Position newWouldBePos = new Position(this.distanceGraph.getEdge(startNode, endNode), 0d);
 		Segment nextWouldBeSegment = this.distanceGraph.getSegmentForPosition(newWouldBePos);
 
 		while ((nextWouldBeSegment.isFull())) {
-			newWouldBePos = new Position(this.distanceGraph.getEdge(0, 1), this.distanceGraph.getEdgeLength(0, 1)
+			newWouldBePos = new Position(this.distanceGraph.getEdge(0, 1), this.distanceGraph.getEdgeLength(startNode, endNode)
 					* r.nextFloat());
 			nextWouldBeSegment = this.distanceGraph.getSegmentForPosition(newWouldBePos);
 		}
-
-		Boid newBoid = createNewBoid(newWouldBePos, randomize(this.boidSpeed), environment, goal);
+		return newWouldBePos;
 	}
 
 	protected Boid createNewBoid(Position newWouldBePos, Double speed, Environment environment, GoalEvaluator goal) {

@@ -7,20 +7,24 @@ import graph.Tour;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Random;
 import java.util.Set;
 
 public class AchieverBoid extends Boid {
 
 	private Tour pathToFollow;
+	private Queue<Integer> pathQueue;
 
 	public AchieverBoid(Boid boid) {
 		super(boid);
 		this.pathToFollow = new Tour(this.pathTaken);
 		this.pathToFollow.calculateCost(getGraph());
 		this.environment.registerPath(this.pathToFollow);
-
+		this.pathQueue = new LinkedList<>();
+		
 		Random rand = new Random();
 
 		float r = rand.nextFloat();
@@ -43,16 +47,19 @@ public class AchieverBoid extends Boid {
 		for (AchieverBoid boid : boidsInSight) {
 
 			// TODO: maybe this should consider only the current walked distance, aka visible current tiredness
-			if (boid.getPathDistance() < this.getPathDistance()) {
+			if (boid.getPathDistance().compareTo(this.getPathDistance()) <= 0) {
 				this.environment.unregisterPath(this.pathToFollow);
 
 				this.pathToFollow = new Tour(boid.getPathToFollow());
 
 				this.environment.registerPath(this.pathToFollow);
-				this.speed = boid.speed;
-			}
+				
+				this.speed = boid.speed > this.speed? boid.speed : this.speed;
 
-			if (boid.getPathDistance() <= this.getPathDistance()) {
+				// update pathTaken so that the boid can respawn correctly
+				this.pathQueue.clear();
+				this.pathQueue.addAll(boid.pathQueue);
+				
 				this.color = new Color(boid.color.getRed(), boid.color.getGreen(), boid.color.getBlue());
 			}
 
@@ -78,6 +85,7 @@ public class AchieverBoid extends Boid {
 			}
 		}
 
+		boidsInSight.remove(this);
 		return boidsInSight;
 	}
 
@@ -141,24 +149,36 @@ public class AchieverBoid extends Boid {
 	public void decide() {
 		if (this.pathTaken.lastLocation() != this.pos.edge.getTo())
 			this.pathTaken.offer(this.getPos().edge.getTo());
-
-		if (this.goalEvaluator.isGoal(getGraph(), this.pathTaken)) {
+		
+		if (this.pathQueue.isEmpty()) { //this.goalEvaluator.isGoal(getGraph(), this.pathTaken)) {
 			respawn();
 			return;
 		}
 
 		int currentNode = this.getPos().edge.getTo();
-		int nodeIndex = this.pathToFollow.indexOf(currentNode);
-		int nextNode = this.pathToFollow.get(nodeIndex + 1);
-
+		//int nodeIndex = this.pathToFollow.indexOf(currentNode);
+		//int nextNode = this.pathToFollow.get(nodeIndex + 1);
+		int nextNode = this.pathQueue.poll();
+		while (nextNode == currentNode) {
+			if (this.pathQueue.isEmpty()) {
+				respawn();
+				return;
+			}
+			nextNode = this.pathQueue.poll();
+		}
 		moveToNextEdge(loadEdge(currentNode, nextNode));
 	}
 
 	public void respawn() {
 		// System.out.println(this.pathToFollow.toString());
 		this.pathTaken.clear();
-		this.pathTaken.offer(this.pathToFollow.get(0));
-		this.setPosition(new Position(loadEdge(this.pathToFollow.get(0), this.pathToFollow.get(1)), 0d));
+		this.pathQueue.clear();
+		this.pathQueue.addAll(this.pathToFollow.locations);
+		Integer firstNode = this.pathQueue.poll();
+		Integer secondNode = this.pathQueue.poll();
+		this.pathTaken.offer(firstNode);
+		
+		this.setPosition(new Position(loadEdge(firstNode, secondNode), 0d));
 	}
 
 	private static double getSpeedModifier(double pathLength) {
