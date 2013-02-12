@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import util.SortableKeyValue;
 import agent.AchieverBoid;
@@ -116,4 +117,9 @@ public class Environment {
 		return densities.get(densities.size() - 1);
 	}
 
+	public void printDistancesMap() {
+		for (Entry<Tour, Integer> entry : this.foundToursPopulations.entrySet()) {
+			System.out.println(entry.getKey().toString() + " boids: " + entry.getValue().toString());
+		}
+	}
 }
