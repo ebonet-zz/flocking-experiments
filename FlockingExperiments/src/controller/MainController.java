@@ -28,8 +28,8 @@ public class MainController {
 		// Constants I believe do not depend on the number of cities
 		float weightOfDistance = 1f;
 		float weightOfOccupancy = 1f;
-		float boidVisionRange = 4f;
 		float boidSpeed = 2f;
+		float boidVisionRange = boidSpeed * 2;
 
 		// TraditionalGraph graph = GenerateBasicInstance.GenerateBasicGraph(); // Sparse
 		// TraditionalGraph graph = GenerateSparseInstance.GenerateSparseGraph(numberOfCities); // Sparse

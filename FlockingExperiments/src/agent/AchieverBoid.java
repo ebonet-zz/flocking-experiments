@@ -15,6 +15,8 @@ import java.util.Set;
 
 public class AchieverBoid extends Boid {
 
+	// TODO: Consider randomly changing it back to explorer boid in a decision point 
+	
 	private Tour pathToFollow;
 	private Queue<Integer> pathQueue;
 
