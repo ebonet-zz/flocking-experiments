@@ -15,12 +15,9 @@ public class MainController {
 	public static void main(String[] args) {
 		int maxIterations = 5000; // Max iterations
 		boolean displaySteps = true; // show boids' movement on each iteration
-		
+
 		// Constants I believe their optimal values depend on the number of cities
 		int numberOfCities = 8;
-		// GoalEvaluator goal = new EndNodeGoalEvaluator(3);
-		GoalEvaluator goal = new TSPGoalEvaluator();
-		
 		int maxAgents = numberOfCities * 50;
 		float multiplierBoidSpawn = 1f;
 		float densityThreshold = 0.7f;
@@ -31,6 +28,9 @@ public class MainController {
 		float boidSpeed = 2f;
 		float boidVisionRange = boidSpeed * 2;
 
+		// GoalEvaluator goal = new EndNodeGoalEvaluator(3);
+		GoalEvaluator goal = new TSPGoalEvaluator();
+
 		// TraditionalGraph graph = GenerateBasicInstance.GenerateBasicGraph(); // Sparse
 		// TraditionalGraph graph = GenerateSparseInstance.GenerateSparseGraph(numberOfCities); // Sparse
 		TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully connected
@@ -39,8 +39,8 @@ public class MainController {
 
 		Problem problem = new TSPProblem(new FlockingGraph(graph), maxIterations);
 		problem.graphics = displaySteps;
-		System.out.println(problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance, weightOfOccupancy,
-				boidVisionRange, boidSpeed, goal));
+		System.out.println(problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance,
+				weightOfOccupancy, boidVisionRange, boidSpeed, goal));
 
 		long estimatedTime = System.nanoTime() - startTime;
 
