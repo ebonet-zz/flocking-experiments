@@ -44,7 +44,8 @@ public class MainController {
 		// weightOfOccupancy, boidVisionRange, boidSpeed, goal));
 
 //		testWD(problem);
-		testWO(problem);
+//		testWO(problem);
+		testBoidSpeed(problem);
 
 		long estimatedTime = System.nanoTime() - startTime;
 		System.out.println("Execution Time: " + estimatedTime / 1000000000.0f + " seconds.");
@@ -90,6 +91,28 @@ public class MainController {
 			average /= divider;
 			System.out.println("For wO = " + wO + " " + divider + "% of the problems had a solution");
 			System.out.println("For wO = " + wO + " the average path was " + average);
+			System.out.println();
+		}
+	}
+	
+	private static void testBoidSpeed(Problem problem) {
+		// Parameter test: weight of Distance
+		for (float speed = 1.0f; speed <= 10f; speed += 1f) {
+			float average = 0f;
+			float divider = 100f;
+			for (int i = 0; i < 100; i++) {
+				Tour solution = problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance, weightOfOccupancy,
+						boidVisionRange, speed, goal);
+				if (solution != null) {
+					average += solution.lastCalculatedCost;
+				} else {
+					divider--;
+				}
+			}
+
+			average /= divider;
+			System.out.println("For speed = " + speed + " " + divider + "% of the problems had a solution");
+			System.out.println("For speed = " + speed + " the average path was " + average);
 			System.out.println();
 		}
 	}

@@ -201,7 +201,7 @@ public class Boid {
 
 				moveToFarthestAvailableLocation(minSegmentHere, maxSegmentHere);
 			} else {
-				if (distanceOnNext > farthestAvailableOnNext.exclusiveEndLocation.distanceFromStart) {
+				if (distanceOnNext >= farthestAvailableOnNext.exclusiveEndLocation.distanceFromStart) {
 					double distance = farthestAvailableOnNext.exclusiveEndLocation.distanceFromStart
 							- MINIMUM_DISTANCE_MARGIN;
 					this.traveledDistance += distance;
