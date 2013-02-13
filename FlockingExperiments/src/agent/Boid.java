@@ -49,6 +49,9 @@ public class Boid {
 		this.pathTaken = otherBoid.pathTaken;
 		this.color = otherBoid.color;
 		this.rand = otherBoid.rand;
+
+		Segment segment = getSegment(this.pos);
+		segment.incrementOccupancy();
 	}
 
 	public Boid(Position position, Double speed, Double visionRange, Double distanceChoiceWeight,
@@ -68,9 +71,13 @@ public class Boid {
 		this.rand = r;
 
 		this.environment.addNewFreeBoid(this);
+		Segment segment = getSegment(this.pos);
+		segment.incrementOccupancy();
 	}
 
 	public void die() {
+		Segment segment = getSegment(this.pos);
+		segment.decrementOccupancy();
 		this.environment.boidDied(this);
 	}
 
@@ -80,6 +87,10 @@ public class Boid {
 
 	public FlockingGraph getGraph() {
 		return this.environment.getFlockingGraph();
+	}
+
+	public Double getPathDistance() {
+		return Double.MAX_VALUE;
 	}
 
 	public Position getPos() {
@@ -94,14 +105,9 @@ public class Boid {
 		return this.speed;
 	}
 
-	public Double getPathDistance() {
-		return Double.MAX_VALUE;
-	}
-
 	public void tryToMove(double distance) {
 		if (checkEdgeBoundaries(distance)) {
-			Position newWouldBePos = this.pos.clone();
-			newWouldBePos.deslocate(distance);
+			Position newWouldBePos = this.pos.deslocate(distance);
 			Segment nextWouldBeSegment = getSegment(newWouldBePos);
 			if (checkSegmentOccupation(nextWouldBeSegment)) {
 				moveDistance(distance);
@@ -117,12 +123,19 @@ public class Boid {
 		return false;
 	}
 
+	protected boolean checkSegmentOccupation(Segment seg) {
+		return !seg.isFull();
+	}
+
 	protected void decide() {
 		if (this.pathTaken.lastLocation() != this.pos.edge.getTo())
 			this.pathTaken.offer(this.pos.edge.getTo());
 
 		if (this.goalEvaluator.isGoal(getGraph(), this.pathTaken)) {
-			becomeAchiever();
+			if (checkSegmentOccupation(getSegment(new Position(loadEdge(this.pathTaken.get(0), this.pathTaken.get(1)),
+					0d)))) {
+				becomeAchiever();
+			}
 			return;
 		}
 
@@ -167,20 +180,48 @@ public class Boid {
 			double distanceWithin = this.pos.getDistanceToEdgeEnd();
 			double distanceOnNext = getNextEdgeDistance(this.speed);
 
-			moveDistance(distanceWithin);
-			this.setPosition(new Position(edge, 0d));
-			tryToMove(distanceOnNext);
+			if (distanceOnNext > edge.getLength()) {
+				distanceOnNext = edge.getLength();
+			}
+
+			Position minNextEdgePosition = new Position(edge, 0d);
+			Position maxNextEdgePosition = new Position(edge, distanceOnNext);
+
+			Segment minSegmentNext = getSegment(minNextEdgePosition);
+			Segment maxSegmentNext = getSegment(maxNextEdgePosition);
+
+			Segment farthestAvailableOnNext = getGraph().getFarthestAvailableSegment(minSegmentNext, maxSegmentNext);
+
+			if (farthestAvailableOnNext.isFull()) {
+				Position minEdgePosition = this.pos;
+				Position maxEdgePosition = new Position(this.pos.edge, this.pos.distanceFromStart + distanceWithin);
+
+				Segment minSegmentHere = getSegment(minEdgePosition);
+				Segment maxSegmentHere = getSegment(maxEdgePosition);
+
+				moveToFarthestAvailableLocation(minSegmentHere, maxSegmentHere);
+			} else {
+				if (distanceOnNext > farthestAvailableOnNext.exclusiveEndLocation.distanceFromStart) {
+					double distance = farthestAvailableOnNext.exclusiveEndLocation.distanceFromStart
+							- MINIMUM_DISTANCE_MARGIN;
+					this.traveledDistance += distance;
+					this.setPosition(new Position(edge, distance));
+				} else {
+					this.traveledDistance += distanceOnNext;
+					this.setPosition(new Position(edge, distanceOnNext));
+				}
+			}
 		}
 	}
 
 	protected void setPosition(Position pos) {
 		Segment currentSegment = getSegment(this.pos);
-		currentSegment.currentOccupancy--;
+		currentSegment.decrementOccupancy();
 
 		this.pos = pos;
 
 		Segment nextSegment = getSegment(this.pos);
-		nextSegment.currentOccupancy++;
+		nextSegment.incrementOccupancy();
 	}
 
 	private void becomeAchiever() {
@@ -192,10 +233,6 @@ public class Boid {
 		return this.pos.canDeslocate(distance);
 	}
 
-	private boolean checkSegmentOccupation(Segment seg) {
-		return !seg.isFull();
-	}
-
 	private double getNextEdgeDistance(double overallDistance) {
 		return overallDistance - (this.pos.getDistanceToEdgeEnd());
 	}
@@ -205,28 +242,31 @@ public class Boid {
 		Position p = new Position(edge, 0d);
 		Segment firstSegment = getSegment(p);
 
-		return Math.pow((firstSegment.maxOccupancy - firstSegment.currentOccupancy), this.occupancyChoiceWeight)
-				* Math.pow(1d / edge.getLength(), this.distanceChoiceWeight);
+		Double probability = Math.pow((firstSegment.maxOccupancy - firstSegment.getCurrentOccupancy()),
+				this.occupancyChoiceWeight) * Math.pow(1d / edge.getLength(), this.distanceChoiceWeight);
+		return probability;
 	}
 
 	private void moveDistance(double distance) {
 		Segment currentSegment = getSegment(this.pos);
-		currentSegment.currentOccupancy--;
+		currentSegment.decrementOccupancy();
 
-		this.pos.deslocate(distance);
+		this.pos = this.pos.deslocate(distance);
 
 		Segment nextSegment = getSegment(this.pos);
-		nextSegment.currentOccupancy++;
+		nextSegment.incrementOccupancy();
 
 		this.traveledDistance += distance;
 	}
 
-	private void moveToFarthestAvailableLocation(Segment current, Segment limit) {
+	private double moveToFarthestAvailableLocation(Segment current, Segment limit) {
 		Segment farthestAvailable = getGraph().getFarthestAvailableSegment(current, limit);
 		double endOfTheSegment = farthestAvailable.exclusiveEndLocation.distanceFromStart;
 		// get to right before the end of the segment
 		double diff = endOfTheSegment - MINIMUM_DISTANCE_MARGIN - this.pos.distanceFromStart;
-		moveDistance(diff < this.speed ? diff : this.speed);
+		double distance = diff < this.speed ? diff : this.speed;
+		moveDistance(distance);
+		return distance;
 	}
 
 	private Edge selectNextEdge(List<Edge> possibleEdges) {

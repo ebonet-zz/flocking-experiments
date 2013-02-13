@@ -18,10 +18,6 @@ public class FlockingGraph extends TraditionalGraph {
 	int[][] capacityMatrix; // same value for all edges unless flow problem
 	Map<Edge, LinkedList<Segment>> edgeSegments;
 
-	public FlockingGraph(int numberOfNodes) {
-		this(numberOfNodes, DEFAULT_SEGMENT_LENGTH, DEFAULT_SEGMENT_CAPACITY);
-	}
-
 	/**
 	 * Constructor of a graph for our flocking problem
 	 * 
@@ -62,25 +58,6 @@ public class FlockingGraph extends TraditionalGraph {
 
 	public void buildSegmentsFor(Edge edge) {
 		if (this.edgeSegments.get(edge) == null) { // segments not yet created
-			Edge symmetric = getInverse(edge); // find symmetric segment
-			if (getEdgeLength(symmetric.getFrom(), symmetric.getTo()) == edge.getLength()) { // Both ways have same
-																								// length
-				// Same length for the reverse edge
-				LinkedList<Segment> symmetricSegments = this.edgeSegments.get(symmetric);
-				if (symmetricSegments != null) {
-					// Reverse edge had segments already created, possible reuse of segments
-					LinkedList<Segment> reversedSegments = new LinkedList<Segment>();
-					Iterator<Segment> it = symmetricSegments.descendingIterator();
-					while (it.hasNext()) {
-						reversedSegments.offer(it.next());
-					}
-
-					// reuse the segments in the reverse order in this case
-					this.edgeSegments.put(edge, reversedSegments);
-					return;
-				}
-			}
-
 			LinkedList<Segment> segmentList = new LinkedList<Segment>();
 			Position segmentStart = new Position(edge, 0d);
 			Position segmentEnd = new Position(edge, edge.getLength());
@@ -109,14 +86,6 @@ public class FlockingGraph extends TraditionalGraph {
 		return this.capacityMatrix[nodeIndexA][nodeIndexB];
 	}
 
-	public int getEdgeCapacity(Position pos) {
-		return getEdgeCapacity(pos.edge);
-	}
-
-	public int getEdgeCapacity(Segment seg) {
-		return getEdgeCapacity(seg.startLocation);
-	}
-
 	public Segment getFarthestAvailableSegment(Segment start, Segment limit) {
 		LinkedList<Segment> segmentsForEdge = this.edgeSegments.get(limit.startLocation.edge);
 		Iterator<Segment> it = segmentsForEdge.descendingIterator();
@@ -130,10 +99,6 @@ public class FlockingGraph extends TraditionalGraph {
 		}
 
 		return currentSeg;
-	}
-
-	public Edge getInverse(Edge edge) {
-		return getEdge(edge.getTo(), edge.getFrom());
 	}
 
 	public Segment getSegmentForPosition(Position pos) {
@@ -151,8 +116,11 @@ public class FlockingGraph extends TraditionalGraph {
 		return seg;
 	}
 
-	public void resetSegments() {
-		this.edgeSegments = new HashMap<Edge, LinkedList<Segment>>();
+	public void resetAndBuildSegments() {
+		if (!this.edgeSegments.isEmpty()) {
+			this.edgeSegments.clear();
+		}
 		buildAllSegments();
 	}
+
 }
