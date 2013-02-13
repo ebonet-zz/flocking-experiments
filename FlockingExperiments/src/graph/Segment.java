@@ -52,6 +52,7 @@ public final class Segment implements Comparable<Segment> {
 	public void incrementOccupancy() {
 		if (this.currentOccupancy >= this.maxOccupancy) {
 			System.out.println("Max segment occupancy exceeded.");
+			throw new RuntimeException("Max segment occupancy exceeded.");
 		}
 		this.currentOccupancy++;
 	}
