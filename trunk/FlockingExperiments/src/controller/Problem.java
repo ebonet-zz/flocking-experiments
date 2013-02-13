@@ -62,7 +62,7 @@ public class Problem {
 
 		// this.graphics = true;
 		Tour expectedShortestTour = null;
-		this.distanceGraph.resetSegments();
+		this.distanceGraph.resetAndBuildSegments();
 
 		FlockingGraphViewer viewer = null;
 		if (this.graphics) {

@@ -127,15 +127,20 @@ public class AchieverBoid extends Boid {
 	}
 
 	public void respawn() {
-		// System.out.println(this.pathToFollow.toString());
-		this.pathTaken.clear();
-		this.pathQueue.clear();
-		this.pathQueue.addAll(this.pathToFollow.locations);
-		Integer firstNode = this.pathQueue.poll();
-		Integer secondNode = this.pathQueue.poll();
-		this.pathTaken.offer(firstNode);
+		if (checkSegmentOccupation(getSegment(new Position(
+				loadEdge(this.pathToFollow.get(0), this.pathToFollow.get(1)), 0d)))) {
+			// System.out.println(this.pathToFollow.toString());
+			this.pathTaken.clear();
 
-		this.setPosition(new Position(loadEdge(firstNode, secondNode), 0d));
+			this.pathQueue.clear();
+			this.pathQueue.addAll(this.pathToFollow.locations);
+
+			Integer firstNode = this.pathQueue.poll();
+			Integer secondNode = this.pathQueue.poll();
+
+			this.setPosition(new Position(loadEdge(firstNode, secondNode), 0d));
+			this.pathTaken.offer(firstNode);
+		}
 	}
 
 	@Override

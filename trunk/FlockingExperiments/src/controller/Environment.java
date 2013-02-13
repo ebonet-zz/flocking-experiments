@@ -90,7 +90,7 @@ public class Environment {
 	}
 
 	public void turnIntoAchiever(Boid boid) {
-		this.freeBoids.remove(boid);
+		boid.die();
 		AchieverBoid achiever = new AchieverBoid(boid);
 		achiever.respawn();
 		this.addNewAchiever(achiever);

@@ -8,21 +8,31 @@ import java.util.Locale;
  * 
  * @author Balthazar. Created Jan 22, 2013.
  */
-public class Position implements Cloneable, Comparable<Position> {
-	public Edge edge;
-	public double distanceFromStart;
+public final class Position implements Cloneable, Comparable<Position> {
+	public final Edge edge;
+	public final double distanceFromStart;
 
 	public Position(Edge edge, double distance) {
 		this.edge = edge;
 		this.distanceFromStart = distance;
 	}
 
-	public void deslocate(double distance) {
-		this.distanceFromStart += distance;
+	public boolean canDeslocate(double distance) {
+		if (new Double(getDistanceToEdgeEnd()).compareTo(distance) >= 0)
+			return true;
+		return false;
+	}
+
+	public Position deslocate(double distance) {
+		return new Position(this.edge, this.distanceFromStart + distance);
 	}
 
 	public double getDistance() {
 		return this.distanceFromStart;
+	}
+
+	public double getDistanceToEdgeEnd() {
+		return this.edge.getLength() - this.distanceFromStart;
 	}
 
 	public int getFrom() {
@@ -33,19 +43,20 @@ public class Position implements Cloneable, Comparable<Position> {
 		return this.edge.getTo();
 	}
 
-	public double getDistanceToEdgeEnd() {
-		return this.edge.getLength() - this.distanceFromStart;
+	public boolean isAfterOrEqual(double l) {
+		return new Double(this.distanceFromStart).compareTo(l) >= 0;
 	}
 
-	public boolean canDeslocate(double distance) {
-		if (new Double(getDistanceToEdgeEnd()).compareTo(distance) >= 0)
-			return true;
-		return false;
+	public boolean isAfterOrEqual(Position p) {
+		return isAfterOrEqual(p.distanceFromStart);
 	}
 
-	@Override
-	public Position clone() {
-		return new Position(this.edge, this.distanceFromStart);
+	public boolean isBefore(double l) {
+		return new Double(this.distanceFromStart).compareTo(l) < 0;
+	}
+
+	public boolean isBefore(Position p) {
+		return isBefore(p.distanceFromStart);
 	}
 
 	public boolean isSameEdge(int from, int to) {
@@ -56,20 +67,9 @@ public class Position implements Cloneable, Comparable<Position> {
 		return this.edge.isSameEdge(p.edge);
 	}
 
-	public boolean isAfterOrEqual(double l) {
-		return new Double(this.distanceFromStart).compareTo(l) >= 0;
-	}
-
-	public boolean isBefore(double l) {
-		return new Double(this.distanceFromStart).compareTo(l) < 0;
-	}
-
-	public boolean isAfterOrEqual(Position p) {
-		return isAfterOrEqual(p.distanceFromStart);
-	}
-
-	public boolean isBefore(Position p) {
-		return isBefore(p.distanceFromStart);
+	@Override
+	public Position clone() {
+		return new Position(this.edge, this.distanceFromStart);
 	}
 
 	@Override
@@ -83,17 +83,6 @@ public class Position implements Cloneable, Comparable<Position> {
 		}
 
 		return -1;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		long temp;
-		temp = Double.doubleToLongBits(this.distanceFromStart);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + ((this.edge == null) ? 0 : this.edge.hashCode());
-		return result;
 	}
 
 	@Override
@@ -113,6 +102,17 @@ public class Position implements Cloneable, Comparable<Position> {
 		} else if (!this.edge.equals(other.edge))
 			return false;
 		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		long temp;
+		temp = Double.doubleToLongBits(this.distanceFromStart);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((this.edge == null) ? 0 : this.edge.hashCode());
+		return result;
 	}
 
 	@Override

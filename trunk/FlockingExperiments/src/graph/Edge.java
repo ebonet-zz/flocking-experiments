@@ -16,13 +16,25 @@ public final class Edge implements Comparable<Edge> {
 		this.length = length;
 	}
 
-	public boolean isSameEdge(int from, int to) {
-		return (from == this.fromNodeIndex && to == this.toNodeIndex)
-				|| (from == this.toNodeIndex && to == this.fromNodeIndex);
+	public int getFrom() {
+		return this.fromNodeIndex;
+	}
+
+	public int getLength() {
+		return this.length;
+	}
+
+	public int getTo() {
+		return this.toNodeIndex;
 	}
 
 	public boolean isSameEdge(Edge p) {
 		return isSameEdge(p.fromNodeIndex, p.toNodeIndex);
+	}
+
+	public boolean isSameEdge(int from, int to) {
+		return (from == this.fromNodeIndex && to == this.toNodeIndex)
+				|| (from == this.toNodeIndex && to == this.fromNodeIndex);
 	}
 
 	@Override
@@ -42,28 +54,6 @@ public final class Edge implements Comparable<Edge> {
 		return -1;
 	}
 
-	public int getFrom() {
-		return this.fromNodeIndex;
-	}
-
-	public int getTo() {
-		return this.toNodeIndex;
-	}
-
-	public int getLength() {
-		return this.length;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + this.fromNodeIndex;
-		result = prime * result + this.length;
-		result = prime * result + this.toNodeIndex;
-		return result;
-	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -80,6 +70,16 @@ public final class Edge implements Comparable<Edge> {
 		if (this.toNodeIndex != other.toNodeIndex)
 			return false;
 		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + this.fromNodeIndex;
+		result = prime * result + this.length;
+		result = prime * result + this.toNodeIndex;
+		return result;
 	}
 
 	@Override
