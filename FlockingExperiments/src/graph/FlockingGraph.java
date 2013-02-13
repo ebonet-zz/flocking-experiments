@@ -22,20 +22,6 @@ public class FlockingGraph extends TraditionalGraph {
 		this(numberOfNodes, DEFAULT_SEGMENT_LENGTH, DEFAULT_SEGMENT_CAPACITY);
 	}
 
-	public FlockingGraph(TraditionalGraph tGraph) {
-		this(tGraph, DEFAULT_SEGMENT_LENGTH, DEFAULT_SEGMENT_CAPACITY);
-	}
-
-	public FlockingGraph(TraditionalGraph tGraph, double segmentLenght, int segmentCapacity) {
-		super(tGraph.numberOfNodes);
-		this.distanceMatrix = tGraph.distanceMatrix;
-		this.segmentLength = segmentLenght;
-		this.edgeSegments = new HashMap<Edge, LinkedList<Segment>>();
-		this.capacityMatrix = new int[this.numberOfNodes][this.numberOfNodes];
-		fillAll(segmentCapacity, this.capacityMatrix);
-		buildAllSegments();
-	}
-
 	/**
 	 * Constructor of a graph for our flocking problem
 	 * 
@@ -53,58 +39,13 @@ public class FlockingGraph extends TraditionalGraph {
 		fillAll(segmentCapacity, this.capacityMatrix);
 	}
 
-	public Edge getInverse(Edge edge) {
-		return getEdge(edge.getTo(), edge.getFrom());
+	public FlockingGraph(TraditionalGraph tGraph) {
+		this(tGraph, DEFAULT_SEGMENT_LENGTH, DEFAULT_SEGMENT_CAPACITY);
 	}
 
-	public Edge getEdge(int from, int to) {
-		return new Edge(from, to, getEdgeLength(from, to));
-	}
-
-	public int getEdgeCapacity(int nodeIndexA, int nodeIndexB) {
-		return this.capacityMatrix[nodeIndexA][nodeIndexB];
-	}
-
-	public int getEdgeCapacity(Edge edge) {
-		return getEdgeCapacity(edge.getFrom(), edge.getTo());
-	}
-
-	public int getEdgeCapacity(Position pos) {
-		return getEdgeCapacity(pos.edge);
-	}
-
-	public int getEdgeCapacity(Segment seg) {
-		return getEdgeCapacity(seg.startLocation);
-	}
-
-	public Segment getFarthestAvailableSegment(Segment start, Segment limit) {
-		LinkedList<Segment> segmentsForEdge = this.edgeSegments.get(limit.startLocation.edge);
-		Iterator<Segment> it = segmentsForEdge.descendingIterator();
-
-		Segment currentSeg = it.next();
-		while (!currentSeg.equals(limit))
-			currentSeg = it.next();
-
-		while (currentSeg.isFull() && !currentSeg.equals(start)) {
-			currentSeg = it.next();
-		}
-
-		return currentSeg;
-	}
-
-	public Segment getSegmentForPosition(Position pos) {
-		LinkedList<Segment> segmentsForEdge = this.edgeSegments.get(pos.edge);
-		Iterator<Segment> it = segmentsForEdge.iterator();
-		if (!it.hasNext()) {
-			return null;
-		}
-
-		Segment seg = it.next();
-		while (!seg.contains(pos)) {
-			seg = it.next();
-		}
-
-		return seg;
+	public FlockingGraph(TraditionalGraph tGraph, double segmentLenght, int segmentCapacity) {
+		this(tGraph.numberOfNodes, segmentLenght, segmentCapacity);
+		this.distanceMatrix = tGraph.distanceMatrix;
 	}
 
 	public void buildAllSegments() {
@@ -154,5 +95,64 @@ public class FlockingGraph extends TraditionalGraph {
 
 			this.edgeSegments.put(edge, segmentList);
 		}
+	}
+
+	public Edge getEdge(int from, int to) {
+		return new Edge(from, to, getEdgeLength(from, to));
+	}
+
+	public int getEdgeCapacity(Edge edge) {
+		return getEdgeCapacity(edge.getFrom(), edge.getTo());
+	}
+
+	public int getEdgeCapacity(int nodeIndexA, int nodeIndexB) {
+		return this.capacityMatrix[nodeIndexA][nodeIndexB];
+	}
+
+	public int getEdgeCapacity(Position pos) {
+		return getEdgeCapacity(pos.edge);
+	}
+
+	public int getEdgeCapacity(Segment seg) {
+		return getEdgeCapacity(seg.startLocation);
+	}
+
+	public Segment getFarthestAvailableSegment(Segment start, Segment limit) {
+		LinkedList<Segment> segmentsForEdge = this.edgeSegments.get(limit.startLocation.edge);
+		Iterator<Segment> it = segmentsForEdge.descendingIterator();
+
+		Segment currentSeg = it.next();
+		while (!currentSeg.equals(limit))
+			currentSeg = it.next();
+
+		while (currentSeg.isFull() && !currentSeg.equals(start)) {
+			currentSeg = it.next();
+		}
+
+		return currentSeg;
+	}
+
+	public Edge getInverse(Edge edge) {
+		return getEdge(edge.getTo(), edge.getFrom());
+	}
+
+	public Segment getSegmentForPosition(Position pos) {
+		LinkedList<Segment> segmentsForEdge = this.edgeSegments.get(pos.edge);
+		Iterator<Segment> it = segmentsForEdge.iterator();
+		if (!it.hasNext()) {
+			return null;
+		}
+
+		Segment seg = it.next();
+		while (!seg.contains(pos)) {
+			seg = it.next();
+		}
+
+		return seg;
+	}
+
+	public void resetSegments() {
+		this.edgeSegments = new HashMap<Edge, LinkedList<Segment>>();
+		buildAllSegments();
 	}
 }

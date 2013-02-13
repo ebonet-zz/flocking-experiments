@@ -31,16 +31,6 @@ public class Problem {
 	FlockingGraph distanceGraph;
 
 	/**
-	 * ArrayList of worker boids
-	 */
-	ArrayList<Boid> boids;
-
-	/**
-	 * Number of Boids spawned per time unit
-	 */
-	double multiplierForBoidSpawn;
-
-	/**
 	 * Number of cities
 	 */
 	int numberOfCities;
@@ -49,33 +39,6 @@ public class Problem {
 	 * Max number of iterations
 	 */
 	int maxIterations;
-
-	/**
-	 * Weight of visibility (distances)
-	 */
-	double weightOfDistance;
-
-	/**
-	 * Weight of occupancy (crowdedness)
-	 */
-	double weightOfOccupancy;
-
-	/**
-	 * End of algorithm density threshold
-	 */
-	double occupancyDensityThreshold;
-
-	/**
-	 * boid vision range
-	 */
-	double visionRange;
-
-	/**
-	 * boid speed
-	 */
-	double boidSpeed;
-
-	int maxBoids;
 
 	/**
 	 * Constructor that instantiates a new problem based on a distance graph and max number of iterations
@@ -87,8 +50,6 @@ public class Problem {
 		this.distanceGraph = distanceGraph;
 		this.numberOfCities = distanceGraph.getNumberOfNodes();
 		this.maxIterations = tMax;
-
-		this.boids = new ArrayList<Boid>();
 	}
 
 	/**
@@ -96,10 +57,12 @@ public class Problem {
 	 * 
 	 * @return The information about the best found Tour (path)
 	 */
-	public String solve(double boidsPerIteration, int maxBoids, double densityThreshold, double wDist, double wOccup,
+	public Tour solve(double boidsPerIteration, int maxBoids, double densityThreshold, double wDist, double wOccup,
 			double vision, double speed, GoalEvaluator goal) {
 
 		// this.graphics = true;
+		Tour expectedShortestTour = null;
+		this.distanceGraph.resetSegments();
 
 		FlockingGraphViewer viewer = null;
 		if (this.graphics) {
@@ -107,36 +70,20 @@ public class Problem {
 			viewer.openViewer();
 		}
 
-		// Number of boids spawned per time unit
-		this.multiplierForBoidSpawn = boidsPerIteration;
-		this.maxBoids = maxBoids;
-
-		// Set constants
-		this.occupancyDensityThreshold = densityThreshold;
-		this.weightOfDistance = wDist;
-		this.weightOfOccupancy = wOccup;
-		this.visionRange = vision;
-		this.boidSpeed = speed;
-
 		// Random and seed
 		Random r = new Random();
 
-		Tour expectedShortestTour = null;
-
-		// Set<Boid> environment = new HashSet<Boid>();
-		Environment environment = new Environment(this.distanceGraph, this.maxBoids);
-		// Boid testBoid = new Boid(new Position(this.distanceGraph.getEdge(0, 1), 0d), this.speed, this.visionRange,
-		// this.weightOfDistance, this.weightOfOccupancy, environment, goal);
+		Environment environment = new Environment(this.distanceGraph, maxBoids);
 
 		double currentBoidCreationProgress = 0d;
 		// Main Loop
 		for (int t = 1; t <= this.maxIterations; t++) { // In each iteration
 
 			if (environment.getAllBoids().size() < maxBoids) {
-				currentBoidCreationProgress += this.multiplierForBoidSpawn;
+				currentBoidCreationProgress += boidsPerIteration;
 
 				while (new Double(currentBoidCreationProgress).compareTo(1d) >= 0) {
-					spawnBoid(r, environment, goal);
+					spawnBoid(r, environment, goal, speed, vision, wDist, wOccup);
 					currentBoidCreationProgress -= 1d;
 				}
 			}
@@ -144,14 +91,6 @@ public class Problem {
 			Set<Boid> aliveBoids = environment.getAllBoids();
 			for (Boid b : aliveBoids) {
 				b.tryToMove(b.getSpeed());
-				// if (this.graphics) {
-				// draw(viewer, aliveBoids);
-				// try {
-				// Thread.sleep(100);
-				// } catch (InterruptedException exception) {
-				// exception.printStackTrace();
-				// }
-				// }
 			}
 
 			SortableKeyValue<Tour, Double> mostDensePath = environment.getMostDensePath();
@@ -159,7 +98,8 @@ public class Problem {
 				expectedShortestTour = mostDensePath.keyObject;
 				Double density = mostDensePath.valueToUseOnSorting;
 
-				if (density.compareTo(this.occupancyDensityThreshold) >= 0) {
+				if (density.compareTo(densityThreshold) >= 0) {
+					// System.out.println("Converged in Iteration " + t);
 					break;
 				}
 			}
@@ -174,29 +114,30 @@ public class Problem {
 			}
 			// System.out.println("NUmber of flocks:" + environment.getNumberOfFlocks());
 		}
-		if (!this.graphics) {
-			// Show only the final positions of all the boids
-			viewer = new FlockingGraphViewer(this.distanceGraph);
-			viewer.openViewer();
-			Set<Boid> aliveBoids = environment.getAllBoids();
-			draw(viewer, aliveBoids);
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException exception) {
-				exception.printStackTrace();
-			}
-		}
-		environment.printDistancesMap();
-		if (expectedShortestTour != null)
-			return "Tour found:" + expectedShortestTour.toString();
-		else
-			return "No Tour found";
+		// if (!this.graphics) {
+		// // Show only the final positions of all the boids
+		// viewer = new FlockingGraphViewer(this.distanceGraph);
+		// viewer.openViewer();
+		// Set<Boid> aliveBoids = environment.getAllBoids();
+		// draw(viewer, aliveBoids);
+		// try {
+		// Thread.sleep(100);
+		// } catch (InterruptedException exception) {
+		// exception.printStackTrace();
+		// }
+		//
+		// environment.printDistancesMap();
+		// }
+
+		return expectedShortestTour;
 	}
 
-	private void spawnBoid(Random r, Environment environment, GoalEvaluator goal) {
+	private void spawnBoid(Random r, Environment environment, GoalEvaluator goal, double boidSpeed, double visionRange,
+			double weightOfDistance, double weightOfOccupancy) {
 		Position newWouldBePos = getSpawnPosition(r);
-		double speed = randomize(this.boidSpeed, r);
-		Boid newBoid = createNewBoid(newWouldBePos, speed, environment, goal, r);
+		double speed = randomize(boidSpeed, r);
+		Boid newBoid = createNewBoid(newWouldBePos, speed, visionRange, weightOfDistance, weightOfOccupancy,
+				environment, goal, r);
 	}
 
 	protected Position getSpawnPosition(Random r) {
@@ -216,10 +157,9 @@ public class Problem {
 		return newWouldBePos;
 	}
 
-	protected Boid createNewBoid(Position newWouldBePos, Double speed, Environment environment, GoalEvaluator goal,
-			Random r) {
-		return new Boid(newWouldBePos, speed, this.visionRange, this.weightOfDistance, this.weightOfOccupancy,
-				environment, goal, r);
+	protected Boid createNewBoid(Position newWouldBePos, double speed, double visionRange, double weightOfDistance,
+			double weightOfOccupancy, Environment environment, GoalEvaluator goal, Random r) {
+		return new Boid(newWouldBePos, speed, visionRange, weightOfDistance, weightOfOccupancy, environment, goal, r);
 	}
 
 	private Double randomize(double value, Random r) {

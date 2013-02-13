@@ -16,9 +16,8 @@ public class TSPProblem extends Problem {
 	}
 
 	@Override
-	protected Boid createNewBoid(Position newWouldBePos, Double speed, Environment environment, GoalEvaluator goal,
-			Random r) {
-		return new TSPBoid(newWouldBePos, speed, this.visionRange, this.weightOfDistance, this.weightOfOccupancy,
-				environment, goal, r);
+	protected Boid createNewBoid(Position newWouldBePos, double speed, double visionRange, double weightOfDistance,
+			double weightOfOccupancy, Environment environment, GoalEvaluator goal, Random r) {
+		return new TSPBoid(newWouldBePos, speed, visionRange, weightOfDistance, weightOfOccupancy, environment, goal, r);
 	}
 }
