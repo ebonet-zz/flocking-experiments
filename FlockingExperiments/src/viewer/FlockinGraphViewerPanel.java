@@ -91,7 +91,7 @@ public class FlockinGraphViewerPanel extends JPanel {
 		}
 		
 		else{
-			theta = ((y1>y0)?1:-1) * Math.PI/2;
+			theta = ((y1>y0)? 0:Math.PI) ;
 		}
 		
 		
