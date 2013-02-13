@@ -15,9 +15,19 @@ import java.util.Set;
 
 public class AchieverBoid extends Boid {
 
-	// TODO: Consider randomly changing it back to explorer boid in a decision point 
-	
+	// TODO: Consider randomly changing it back to explorer boid in a decision point
+
+	private static double getSpeedModifier(double pathLength) {
+		int magnitude = 1;
+		while (pathLength > magnitude) {
+			magnitude *= 10;
+		}
+		magnitude = magnitude / 10;
+		return (1 + magnitude / pathLength);
+	}
+
 	private Tour pathToFollow;
+
 	private Queue<Integer> pathQueue;
 
 	public AchieverBoid(Boid boid) {
@@ -26,7 +36,7 @@ public class AchieverBoid extends Boid {
 		this.pathToFollow.calculateCost(getGraph());
 		this.environment.registerPath(this.pathToFollow);
 		this.pathQueue = new LinkedList<>();
-		
+
 		Random rand = new Random();
 
 		float r = rand.nextFloat();
@@ -37,58 +47,6 @@ public class AchieverBoid extends Boid {
 
 		// this.color = Color.BLUE;
 		this.speed = this.speed * getSpeedModifier(this.pathToFollow.getCost(getGraph()));
-	}
-
-	@Override
-	public void tryToMove(double distance) {
-
-		// 1) Check for other achiever boids around
-		Set<AchieverBoid> boidsInSight = getBoidsInSight();
-
-		// 2) Compare the traveled distance and 3) Update the path
-		for (AchieverBoid boid : boidsInSight) {
-
-			// TODO: maybe this should consider only the current walked distance, aka visible current tiredness
-			if (boid.getPathDistance().compareTo(this.getPathDistance()) <= 0) {
-				this.environment.unregisterPath(this.pathToFollow);
-
-				this.pathToFollow = new Tour(boid.getPathToFollow());
-
-				this.environment.registerPath(this.pathToFollow);
-				
-				this.speed = boid.speed > this.speed? boid.speed : this.speed;
-
-				// update pathTaken so that the boid can respawn correctly
-				this.pathQueue.clear();
-				this.pathQueue.addAll(boid.pathQueue);
-				
-				this.color = new Color(boid.color.getRed(), boid.color.getGreen(), boid.color.getBlue());
-			}
-
-		}
-
-		// 4) Move as before
-
-		super.tryToMove(distance);
-	}
-
-	@Override
-	public Double getPathDistance() {
-		return this.pathToFollow.lastCalculatedCost;
-	}
-
-	private Set<AchieverBoid> getBoidsInSight() {
-		Set<AchieverBoid> boidsInSight = new HashSet<>();
-
-		for (AchieverBoid b : this.environment.getAllAchievers()) {
-
-			if (canSee(b)) {
-				boidsInSight.add(b);
-			}
-		}
-
-		boidsInSight.remove(this);
-		return boidsInSight;
 	}
 
 	@Override
@@ -120,7 +78,7 @@ public class AchieverBoid extends Boid {
 					return false;
 				}
 			} else {
-				List<Edge> neighbors = generatePossibleEdges();
+				List<Edge> neighbors = generatePossibleNextEdges();
 				Double visibleDistance = this.visionRange - this.pos.getDistanceToEdgeEnd();
 
 				for (Edge e : neighbors) {
@@ -136,30 +94,18 @@ public class AchieverBoid extends Boid {
 	}
 
 	@Override
-	protected List<Edge> generatePossibleEdges() {
-		ArrayList<Integer> neighbors = getGraph().getNeighborsOf(this.pos.edge.getTo());
-
-		List<Edge> possibleEdges = generateEdges(neighbors);
-		return possibleEdges;
-	}
-
-	public Tour getPathToFollow() {
-		return this.pathToFollow;
-	}
-
-	@Override
 	public void decide() {
 		if (this.pathTaken.lastLocation() != this.pos.edge.getTo())
 			this.pathTaken.offer(this.getPos().edge.getTo());
-		
-		if (this.pathQueue.isEmpty()) { //this.goalEvaluator.isGoal(getGraph(), this.pathTaken)) {
+
+		if (this.pathQueue.isEmpty()) { // this.goalEvaluator.isGoal(getGraph(), this.pathTaken)) {
 			respawn();
 			return;
 		}
 
 		int currentNode = this.getPos().edge.getTo();
-		//int nodeIndex = this.pathToFollow.indexOf(currentNode);
-		//int nextNode = this.pathToFollow.get(nodeIndex + 1);
+		// int nodeIndex = this.pathToFollow.indexOf(currentNode);
+		// int nextNode = this.pathToFollow.get(nodeIndex + 1);
 		int nextNode = this.pathQueue.poll();
 		while (nextNode == currentNode) {
 			if (this.pathQueue.isEmpty()) {
@@ -171,6 +117,15 @@ public class AchieverBoid extends Boid {
 		moveToNextEdge(loadEdge(currentNode, nextNode));
 	}
 
+	@Override
+	public Double getPathDistance() {
+		return this.pathToFollow.lastCalculatedCost;
+	}
+
+	public Tour getPathToFollow() {
+		return this.pathToFollow;
+	}
+
 	public void respawn() {
 		// System.out.println(this.pathToFollow.toString());
 		this.pathTaken.clear();
@@ -179,17 +134,63 @@ public class AchieverBoid extends Boid {
 		Integer firstNode = this.pathQueue.poll();
 		Integer secondNode = this.pathQueue.poll();
 		this.pathTaken.offer(firstNode);
-		
+
 		this.setPosition(new Position(loadEdge(firstNode, secondNode), 0d));
 	}
 
-	private static double getSpeedModifier(double pathLength) {
-		int magnitude = 1;
-		while (pathLength > magnitude) {
-			magnitude *= 10;
+	@Override
+	public void tryToMove(double distance) {
+
+		// 1) Check for other achiever boids around
+		Set<AchieverBoid> boidsInSight = getBoidsInSight();
+
+		// 2) Compare the traveled distance and 3) Update the path
+		for (AchieverBoid boid : boidsInSight) {
+
+			// TODO: maybe this should consider only the current walked distance, aka visible current tiredness
+			if (boid.getPathDistance().compareTo(this.getPathDistance()) <= 0) {
+				this.environment.unregisterPath(this.pathToFollow);
+
+				this.pathToFollow = new Tour(boid.getPathToFollow());
+
+				this.environment.registerPath(this.pathToFollow);
+
+				this.speed = boid.speed > this.speed ? boid.speed : this.speed;
+
+				// update pathTaken so that the boid can respawn correctly
+				this.pathQueue.clear();
+				this.pathQueue.addAll(boid.pathQueue);
+
+				this.color = new Color(boid.color.getRed(), boid.color.getGreen(), boid.color.getBlue());
+			}
+
 		}
-		magnitude = magnitude / 10;
-		return (1 + magnitude / pathLength);
+
+		// 4) Move as before
+
+		super.tryToMove(distance);
+	}
+
+	@Override
+	protected List<Edge> generatePossibleNextEdges() {
+		ArrayList<Integer> neighbors = getGraph().getNeighborsOf(this.pos.edge.getTo());
+
+		List<Edge> possibleEdges = generateEdges(neighbors);
+		return possibleEdges;
+	}
+
+	private Set<AchieverBoid> getBoidsInSight() {
+		Set<AchieverBoid> boidsInSight = new HashSet<>();
+
+		for (AchieverBoid b : this.environment.getAllAchievers()) {
+
+			if (canSee(b)) {
+				boidsInSight.add(b);
+			}
+		}
+
+		boidsInSight.remove(this);
+		return boidsInSight;
 	}
 
 }

@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import util.SortableKeyValue;
 import util.WeightedRouletteWheelSelector;
@@ -33,50 +34,40 @@ public class Boid {
 	protected double distanceChoiceWeight;
 	protected double occupancyChoiceWeight;
 	protected GoalEvaluator goalEvaluator;
+	protected Random rand;
 
 	public Boid(Boid otherBoid) {
-		this.environment = otherBoid.environment;
 		this.pos = otherBoid.pos;
 		this.speed = otherBoid.speed;
 		this.visionRange = otherBoid.visionRange;
-		this.occupancyChoiceWeight = otherBoid.distanceChoiceWeight;
 		this.distanceChoiceWeight = otherBoid.distanceChoiceWeight;
+		this.occupancyChoiceWeight = otherBoid.occupancyChoiceWeight;
+		this.environment = otherBoid.environment;
+		this.goalEvaluator = otherBoid.goalEvaluator;
+
 		this.traveledDistance = otherBoid.traveledDistance;
 		this.pathTaken = otherBoid.pathTaken;
-		this.goalEvaluator = otherBoid.goalEvaluator;
 		this.color = otherBoid.color;
+		this.rand = otherBoid.rand;
 	}
 
 	public Boid(Position position, Double speed, Double visionRange, Double distanceChoiceWeight,
-			Double occupancyChoiceWeight, Environment enviroment, GoalEvaluator goalEvaluator) {
-		this.environment = enviroment;
+			Double occupancyChoiceWeight, Environment enviroment, GoalEvaluator goalEvaluator, Random r) {
 		this.pos = position;
 		this.speed = speed;
 		this.visionRange = visionRange;
-		this.occupancyChoiceWeight = occupancyChoiceWeight;
 		this.distanceChoiceWeight = distanceChoiceWeight;
-		this.traveledDistance = 0d;
-		this.pathTaken = new Tour();
-
-		this.pathTaken.offer(this.pos.edge.getFrom());
-		this.environment.addNewBoid(this);
-
+		this.occupancyChoiceWeight = occupancyChoiceWeight;
+		this.environment = enviroment;
 		this.goalEvaluator = goalEvaluator;
 
-		// Random rand = new Random();
-		//
-		// float r = rand.nextFloat();
-		// float g = rand.nextFloat();
-		// float b = rand.nextFloat();
-		//
-		// // // Will produce only bright / light colours:
-		// // float r = rand.nextFloat() / 2f + 0.5f;
-		// // float g = rand.nextFloat() / 2f + 0.5f;
-		// // float b = rand.nextFloat() / 2f + 0.5f;
-		//
-		// this.color = new Color(r, g, b);
-
+		this.traveledDistance = 0d;
+		this.pathTaken = new Tour();
+		this.pathTaken.offer(this.pos.edge.getFrom());
 		this.color = Color.GREEN;
+		this.rand = r;
+
+		this.environment.addNewFreeBoid(this);
 	}
 
 	public void die() {
@@ -87,16 +78,8 @@ public class Boid {
 		return this.color;
 	}
 
-	public Environment getEnvironment() {
-		return this.environment;
-	}
-
 	public FlockingGraph getGraph() {
 		return this.environment.getFlockingGraph();
-	}
-
-	public Double getPathDistance() {
-		return Double.MAX_VALUE;
 	}
 
 	public Position getPos() {
@@ -111,8 +94,8 @@ public class Boid {
 		return this.speed;
 	}
 
-	public void setSpeed(Double speed) {
-		this.speed = speed;
+	public Double getPathDistance() {
+		return Double.MAX_VALUE;
 	}
 
 	public void tryToMove(double distance) {
@@ -130,6 +113,10 @@ public class Boid {
 		}
 	}
 
+	protected boolean canSee(Boid b) {
+		return false;
+	}
+
 	protected void decide() {
 		if (this.pathTaken.lastLocation() != this.pos.edge.getTo())
 			this.pathTaken.offer(this.pos.edge.getTo());
@@ -139,7 +126,7 @@ public class Boid {
 			return;
 		}
 
-		List<Edge> possibleEdges = generatePossibleEdges();
+		List<Edge> possibleEdges = generatePossibleNextEdges();
 
 		if (possibleEdges.isEmpty()) {
 			die();
@@ -161,7 +148,7 @@ public class Boid {
 		return edges;
 	}
 
-	protected List<Edge> generatePossibleEdges() {
+	protected List<Edge> generatePossibleNextEdges() {
 		ArrayList<Integer> closestNeighbors = getGraph().getClosestNeighborsSortedByDistance(this.pos.edge.getTo());
 		for (int i : this.pathTaken.locations) {
 			closestNeighbors.remove(new Integer(i));
@@ -169,10 +156,6 @@ public class Boid {
 
 		List<Edge> possibleEdges = generateEdges(closestNeighbors);
 		return possibleEdges;
-	}
-
-	protected boolean canSee(Boid b) {
-		return false;
 	}
 
 	protected Edge loadEdge(int from, int to) {
@@ -270,7 +253,7 @@ public class Boid {
 
 		Collections.sort(edgeProbabilityPairs);
 
-		WeightedRouletteWheelSelector selector = new WeightedRouletteWheelSelector(edgeProbabilityPairs);
+		WeightedRouletteWheelSelector selector = new WeightedRouletteWheelSelector(edgeProbabilityPairs, this.rand);
 		Edge e = (Edge) selector.getRandom().keyObject;
 
 		return e;

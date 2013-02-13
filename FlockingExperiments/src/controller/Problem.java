@@ -134,7 +134,7 @@ public class Problem {
 
 			if (environment.getAllBoids().size() < maxBoids) {
 				currentBoidCreationProgress += this.multiplierForBoidSpawn;
-				
+
 				while (new Double(currentBoidCreationProgress).compareTo(1d) >= 0) {
 					spawnBoid(r, environment, goal);
 					currentBoidCreationProgress -= 1d;
@@ -195,8 +195,8 @@ public class Problem {
 
 	private void spawnBoid(Random r, Environment environment, GoalEvaluator goal) {
 		Position newWouldBePos = getSpawnPosition(r);
-		double speed = randomize(this.boidSpeed);
-		Boid newBoid = createNewBoid(newWouldBePos, speed, environment, goal);
+		double speed = randomize(this.boidSpeed, r);
+		Boid newBoid = createNewBoid(newWouldBePos, speed, environment, goal, r);
 	}
 
 	protected Position getSpawnPosition(Random r) {
@@ -204,25 +204,26 @@ public class Problem {
 		Integer[] possibleEndNodes = this.distanceGraph.getArrayOfNeighborsOf(startNode);
 		int nextNodeIndex = r.nextInt(possibleEndNodes.length);
 		Integer endNode = possibleEndNodes[nextNodeIndex];
-		
+
 		Position newWouldBePos = new Position(this.distanceGraph.getEdge(startNode, endNode), 0d);
 		Segment nextWouldBeSegment = this.distanceGraph.getSegmentForPosition(newWouldBePos);
 
 		while ((nextWouldBeSegment.isFull())) {
-			newWouldBePos = new Position(this.distanceGraph.getEdge(0, 1), this.distanceGraph.getEdgeLength(startNode, endNode)
-					* r.nextFloat());
+			newWouldBePos = new Position(this.distanceGraph.getEdge(startNode, endNode),
+					this.distanceGraph.getEdgeLength(startNode, endNode) * r.nextFloat());
 			nextWouldBeSegment = this.distanceGraph.getSegmentForPosition(newWouldBePos);
 		}
 		return newWouldBePos;
 	}
 
-	protected Boid createNewBoid(Position newWouldBePos, Double speed, Environment environment, GoalEvaluator goal) {
-		return new Boid(newWouldBePos, speed, this.visionRange, this.weightOfDistance,
-				this.weightOfOccupancy, environment, goal);
+	protected Boid createNewBoid(Position newWouldBePos, Double speed, Environment environment, GoalEvaluator goal,
+			Random r) {
+		return new Boid(newWouldBePos, speed, this.visionRange, this.weightOfDistance, this.weightOfOccupancy,
+				environment, goal, r);
 	}
 
-	private Double randomize(double value) {
-		return value * (1 + Math.random() * 0.4 - 0.2);
+	private Double randomize(double value, Random r) {
+		return value * (1 + r.nextDouble() * 0.4 - 0.2);
 	}
 
 	private void draw(FlockingGraphViewer viewer, Set<Boid> boids) {

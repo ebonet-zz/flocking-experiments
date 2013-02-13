@@ -15,7 +15,7 @@ public class WeightedRouletteWheelSelector {
 	List<SortableKeyValue<?, Double>> items;
 
 	@SuppressWarnings("javadoc")
-	Random rand = new Random();
+	Random rand = null;
 
 	/**
 	 * The cumulative sum of all the properties.
@@ -27,7 +27,8 @@ public class WeightedRouletteWheelSelector {
 	 * 
 	 * @param items
 	 */
-	public WeightedRouletteWheelSelector(List<SortableKeyValue<?, Double>> items) {
+	public WeightedRouletteWheelSelector(List<SortableKeyValue<?, Double>> items, Random r) {
+		this.rand = r;
 		this.items = items;
 		for (SortableKeyValue<?, Double> item : items) {
 			this.totalSum += item.valueToUseOnSorting;
