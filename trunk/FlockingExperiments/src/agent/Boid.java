@@ -176,10 +176,19 @@ public class Boid {
 			if (!closestUnvisitedNeighbors.isEmpty()) {
 				closestNeighbors = closestUnvisitedNeighbors;
 			} else {
-				Integer startNode = this.pathTaken.firstLocation();
-				if (closestNeighbors.contains(startNode)) {
-					closestNeighbors.clear();
-					closestNeighbors.add(startNode);
+				boolean gotAllCities = true;
+				for (int i = 0; i < this.getGraph().getNumberOfNodes(); i++) {
+					if (!this.pathTaken.locations.contains(new Integer(i))) {
+						gotAllCities = false;
+						break;
+					}
+				}
+				if (gotAllCities) {
+					Integer startNode = this.pathTaken.firstLocation();
+					if (closestNeighbors.contains(startNode)) {
+						closestNeighbors.clear();
+						closestNeighbors.add(startNode);
+					}
 				}
 			}
 		}
