@@ -17,7 +17,7 @@ public class MainController {
 
 	// Constants I believe their optimal values depend on the number of cities
 	static int numberOfCities = 8;
-	static int maxAgents = numberOfCities * 50;
+	static int maxAgents = numberOfCities * 31;
 	static float multiplierBoidSpawn = 1f;
 	static float densityThreshold = 0.7f;
 
@@ -27,6 +27,9 @@ public class MainController {
 	static float boidSpeed = 2f;
 	static float boidVisionRange = boidSpeed * 2;
 
+	static int segmentCapacity = 3;
+	static float segmentLength = 1f;
+
 	// GoalEvaluator goal = new EndNodeGoalEvaluator(3);
 	static GoalEvaluator goal = new TSPGoalEvaluator();
 
@@ -34,7 +37,7 @@ public class MainController {
 	// TraditionalGraph graph = GenerateSparseInstance.GenerateSparseGraph(numberOfCities); // Sparse
 	static TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully connected
 
-	static Problem problem = new TSPProblem(new FlockingGraph(graph), maxIterations);
+	static Problem problem = new TSPProblem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
 
 	public static void main(String[] args) {
 		long startTime = System.nanoTime();
@@ -46,7 +49,10 @@ public class MainController {
 		// testWD(problem);
 		// testWO(problem);
 		// testBoidSpeed(problem);
-		testBoidVision(problem);
+		// testMaxAgents(problem);
+		// testBoidVision(problem);
+		// testSegmentCapacity();
+		testSegmentLength();
 
 		long estimatedTime = System.nanoTime() - startTime;
 		System.out.println("Execution Time: " + estimatedTime / 1000000000.0f + " seconds.");
@@ -155,6 +161,52 @@ public class MainController {
 			System.out.println("For maxAgentsMultiplier = " + maxAgentsMultiplier + " " + divider
 					+ "% of the problems had a solution");
 			System.out.println("For maxAgentsMultiplier = " + maxAgentsMultiplier + " the average path was " + average);
+			System.out.println();
+		}
+	}
+
+	private static void testSegmentCapacity() {
+		for (int capacity = 1; capacity <= 10; capacity += 1) {
+			float average = 0f;
+			float divider = 100f;
+			for (int i = 0; i < 100; i++) {
+				Problem problem = new TSPProblem(new FlockingGraph(graph, segmentLength, capacity), maxIterations);
+				Tour solution = problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance,
+						weightOfOccupancy, boidVisionRange, boidSpeed, goal);
+				if (solution != null) {
+					average += solution.lastCalculatedCost;
+				} else {
+					divider--;
+				}
+			}
+
+			average /= divider;
+			System.out.println("For capacity = " + capacity + " " + divider + "% of the problems had a solution");
+			System.out.println("For capacity = " + capacity + " the average path was " + average);
+			System.out.println();
+		}
+	}
+
+	private static void testSegmentLength() {
+		for (float segmentLength = 1; segmentLength <= 10; segmentLength += 1) {
+			float average = 0f;
+			float divider = 100f;
+			for (int i = 0; i < 100; i++) {
+				Problem problem = new TSPProblem(new FlockingGraph(graph, segmentLength, segmentCapacity),
+						maxIterations);
+				Tour solution = problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance,
+						weightOfOccupancy, boidVisionRange, boidSpeed, goal);
+				if (solution != null) {
+					average += solution.lastCalculatedCost;
+				} else {
+					divider--;
+				}
+			}
+
+			average /= divider;
+			System.out.println("For segmentLength = " + segmentLength + " " + divider
+					+ "% of the problems had a solution");
+			System.out.println("For segmentLength = " + segmentLength + " the average path was " + average);
 			System.out.println();
 		}
 	}
