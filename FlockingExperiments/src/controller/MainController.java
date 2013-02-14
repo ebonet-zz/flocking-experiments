@@ -17,7 +17,7 @@ public class MainController {
 
 	// Constants I believe their optimal values depend on the number of cities
 	static int numberOfCities = 8;
-	static int maxAgents = numberOfCities * 31;
+	static int maxAgents = numberOfCities * 51;
 	static float multiplierBoidSpawn = 1f;
 	static float densityThreshold = 0.7f;
 
@@ -34,8 +34,8 @@ public class MainController {
 	static GoalEvaluator goal = new TSPGoalEvaluator();
 
 	// TraditionalGraph graph = GenerateBasicInstance.GenerateBasicGraph(); // Sparse
-	static TraditionalGraph graph = GenerateSparseInstance.GenerateSparseGraph(numberOfCities); // Sparse
-	// static TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully connected
+	// static TraditionalGraph graph = GenerateSparseInstance.GenerateSparseGraph(numberOfCities); // Sparse
+	static TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully connected
 
 	static Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
 

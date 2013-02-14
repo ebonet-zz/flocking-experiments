@@ -24,6 +24,11 @@ public class TSPGoalEvaluator implements GoalEvaluator {
 		if (!pathTaken.firstLocation().equals(pathTaken.lastLocation())) {
 			return false;
 		}
+		for (int i = 0; i < graph.getNumberOfNodes(); i++) {
+			if (!pathTaken.locations.contains(new Integer(i))) {
+				return false;
+			}
+		}
 
 		return true;
 	}
