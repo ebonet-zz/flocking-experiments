@@ -17,7 +17,7 @@ public class MainController {
 
 	// Constants I believe their optimal values depend on the number of cities
 	static int numberOfCities = 8;
-	static int maxAgents = numberOfCities * 51;
+	static int maxAgents = numberOfCities * 31;
 	static float multiplierBoidSpawn = 1f;
 	static float densityThreshold = 0.7f;
 
