@@ -13,7 +13,8 @@ public final class Segment implements Comparable<Segment> {
 
 	public Segment(Position location, double segmentLength, int maxOccupancy) {
 		this.startLocation = location;
-		this.exclusiveEndLocation = this.startLocation.deslocate(segmentLength);
+		this.exclusiveEndLocation = this.startLocation.clone();
+		this.exclusiveEndLocation.deslocate(segmentLength);
 		this.maxOccupancy = maxOccupancy;
 		this.currentOccupancy = 0;
 	}

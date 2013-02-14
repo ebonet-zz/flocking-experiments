@@ -34,7 +34,7 @@ public class MainController {
 	static GoalEvaluator goal = new TSPGoalEvaluator();
 
 	// TraditionalGraph graph = GenerateBasicInstance.GenerateBasicGraph(); // Sparse
-	// TraditionalGraph graph = GenerateSparseInstance.GenerateSparseGraph(numberOfCities); // Sparse
+	// static TraditionalGraph graph = GenerateSparseInstance.GenerateSparseGraph(numberOfCities); // Sparse
 	static TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully connected
 
 	static Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
@@ -42,9 +42,9 @@ public class MainController {
 	public static void main(String[] args) {
 		long startTime = System.nanoTime();
 
-		problem.graphics = displaySteps;
-		System.out.println(problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance,
-				weightOfOccupancy, boidVisionRange, boidSpeed, goal));
+//		problem.graphics = displaySteps;
+//		System.out.println(problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance,
+//				weightOfOccupancy, boidVisionRange, boidSpeed, goal));
 
 		// testWD(problem);
 		// testWO(problem);
@@ -52,7 +52,7 @@ public class MainController {
 		// testMaxAgents(problem);
 		// testBoidVision(problem);
 		// testSegmentCapacity();
-		// testSegmentLength();
+		testSegmentLength();
 
 		long estimatedTime = System.nanoTime() - startTime;
 		System.out.println("Execution Time: " + estimatedTime / 1000000000.0f + " seconds.");

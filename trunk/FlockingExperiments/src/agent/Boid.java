@@ -107,7 +107,8 @@ public class Boid {
 
 	public void tryToMove(double distance) {
 		if (checkEdgeBoundaries(distance)) {
-			Position newWouldBePos = this.pos.deslocate(distance);
+			Position newWouldBePos = this.pos.clone();
+			newWouldBePos.deslocate(distance);
 			Segment nextWouldBeSegment = getSegment(newWouldBePos);
 			if (checkSegmentOccupation(nextWouldBeSegment)) {
 				moveDistance(distance);
@@ -267,7 +268,7 @@ public class Boid {
 		Segment currentSegment = getSegment(this.pos);
 		currentSegment.decrementOccupancy();
 
-		this.pos = this.pos.deslocate(distance);
+		this.pos.deslocate(distance);
 
 		Segment nextSegment = getSegment(this.pos);
 		nextSegment.incrementOccupancy();

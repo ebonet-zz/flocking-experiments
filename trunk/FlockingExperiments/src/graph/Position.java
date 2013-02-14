@@ -10,7 +10,7 @@ import java.util.Locale;
  */
 public final class Position implements Cloneable, Comparable<Position> {
 	public final Edge edge;
-	public final double distanceFromStart;
+	public double distanceFromStart;
 
 	public Position(Edge edge, double distance) {
 		this.edge = edge;
@@ -23,8 +23,8 @@ public final class Position implements Cloneable, Comparable<Position> {
 		return false;
 	}
 
-	public Position deslocate(double distance) {
-		return new Position(this.edge, this.distanceFromStart + distance);
+	public void deslocate(double distance) {
+		this.distanceFromStart += distance;
 	}
 
 	public double getDistance() {
