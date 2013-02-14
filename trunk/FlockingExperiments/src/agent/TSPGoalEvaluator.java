@@ -18,12 +18,6 @@ public class TSPGoalEvaluator implements GoalEvaluator {
 	}
 
 	public boolean completedTour(FlockingGraph graph, Tour pathTaken) {
-
-		if (pathTaken.size() != graph.getNumberOfNodes() + 1)
-			return false;
-		if (!pathTaken.firstLocation().equals(pathTaken.lastLocation())) {
-			return false;
-		}
 		for (int i = 0; i < graph.getNumberOfNodes(); i++) {
 			if (!pathTaken.locations.contains(new Integer(i))) {
 				return false;
