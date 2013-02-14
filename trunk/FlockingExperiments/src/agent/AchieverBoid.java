@@ -169,8 +169,7 @@ public class AchieverBoid extends Boid {
 				this.speed = boid.speed > this.speed ? boid.speed : this.speed;
 
 				// update pathTaken so that the boid can respawn correctly
-				this.pathQueue.clear();
-				this.pathQueue.addAll(boid.pathQueue);
+				updatePathQueueFromBoid(boid);
 
 				this.color = new Color(boid.color.getRed(), boid.color.getGreen(), boid.color.getBlue());
 			}
@@ -180,6 +179,16 @@ public class AchieverBoid extends Boid {
 		// 4) Move as before
 
 		super.tryToMove(distance);
+	}
+
+	protected void updatePathQueueFromBoid(AchieverBoid boid) {
+		this.pathQueue.clear();
+		if (this.pos.getTo() == boid.pos.getFrom()) { 
+			// if the other boid was in the node we're trying to reach
+			// our next node should be other's current endNode, but it's not in its queue anymore
+			this.pathQueue.add(boid.pos.getTo());
+		}
+		this.pathQueue.addAll(boid.pathQueue);
 	}
 
 	@Override
