@@ -163,8 +163,24 @@ public class Boid {
 
 	protected List<Edge> generatePossibleNextEdges() {
 		ArrayList<Integer> closestNeighbors = getGraph().getClosestNeighborsSortedByDistance(this.pos.edge.getTo());
-		for (int i : this.pathTaken.locations) {
-			closestNeighbors.remove(new Integer(i));
+
+		if (!closestNeighbors.isEmpty()) {
+			ArrayList<Integer> closestUnvisitedNeighbors = new ArrayList<>();
+			closestUnvisitedNeighbors.addAll(closestNeighbors);
+
+			for (int i : this.pathTaken.locations) {
+				closestUnvisitedNeighbors.remove(new Integer(i));
+			}
+
+			if (!closestUnvisitedNeighbors.isEmpty()) {
+				closestNeighbors = closestUnvisitedNeighbors;
+			} else {
+				Integer startNode = this.pathTaken.firstLocation();
+				if (closestNeighbors.contains(startNode)) {
+					closestNeighbors.clear();
+					closestNeighbors.add(startNode);
+				}
+			}
 		}
 
 		List<Edge> possibleEdges = generateEdges(closestNeighbors);
