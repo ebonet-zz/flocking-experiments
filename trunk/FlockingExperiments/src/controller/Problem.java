@@ -101,7 +101,7 @@ public class Problem {
 				Double density = mostDensePath.valueToUseOnSorting;
 
 				if (density.compareTo(densityThreshold) >= 0) {
-					// System.out.println("Converged in Iteration " + t);
+					System.out.println("Converged in Iteration " + t);
 					break;
 				}
 			}

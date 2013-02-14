@@ -114,12 +114,12 @@ public class AchieverBoid extends Boid {
 			}
 			nextNode = this.pathQueue.poll();
 		}
-		
+
 		Edge nextEdge = loadEdge(currentNode, nextNode);
-		if(nextEdge.getLength() < 0){
+		if (nextEdge.getLength() < 0) {
 			throw new RuntimeException("Bad edge");
 		}
-		
+
 		moveToNextEdge(nextEdge);
 	}
 
@@ -159,7 +159,8 @@ public class AchieverBoid extends Boid {
 		for (AchieverBoid boid : boidsInSight) {
 
 			// TODO: maybe this should consider only the current walked distance, aka visible current tiredness
-			if (boid.getPathDistance().compareTo(this.getPathDistance()) <= 0) {
+			if (boid.getPathDistance().compareTo(this.getPathDistance()) < 0
+					|| (boid.getPathDistance().compareTo(this.getPathDistance()) == 0 && boid.speed > this.speed)) {
 				this.environment.unregisterPath(this.pathToFollow);
 
 				this.pathToFollow = new Tour(boid.getPathToFollow());
@@ -183,7 +184,7 @@ public class AchieverBoid extends Boid {
 
 	protected void updatePathQueueFromBoid(AchieverBoid boid) {
 		this.pathQueue.clear();
-		if (this.pos.getTo() == boid.pos.getFrom()) { 
+		if (this.pos.getTo() == boid.pos.getFrom()) {
 			// if the other boid was in the node we're trying to reach
 			// our next node should be other's current endNode, but it's not in its queue anymore
 			this.pathQueue.add(boid.pos.getTo());
