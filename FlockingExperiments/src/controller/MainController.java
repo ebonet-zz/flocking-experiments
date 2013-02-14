@@ -3,6 +3,7 @@ package controller;
 import graph.FlockingGraph;
 import graph.Tour;
 import graph.TraditionalGraph;
+import agent.EndNodeGoalEvaluator;
 import agent.GoalEvaluator;
 import agent.TSPGoalEvaluator;
 
@@ -16,7 +17,7 @@ public class MainController {
 	static boolean displaySteps = true; // show boids' movement on each iteration
 
 	// Constants I believe their optimal values depend on the number of cities
-	static int numberOfCities = 8;
+	static int numberOfCities = 5;
 	static int maxAgents = numberOfCities * 31;
 	static float multiplierBoidSpawn = 1f;
 	static float densityThreshold = 0.7f;
@@ -30,11 +31,11 @@ public class MainController {
 	static int segmentCapacity = 3;
 	static float segmentLength = 1f;
 
-	// GoalEvaluator goal = new EndNodeGoalEvaluator(3);
-	static GoalEvaluator goal = new TSPGoalEvaluator();
+	static GoalEvaluator goal = new EndNodeGoalEvaluator(3);
+	//static GoalEvaluator goal = new TSPGoalEvaluator();
 
-	// TraditionalGraph graph = GenerateBasicInstance.GenerateBasicGraph(); // Sparse
-	static TraditionalGraph graph = GenerateSparseInstance.GenerateSparseGraph(numberOfCities); // Sparse
+	static TraditionalGraph graph = GenerateBasicInstance.GenerateBasicGraph(); // Sparse
+	// static TraditionalGraph graph = GenerateSparseInstance.GenerateSparseGraph(numberOfCities); // Sparse
 	// static TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully connected
 
 	static Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);

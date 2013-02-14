@@ -206,6 +206,22 @@ public class AchieverBoid extends Boid {
 		for (AchieverBoid b : this.environment.getAllAchievers()) {
 
 			if (canSee(b)) {
+//				if (b.pos.edge == this.pos.edge) {
+//					if (b.pos.getTo() == this.pos.getTo()) {
+//						// same edge, same direction
+//					} else if (b.pos.getFrom() == this.pos.getTo()) {
+//						// same edge, opposite directions
+//					} else {
+//						throw new RuntimeException("BUM! Unforeseen case.");
+//					}
+//				} else if (this.pos.getTo() == b.pos.getTo()) {
+//					// converging different edges
+//				} else if (this.pos.getTo() == b.pos.getFrom()) {
+//					// sequential different edges
+//				} else {
+//					throw new RuntimeException("BUM! Unforeseen case.");
+//				}
+
 				boidsInSight.add(b);
 			}
 		}
