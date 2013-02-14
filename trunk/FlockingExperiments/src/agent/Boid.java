@@ -220,7 +220,8 @@ public class Boid {
 
 			if (farthestAvailableOnNext.isFull()) {
 				Position minEdgePosition = this.pos;
-				Position maxEdgePosition = new Position(this.pos.edge, this.pos.distanceFromStart + distanceWithin);
+				Position maxEdgePosition = new Position(this.pos.edge, this.pos.distanceFromStart + distanceWithin
+						- MINIMUM_DISTANCE_MARGIN);
 
 				Segment minSegmentHere = getSegment(minEdgePosition);
 				Segment maxSegmentHere = getSegment(maxEdgePosition);
@@ -278,6 +279,9 @@ public class Boid {
 		currentSegment.decrementOccupancy();
 
 		this.pos.deslocate(distance);
+		if (this.pos.distanceFromStart > this.pos.edge.getLength()) {
+			throw new RuntimeException("Deslocate limit error");
+		}
 
 		Segment nextSegment = getSegment(this.pos);
 		nextSegment.incrementOccupancy();
