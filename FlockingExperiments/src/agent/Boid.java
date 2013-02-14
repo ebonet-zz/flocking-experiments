@@ -289,9 +289,9 @@ public class Boid {
 		currentSegment.decrementOccupancy();
 
 		this.pos.deslocate(distance);
-//		if (this.pos.distanceFromStart > this.pos.edge.getLength()) {
-//			throw new RuntimeException("Deslocate limit error");
-//		}
+		if (this.pos.distanceFromStart > this.pos.edge.getLength()) {
+			throw new RuntimeException("Deslocate limit error");
+		}
 
 		Segment nextSegment = getSegment(this.pos);
 		nextSegment.incrementOccupancy();
