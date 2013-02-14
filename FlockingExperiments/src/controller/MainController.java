@@ -53,7 +53,6 @@ public class MainController {
 	}
 
 	private static void testWD(Problem problem) {
-		// Parameter test: weight of Distance
 		for (float wD = 2.0f; wD <= 5f; wD += 0.5f) {
 			float average = 0f;
 			float divider = 100f;
@@ -75,7 +74,6 @@ public class MainController {
 	}
 
 	private static void testWO(Problem problem) {
-		// Parameter test: weight of Distance
 		for (float wO = 0.0f; wO <= 5f; wO += 0.5f) {
 			float average = 0f;
 			float divider = 100f;
@@ -97,7 +95,6 @@ public class MainController {
 	}
 
 	private static void testBoidSpeed(Problem problem) {
-		// Parameter test: weight of Distance
 		for (float speed = 1.0f; speed <= 10f; speed += 1f) {
 			float average = 0f;
 			float divider = 100f;
@@ -119,7 +116,6 @@ public class MainController {
 	}
 
 	private static void testBoidVision(Problem problem) {
-		// Parameter test: weight of Distance
 		for (float visionMultiplier = 1.0f; visionMultiplier <= 10f; visionMultiplier += 1f) {
 			float average = 0f;
 			float divider = 100f;
@@ -142,7 +138,6 @@ public class MainController {
 	}
 
 	private static void testMaxAgents(Problem problem) {
-		// Parameter test: weight of Distance
 		for (int maxAgentsMultiplier = 1; maxAgentsMultiplier <= 100; maxAgentsMultiplier += 10) {
 			float average = 0f;
 			float divider = 100f;
