@@ -129,13 +129,21 @@ public class Boid {
 	}
 
 	protected void decide() {
-		if (this.pathTaken.lastLocation() != this.pos.edge.getTo())
+		boolean added = false;
+		if (this.pathTaken.lastLocation() != this.pos.edge.getTo()) {
 			this.pathTaken.offer(this.pos.edge.getTo());
+			added = true;
+		}
 
 		if (this.goalEvaluator.isGoal(getGraph(), this.pathTaken)) {
 			if (checkSegmentOccupation(getSegment(new Position(loadEdge(this.pathTaken.get(0), this.pathTaken.get(1)),
 					0d)))) {
 				becomeAchiever();
+			} else {
+				if (added) {
+					this.pathTaken.locations.remove(this.pathTaken.locations.size() - 1);
+					added = false;
+				}
 			}
 			return;
 		}
@@ -219,6 +227,8 @@ public class Boid {
 			Segment farthestAvailableOnNext = getGraph().getFarthestAvailableSegment(minSegmentNext, maxSegmentNext);
 
 			if (farthestAvailableOnNext.isFull()) {
+				this.pathTaken.locations.remove(this.pathTaken.locations.size() - 1);
+
 				Position minEdgePosition = this.pos;
 				Position maxEdgePosition = new Position(this.pos.edge, this.pos.distanceFromStart + distanceWithin
 						- MINIMUM_DISTANCE_MARGIN);
@@ -279,9 +289,9 @@ public class Boid {
 		currentSegment.decrementOccupancy();
 
 		this.pos.deslocate(distance);
-		if (this.pos.distanceFromStart > this.pos.edge.getLength()) {
-			throw new RuntimeException("Deslocate limit error");
-		}
+//		if (this.pos.distanceFromStart > this.pos.edge.getLength()) {
+//			throw new RuntimeException("Deslocate limit error");
+//		}
 
 		Segment nextSegment = getSegment(this.pos);
 		nextSegment.incrementOccupancy();
@@ -289,14 +299,18 @@ public class Boid {
 		this.traveledDistance += distance;
 	}
 
-	private double moveToFarthestAvailableLocation(Segment current, Segment limit) {
+	private void moveToFarthestAvailableLocation(Segment current, Segment limit) {
 		Segment farthestAvailable = getGraph().getFarthestAvailableSegment(current, limit);
 		double endOfTheSegment = farthestAvailable.exclusiveEndLocation.distanceFromStart;
 		// get to right before the end of the segment
 		double diff = endOfTheSegment - MINIMUM_DISTANCE_MARGIN - this.pos.distanceFromStart;
+		if (diff < -0.1d) {
+			throw new RuntimeException("Walking backwards");
+		}
 		double distance = diff < this.speed ? diff : this.speed;
-		moveDistance(distance);
-		return distance;
+		if (distance > 0d) {
+			moveDistance(distance);
+		}
 	}
 
 	private Edge selectNextEdge(List<Edge> possibleEdges) {

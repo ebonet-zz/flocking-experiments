@@ -95,32 +95,58 @@ public class AchieverBoid extends Boid {
 
 	@Override
 	public void decide() {
-		if (this.pathTaken.lastLocation() != this.pos.edge.getTo())
-			this.pathTaken.offer(this.getPos().edge.getTo());
+		boolean added = false;
+		if (this.pathTaken.lastLocation() != this.pos.edge.getTo()) {
+			this.pathTaken.offer(this.pos.edge.getTo());
+			added = true;
+		}
 
 		if (this.pathQueue.isEmpty()) { // this.goalEvaluator.isGoal(getGraph(), this.pathTaken)) {
-			respawn();
+			if (checkSegmentOccupation(getSegment(new Position(loadEdge(this.pathToFollow.get(0),
+					this.pathToFollow.get(1)), 0d)))) {
+				respawn();
+			} else {
+				if (added) {
+					this.pathTaken.locations.remove(this.pathTaken.locations.size() - 1);
+					added = false;
+				}
+			}
 			return;
 		}
 
 		int currentNode = this.getPos().edge.getTo();
 		// int nodeIndex = this.pathToFollow.indexOf(currentNode);
 		// int nextNode = this.pathToFollow.get(nodeIndex + 1);
-		int nextNode = this.pathQueue.poll();
+		int nextNode = this.pathQueue.peek();
 		while (nextNode == currentNode) {
 			if (this.pathQueue.isEmpty()) {
-				respawn();
+				if (checkSegmentOccupation(getSegment(new Position(loadEdge(this.pathToFollow.get(0),
+						this.pathToFollow.get(1)), 0d)))) {
+					respawn();
+				} else {
+					this.pathQueue.offer(nextNode);
+					if (added) {
+						this.pathTaken.locations.remove(this.pathTaken.locations.size() - 1);
+						added = false;
+					}
+				}
 				return;
 			}
 			nextNode = this.pathQueue.poll();
 		}
 
 		Edge nextEdge = loadEdge(currentNode, nextNode);
-		if (nextEdge.getLength() < 0) {
-			throw new RuntimeException("Bad edge");
-		}
+//		if (nextEdge.getLength() < 0) {
+//			throw new RuntimeException("Bad edge");
+//		}
+
+		Edge currentEdge = this.pos.edge;
 
 		moveToNextEdge(nextEdge);
+
+		if (!this.pos.edge.equals(currentEdge)) {
+			this.pathQueue.poll();
+		}
 	}
 
 	@Override
@@ -133,20 +159,19 @@ public class AchieverBoid extends Boid {
 	}
 
 	public void respawn() {
-		if (checkSegmentOccupation(getSegment(new Position(
-				loadEdge(this.pathToFollow.get(0), this.pathToFollow.get(1)), 0d)))) {
-			// System.out.println(this.pathToFollow.toString());
-			this.pathTaken.clear();
 
-			this.pathQueue.clear();
-			this.pathQueue.addAll(this.pathToFollow.locations);
+		// System.out.println(this.pathToFollow.toString());
+		this.pathTaken.clear();
 
-			Integer firstNode = this.pathQueue.poll();
-			Integer secondNode = this.pathQueue.poll();
+		this.pathQueue.clear();
+		this.pathQueue.addAll(this.pathToFollow.locations);
 
-			this.setPosition(new Position(loadEdge(firstNode, secondNode), 0d));
-			this.pathTaken.offer(firstNode);
-		}
+		Integer firstNode = this.pathQueue.poll();
+		Integer secondNode = this.pathQueue.poll();
+
+		this.setPosition(new Position(loadEdge(firstNode, secondNode), 0d));
+		this.pathTaken.offer(firstNode);
+
 	}
 
 	@Override
@@ -206,21 +231,21 @@ public class AchieverBoid extends Boid {
 		for (AchieverBoid b : this.environment.getAllAchievers()) {
 
 			if (canSee(b)) {
-//				if (b.pos.edge == this.pos.edge) {
-//					if (b.pos.getTo() == this.pos.getTo()) {
-//						// same edge, same direction
-//					} else if (b.pos.getFrom() == this.pos.getTo()) {
-//						// same edge, opposite directions
-//					} else {
-//						throw new RuntimeException("BUM! Unforeseen case.");
-//					}
-//				} else if (this.pos.getTo() == b.pos.getTo()) {
-//					// converging different edges
-//				} else if (this.pos.getTo() == b.pos.getFrom()) {
-//					// sequential different edges
-//				} else {
-//					throw new RuntimeException("BUM! Unforeseen case.");
-//				}
+				// if (b.pos.edge == this.pos.edge) {
+				// if (b.pos.getTo() == this.pos.getTo()) {
+				// // same edge, same direction
+				// } else if (b.pos.getFrom() == this.pos.getTo()) {
+				// // same edge, opposite directions
+				// } else {
+				// throw new RuntimeException("BUM! Unforeseen case.");
+				// }
+				// } else if (this.pos.getTo() == b.pos.getTo()) {
+				// // converging different edges
+				// } else if (this.pos.getTo() == b.pos.getFrom()) {
+				// // sequential different edges
+				// } else {
+				// throw new RuntimeException("BUM! Unforeseen case.");
+				// }
 
 				boidsInSight.add(b);
 			}
