@@ -13,7 +13,7 @@ import agent.TSPGoalEvaluator;
  */
 public class MainController {
 	static int maxIterations = 1000; // Max iterations
-	static boolean displaySteps = false; // show boids' movement on each iteration
+	static boolean displaySteps = true; // show boids' movement on each iteration
 
 	// Constants I believe their optimal values depend on the number of cities
 	static int numberOfCities = 8;
@@ -37,14 +37,14 @@ public class MainController {
 	// TraditionalGraph graph = GenerateSparseInstance.GenerateSparseGraph(numberOfCities); // Sparse
 	static TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully connected
 
-	static Problem problem = new TSPProblem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
+	static Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
 
 	public static void main(String[] args) {
 		long startTime = System.nanoTime();
 
-		// problem.graphics = displaySteps;
-		// System.out.println(problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance,
-		// weightOfOccupancy, boidVisionRange, boidSpeed, goal));
+		problem.graphics = displaySteps;
+		System.out.println(problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance,
+				weightOfOccupancy, boidVisionRange, boidSpeed, goal));
 
 		// testWD(problem);
 		// testWO(problem);
@@ -52,7 +52,7 @@ public class MainController {
 		// testMaxAgents(problem);
 		// testBoidVision(problem);
 		// testSegmentCapacity();
-		testSegmentLength();
+		// testSegmentLength();
 
 		long estimatedTime = System.nanoTime() - startTime;
 		System.out.println("Execution Time: " + estimatedTime / 1000000000.0f + " seconds.");
@@ -170,7 +170,7 @@ public class MainController {
 			float average = 0f;
 			float divider = 100f;
 			for (int i = 0; i < 100; i++) {
-				Problem problem = new TSPProblem(new FlockingGraph(graph, segmentLength, capacity), maxIterations);
+				Problem problem = new Problem(new FlockingGraph(graph, segmentLength, capacity), maxIterations);
 				Tour solution = problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance,
 						weightOfOccupancy, boidVisionRange, boidSpeed, goal);
 				if (solution != null) {
@@ -192,8 +192,7 @@ public class MainController {
 			float average = 0f;
 			float divider = 100f;
 			for (int i = 0; i < 100; i++) {
-				Problem problem = new TSPProblem(new FlockingGraph(graph, segmentLength, segmentCapacity),
-						maxIterations);
+				Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
 				Tour solution = problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance,
 						weightOfOccupancy, boidVisionRange, boidSpeed, goal);
 				if (solution != null) {
