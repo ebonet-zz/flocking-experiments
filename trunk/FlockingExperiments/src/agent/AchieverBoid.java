@@ -136,9 +136,9 @@ public class AchieverBoid extends Boid {
 		}
 
 		Edge nextEdge = loadEdge(currentNode, nextNode);
-//		if (nextEdge.getLength() < 0) {
-//			throw new RuntimeException("Bad edge");
-//		}
+		if (nextEdge.getLength() < 0) {
+			throw new RuntimeException("Bad edge");
+		}
 
 		Edge currentEdge = this.pos.edge;
 
