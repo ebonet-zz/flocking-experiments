@@ -150,8 +150,7 @@ public class Problem {
 		Segment nextWouldBeSegment = this.distanceGraph.getSegmentForPosition(newWouldBePos);
 
 		while ((nextWouldBeSegment.isFull())) {
-			newWouldBePos = new Position(this.distanceGraph.getEdge(startNode, endNode),
-					this.distanceGraph.getEdgeLength(startNode, endNode) * r.nextFloat());
+			newWouldBePos.distanceFromStart = this.distanceGraph.getEdgeLength(startNode, endNode) * r.nextFloat();
 			nextWouldBeSegment = this.distanceGraph.getSegmentForPosition(newWouldBePos);
 		}
 		return newWouldBePos;
