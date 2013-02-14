@@ -60,6 +60,8 @@ public class Problem {
 	public Tour solve(double boidsPerIteration, int maxBoids, double densityThreshold, double wDist, double wOccup,
 			double vision, double speed, GoalEvaluator goal) {
 
+		System.gc();
+		
 		// this.graphics = true;
 		Tour expectedShortestTour = null;
 		this.distanceGraph.resetAndBuildSegments();

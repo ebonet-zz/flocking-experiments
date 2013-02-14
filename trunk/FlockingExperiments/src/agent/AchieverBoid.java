@@ -114,7 +114,13 @@ public class AchieverBoid extends Boid {
 			}
 			nextNode = this.pathQueue.poll();
 		}
-		moveToNextEdge(loadEdge(currentNode, nextNode));
+		
+		Edge nextEdge = loadEdge(currentNode, nextNode);
+		if(nextEdge.getLength() < 0){
+			throw new RuntimeException("Bad edge");
+		}
+		
+		moveToNextEdge(nextEdge);
 	}
 
 	@Override
