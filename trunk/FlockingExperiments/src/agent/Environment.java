@@ -1,4 +1,4 @@
-package controller;
+package agent;
 
 import graph.FlockingGraph;
 import graph.Tour;
@@ -11,8 +11,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import util.SortableKeyValue;
-import agent.AchieverBoid;
-import agent.Boid;
 
 public class Environment {
 	private Set<Boid> freeBoids;

@@ -1,5 +1,6 @@
 package agent;
 
+import goal.GoalEvaluator;
 import graph.Edge;
 import graph.FlockingGraph;
 import graph.Position;
@@ -14,7 +15,6 @@ import java.util.Random;
 
 import util.SortableKeyValue;
 import util.WeightedRouletteWheelSelector;
-import controller.Environment;
 
 /**
  * Our explorational Bird-like object agent
