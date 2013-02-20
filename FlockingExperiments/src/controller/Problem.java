@@ -61,9 +61,8 @@ public class Problem {
 			double vision, double speed, GoalEvaluator goal) {
 
 		System.gc();
-		
+
 		// this.graphics = true;
-		Tour expectedShortestTour = null;
 		this.distanceGraph.resetAndBuildSegments();
 
 		FlockingGraphViewer viewer = null;
@@ -95,15 +94,10 @@ public class Problem {
 				b.tryToMove(b.getSpeed());
 			}
 
-			SortableKeyValue<Tour, Double> mostDensePath = environment.getMostDensePath();
-			if (mostDensePath != null) {
-				expectedShortestTour = mostDensePath.keyObject;
-				Double density = mostDensePath.valueToUseOnSorting;
-
-				if (density.compareTo(densityThreshold) >= 0) {
-					System.out.println("Converged in Iteration " + t);
-					break;
-				}
+			Tour result = testAlgorithmTermination(environment, densityThreshold);
+			if (result != null) {
+				System.out.println("Converged in Iteration " + t);
+				return result;
 			}
 
 			if (this.graphics) {
@@ -116,22 +110,20 @@ public class Problem {
 			}
 			// System.out.println("NUmber of flocks:" + environment.getNumberOfFlocks());
 		}
-		// if (!this.graphics) {
-		// // Show only the final positions of all the boids
-		// viewer = new FlockingGraphViewer(this.distanceGraph);
-		// viewer.openViewer();
-		// Set<Boid> aliveBoids = environment.getAllBoids();
-		// draw(viewer, aliveBoids);
-		// try {
-		// Thread.sleep(100);
-		// } catch (InterruptedException exception) {
-		// exception.printStackTrace();
-		// }
-		//
-		// environment.printDistancesMap();
-		// }
 
-		return expectedShortestTour;
+		return null;
+	}
+
+	protected Tour testAlgorithmTermination(Environment environment, double densityThreshold) {
+		SortableKeyValue<Tour, Double> mostDensePath = environment.getMostDensePath();
+		if (mostDensePath != null) {
+			Double density = mostDensePath.valueToUseOnSorting;
+
+			if (density.compareTo(densityThreshold) >= 0) {
+				return mostDensePath.keyObject;
+			}
+		}
+		return null;
 	}
 
 	private void spawnBoid(Random r, Environment environment, GoalEvaluator goal, double boidSpeed, double visionRange,

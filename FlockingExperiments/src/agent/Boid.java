@@ -274,7 +274,7 @@ public class Boid {
 		return overallDistance - (this.pos.getDistanceToEdgeEnd());
 	}
 
-	private Double getPartialChoiceProbability(Edge edge) {
+	protected Double getPartialChoiceProbability(Edge edge, List<Edge> possibleEdges) {
 		// TODO: Maybe update this to include all the visible segments?
 		Position p = new Position(edge, 0d);
 		Segment firstSegment = getSegment(p);
@@ -313,13 +313,13 @@ public class Boid {
 		}
 	}
 
-	private Edge selectNextEdge(List<Edge> possibleEdges) {
+	protected Edge selectNextEdge(List<Edge> possibleEdges) {
 		List<SortableKeyValue<?, Double>> edgeProbabilityPairs = new ArrayList<SortableKeyValue<?, Double>>();
 		Double totalSum = 0d;
 
 		// calculate
 		for (Edge e : possibleEdges) {
-			Double probability = getPartialChoiceProbability(e);
+			Double probability = getPartialChoiceProbability(e, possibleEdges);
 			if (probability.compareTo(0d) > 0) {
 				totalSum += probability;
 				edgeProbabilityPairs.add(new SortableKeyValue<Edge, Double>(e, probability));

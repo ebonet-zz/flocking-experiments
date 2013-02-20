@@ -83,10 +83,6 @@ public class Environment {
 		} else {
 			this.foundToursPopulations.put(pathToFollow, 1);
 		}
-
-		// System.out.println("Registering Boid");
-		// System.out.println(this.pathsTaken.toString());
-		// System.out.println("");
 	}
 
 	public void turnIntoAchiever(Boid boid) {
@@ -104,10 +100,5 @@ public class Environment {
 				this.foundToursPopulations.put(pathToFollow, this.foundToursPopulations.get(pathToFollow) - 1);
 			}
 		}
-
-		// System.out.println("Unregistering Boid");
-		// System.out.println(this.pathsTaken.toString());
-		// System.out.println("");
-
 	}
 }
