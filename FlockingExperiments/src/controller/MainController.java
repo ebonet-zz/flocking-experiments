@@ -12,12 +12,12 @@ import agent.TSPGoalEvaluator;
  * @author Balthazar. Created Jan 28, 2013.
  */
 public class MainController {
-	static int maxIterations = 1000; // Max iterations
+	static int maxIterations = 5000; // Max iterations
 	static boolean displaySteps = true; // show boids' movement on each iteration
 
 	// Constants I believe their optimal values depend on the number of cities
 	static int numberOfCities = 8;
-	static int maxAgents = 3 * numberOfCities * numberOfCities;
+	static int maxAgents = 3 * numberOfCities * numberOfCities * 10000;
 	static float multiplierBoidSpawn = 1f;
 	static float densityThreshold = 0.7f;
 
@@ -27,7 +27,7 @@ public class MainController {
 	static float boidSpeed = 2f;
 	static float boidVisionRange = boidSpeed * 2;
 
-	static int segmentCapacity = 3;
+	static int segmentCapacity = 1;
 	static float segmentLength = 1f;
 
 	// static GoalEvaluator goal = new EndNodeGoalEvaluator(3);
@@ -37,10 +37,10 @@ public class MainController {
 //	 static TraditionalGraph graph = GenerateSparseInstance.GenerateSparseGraph(numberOfCities); // Sparse
 	 static TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully connected
 
-	static Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
+//	static Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
 
-	// static Problem problem = new WollowskiProblem(new FlockingGraph(graph, segmentLength, segmentCapacity),
-	// maxIterations);
+	 static Problem problem = new WollowskiProblem(new FlockingGraph(graph, segmentLength, segmentCapacity),
+	 maxIterations);
 
 	public static void main(String[] args) {
 		long startTime = System.nanoTime();

@@ -5,6 +5,7 @@ import graph.FlockingGraph;
 import graph.Position;
 import graph.Tour;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -37,6 +38,7 @@ public class WollowskiProblem extends Problem {
 			Edge e = environment.getFlockingGraph().getEdge(0, n);
 
 			if (environment.getFlockingGraph().isEdgeFull(e)) {
+				// TODO: The pruning is making this end before it should, because boids get clogged in subtours
 				return traceTourFoundByAlgorithm(environment, goal);
 			}
 		}
@@ -52,6 +54,32 @@ public class WollowskiProblem extends Problem {
 		boolean linking = false;
 		do {
 			List<Integer> neighbors = environment.getFlockingGraph().getNeighborsOf(currentNode);
+
+			ArrayList<Integer> unvisitedNeighbors = new ArrayList<>();
+			unvisitedNeighbors.addAll(neighbors);
+
+			for (int i : t.locations) {
+				unvisitedNeighbors.remove(new Integer(i));
+			}
+
+			if (!unvisitedNeighbors.isEmpty()) {
+				neighbors = unvisitedNeighbors;
+			} else {
+				boolean gotAllCities = true;
+				for (int i = 0; i < environment.getFlockingGraph().getNumberOfNodes(); i++) {
+					if (!t.locations.contains(new Integer(i))) {
+						gotAllCities = false;
+						break;
+					}
+				}
+				if (gotAllCities) {
+					Integer startNode = t.firstLocation();
+					if (neighbors.contains(startNode)) {
+						neighbors.clear();
+						neighbors.add(startNode);
+					}
+				}
+			}
 
 			linking = false;
 			for (Integer n : neighbors) {
@@ -70,6 +98,15 @@ public class WollowskiProblem extends Problem {
 		t.calculateCost(environment.getFlockingGraph());
 
 		return t;
+	}
+
+	private int countOccurences(Tour t, Integer index) {
+		int r = 0;
+		for (Integer i : t.locations) {
+			if (i.equals(index))
+				r++;
+		}
+		return r;
 	}
 
 }
