@@ -46,6 +46,7 @@ public class WollowskiProblem extends Problem {
 	}
 
 	private Tour traceTourFoundByAlgorithm(Environment environment, GoalEvaluator goal) {
+		// TODO: Fix this, its wrong
 		Tour t = new Tour();
 
 		int currentNode = 0;
