@@ -95,6 +95,7 @@ public class WollowskiBoid extends Boid {
 		int totalEdgeChoices = possibleEdges.size();
 		int visibleBoidsInThisChoice = visibleBoidsInEdge.size();
 
+		// TODO: maybe this should consider distances to don't be so dumb
 		Double probability = Math.pow(visibleBoidsInThisChoice, this.visibleBoidsInPathWeight)
 				+ Math.pow(1d / totalEdgeChoices, this.numberOfChoicesWeight);
 
