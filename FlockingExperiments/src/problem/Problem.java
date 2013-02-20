@@ -1,5 +1,6 @@
-package controller;
+package problem;
 
+import goal.GoalEvaluator;
 import graph.FlockingGraph;
 import graph.Position;
 import graph.Segment;
@@ -10,11 +11,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+
 import util.SortableKeyValue;
 import viewer.FlockingGraphViewer;
 import viewer.MovingObject;
 import agent.Boid;
-import agent.GoalEvaluator;
+import agent.Environment;
 
 /**
  * Defines a Flocking-TSP problem.
@@ -54,16 +56,17 @@ public class Problem {
 
 	/**
 	 * Attempts to solve the problem given the constant values below
+	 * @param displaySteps 
 	 * 
 	 * @return The information about the best found Tour (path)
 	 */
 	public Tour solve(double boidsPerIteration, int maxBoids, double densityThreshold, double wDist, double wOccup,
-			double vision, double speed, GoalEvaluator goal) {
+			double vision, double speed, GoalEvaluator goal, boolean displaySteps) {
 
 		System.out.println("Algorithm started!");
 		System.gc();
 
-		// this.graphics = true;
+	    this.graphics = displaySteps;
 		this.distanceGraph.resetAndBuildSegments();
 
 		FlockingGraphViewer viewer = null;

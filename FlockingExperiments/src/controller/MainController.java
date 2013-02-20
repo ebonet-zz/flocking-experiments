@@ -1,10 +1,12 @@
 package controller;
 
+import goal.GoalEvaluator;
+import goal.TSPGoalEvaluator;
 import graph.FlockingGraph;
 import graph.Tour;
 import graph.TraditionalGraph;
-import agent.GoalEvaluator;
-import agent.TSPGoalEvaluator;
+import problem.Problem;
+import problem.WollowskiProblem;
 
 /**
  * Main program controller and entry point. Starts everything.
@@ -33,21 +35,20 @@ public class MainController {
 	// static GoalEvaluator goal = new EndNodeGoalEvaluator(3);
 	static GoalEvaluator goal = new TSPGoalEvaluator();
 
-//	static TraditionalGraph graph = GenerateBasicInstance.GenerateBasicGraph(); // Sparse
-//	 static TraditionalGraph graph = GenerateSparseInstance.GenerateSparseGraph(numberOfCities); // Sparse
-	 static TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully connected
+	// static TraditionalGraph graph = GenerateBasicInstance.GenerateBasicGraph(); // Sparse
+	// static TraditionalGraph graph = GenerateSparseInstance.GenerateSparseGraph(numberOfCities); // Sparse
+	static TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully connected
 
-//	static Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
+	// static Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
 
-	 static Problem problem = new WollowskiProblem(new FlockingGraph(graph, segmentLength, segmentCapacity),
-	 maxIterations);
+	static Problem problem = new WollowskiProblem(new FlockingGraph(graph, segmentLength, segmentCapacity),
+			maxIterations);
 
 	public static void main(String[] args) {
 		long startTime = System.nanoTime();
 
-		problem.graphics = displaySteps;
 		System.out.println(problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance,
-				weightOfOccupancy, boidVisionRange, boidSpeed, goal));
+				weightOfOccupancy, boidVisionRange, boidSpeed, goal, displaySteps));
 
 		// testWD(problem);
 		// testWO(problem);
@@ -67,7 +68,7 @@ public class MainController {
 			float divider = 100f;
 			for (int i = 0; i < 100; i++) {
 				Tour solution = problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, wD, weightOfOccupancy,
-						boidVisionRange, boidSpeed, goal);
+						boidVisionRange, boidSpeed, goal, displaySteps);
 				if (solution != null) {
 					average += solution.lastCalculatedCost;
 				} else {
@@ -88,7 +89,7 @@ public class MainController {
 			float divider = 100f;
 			for (int i = 0; i < 100; i++) {
 				Tour solution = problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance, wO,
-						boidVisionRange, boidSpeed, goal);
+						boidVisionRange, boidSpeed, goal, displaySteps);
 				if (solution != null) {
 					average += solution.lastCalculatedCost;
 				} else {
@@ -109,7 +110,7 @@ public class MainController {
 			float divider = 100f;
 			for (int i = 0; i < 100; i++) {
 				Tour solution = problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance,
-						weightOfOccupancy, boidVisionRange, speed, goal);
+						weightOfOccupancy, boidVisionRange, speed, goal, displaySteps);
 				if (solution != null) {
 					average += solution.lastCalculatedCost;
 				} else {
@@ -130,7 +131,7 @@ public class MainController {
 			float divider = 100f;
 			for (int i = 0; i < 100; i++) {
 				Tour solution = problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance,
-						weightOfOccupancy, visionMultiplier * boidSpeed, boidSpeed, goal);
+						weightOfOccupancy, visionMultiplier * boidSpeed, boidSpeed, goal, displaySteps);
 				if (solution != null) {
 					average += solution.lastCalculatedCost;
 				} else {
@@ -152,7 +153,8 @@ public class MainController {
 			float divider = 100f;
 			for (int i = 0; i < 100; i++) {
 				Tour solution = problem.solve(multiplierBoidSpawn, numberOfCities * maxAgentsMultiplier,
-						densityThreshold, weightOfDistance, weightOfOccupancy, boidVisionRange, boidSpeed, goal);
+						densityThreshold, weightOfDistance, weightOfOccupancy, boidVisionRange, boidSpeed, goal,
+						displaySteps);
 				if (solution != null) {
 					average += solution.lastCalculatedCost;
 				} else {
@@ -175,7 +177,7 @@ public class MainController {
 			for (int i = 0; i < 100; i++) {
 				Problem problem = new Problem(new FlockingGraph(graph, segmentLength, capacity), maxIterations);
 				Tour solution = problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance,
-						weightOfOccupancy, boidVisionRange, boidSpeed, goal);
+						weightOfOccupancy, boidVisionRange, boidSpeed, goal, displaySteps);
 				if (solution != null) {
 					average += solution.lastCalculatedCost;
 				} else {
@@ -197,7 +199,7 @@ public class MainController {
 			for (int i = 0; i < 100; i++) {
 				Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
 				Tour solution = problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance,
-						weightOfOccupancy, boidVisionRange, boidSpeed, goal);
+						weightOfOccupancy, boidVisionRange, boidSpeed, goal, displaySteps);
 				if (solution != null) {
 					average += solution.lastCalculatedCost;
 				} else {

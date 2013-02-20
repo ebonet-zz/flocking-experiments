@@ -1,5 +1,6 @@
-package controller;
+package problem;
 
+import goal.GoalEvaluator;
 import graph.Edge;
 import graph.FlockingGraph;
 import graph.Position;
@@ -9,8 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+
 import agent.Boid;
-import agent.GoalEvaluator;
+import agent.Environment;
 import agent.WollowskiBoid;
 
 /**

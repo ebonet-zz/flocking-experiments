@@ -1,4 +1,4 @@
-package agent;
+package goal;
 
 import graph.FlockingGraph;
 import graph.Tour;

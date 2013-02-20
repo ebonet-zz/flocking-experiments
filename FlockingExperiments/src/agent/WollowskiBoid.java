@@ -1,5 +1,6 @@
 package agent;
 
+import goal.GoalEvaluator;
 import graph.Edge;
 import graph.Position;
 import graph.Segment;
@@ -11,7 +12,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import controller.Environment;
 
 public class WollowskiBoid extends Boid {
 
