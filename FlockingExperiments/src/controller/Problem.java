@@ -60,6 +60,7 @@ public class Problem {
 	public Tour solve(double boidsPerIteration, int maxBoids, double densityThreshold, double wDist, double wOccup,
 			double vision, double speed, GoalEvaluator goal) {
 
+		System.out.println("Algorithm started!");
 		System.gc();
 
 		// this.graphics = true;
@@ -80,11 +81,18 @@ public class Problem {
 		// Main Loop
 		for (int t = 1; t <= this.maxIterations; t++) { // In each iteration
 
-			if (environment.getAllBoids().size() < maxBoids) {
+			if (environment.countAllBoids() < maxBoids
+					&& environment.getAllAchievers().size() <= (environment.countAllBoids() / 3)) {
 				currentBoidCreationProgress += boidsPerIteration;
 
 				while (new Double(currentBoidCreationProgress).compareTo(1d) >= 0) {
-					spawnBoid(r, environment, goal, speed, vision, wDist, wOccup);
+					try {
+						spawnBoid(r, environment, goal, speed, vision, wDist, wOccup);
+					} catch (Exception exception) {
+						System.out.println("Skept a boid creation because initial paths are too crowded.");
+						System.out.println("This indicates a possible 'clogged graph' deadlock.");
+						System.out.println("Consider using less agents for this problem config.\n");
+					}
 					currentBoidCreationProgress -= 1d;
 				}
 			}
@@ -127,14 +135,14 @@ public class Problem {
 	}
 
 	private void spawnBoid(Random r, Environment environment, GoalEvaluator goal, double boidSpeed, double visionRange,
-			double weightOfDistance, double weightOfOccupancy) {
+			double weightOfDistance, double weightOfOccupancy) throws Exception {
 		Position newWouldBePos = getSpawnPosition(r);
 		double speed = randomize(boidSpeed, r);
 		Boid newBoid = createNewBoid(newWouldBePos, speed, visionRange, weightOfDistance, weightOfOccupancy,
 				environment, goal, r);
 	}
 
-	protected Position getSpawnPosition(Random r) {
+	protected Position getSpawnPosition(Random r) throws Exception {
 		Integer startNode = 0;
 		Integer[] possibleEndNodes = this.distanceGraph.getArrayOfNeighborsOf(startNode);
 		int nextNodeIndex = r.nextInt(possibleEndNodes.length);
@@ -143,10 +151,23 @@ public class Problem {
 		Position newWouldBePos = new Position(this.distanceGraph.getEdge(startNode, endNode), 0d);
 		Segment nextWouldBeSegment = this.distanceGraph.getSegmentForPosition(newWouldBePos);
 
-		while ((nextWouldBeSegment.isFull())) {
-			newWouldBePos.distanceFromStart = this.distanceGraph.getEdgeLength(startNode, endNode) * r.nextFloat();
+		int attemptCount = 0;
+
+		while ((nextWouldBeSegment.isFull() && attemptCount++ < 10)) {
+			System.gc();
+
+			nextNodeIndex = r.nextInt(possibleEndNodes.length);
+			endNode = possibleEndNodes[nextNodeIndex];
+
+			newWouldBePos = new Position(this.distanceGraph.getEdge(startNode, endNode),
+					this.distanceGraph.getEdgeLength(startNode, endNode) * r.nextFloat());
 			nextWouldBeSegment = this.distanceGraph.getSegmentForPosition(newWouldBePos);
 		}
+
+		if (attemptCount > 10) {
+			throw new Exception("Too crowded to spawn new agent");
+		}
+
 		return newWouldBePos;
 	}
 

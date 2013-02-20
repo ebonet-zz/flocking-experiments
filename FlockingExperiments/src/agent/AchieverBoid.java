@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.Random;
 import java.util.Set;
 
 public class AchieverBoid extends Boid {
@@ -37,11 +36,9 @@ public class AchieverBoid extends Boid {
 		this.environment.registerPath(this.pathToFollow);
 		this.pathQueue = new LinkedList<>();
 
-		Random rand = new Random();
-
-		float r = rand.nextFloat();
+		float r = this.rand.nextFloat();
 		float g = 0;
-		float b = rand.nextFloat();
+		float b = this.rand.nextFloat();
 
 		this.color = new Color(r, g, b);
 
