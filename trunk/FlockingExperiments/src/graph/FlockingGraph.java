@@ -116,6 +116,45 @@ public class FlockingGraph extends TraditionalGraph {
 		return seg;
 	}
 
+	public LinkedList<Segment> getSegmentsUpToPosition(Position pos) {
+		LinkedList<Segment> segmentsForEdge = this.edgeSegments.get(pos.edge);
+		Iterator<Segment> it = segmentsForEdge.iterator();
+		if (!it.hasNext()) {
+			return null;
+		}
+
+		LinkedList<Segment> result = new LinkedList<>();
+
+		Segment seg = it.next();
+		while (!seg.contains(pos)) {
+			result.add(seg);
+			seg = it.next();
+		}
+
+		result.add(seg);
+
+		return result;
+	}
+
+	public LinkedList<Segment> getSegmentsForEdge(Edge e) {
+		return this.edgeSegments.get(e);
+	}
+
+	public boolean isEdgeFull(Edge e) {
+		LinkedList<Segment> segmentsForEdge = new LinkedList<>();
+		segmentsForEdge.addAll(getSegmentsForEdge(e));
+		
+		segmentsForEdge.removeLast();
+
+		for (Segment s : segmentsForEdge) {
+			if (!s.isFull()) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	public void resetAndBuildSegments() {
 		if (!this.edgeSegments.isEmpty()) {
 			this.edgeSegments.clear();

@@ -53,7 +53,6 @@ public class AchieverBoid extends Boid {
 	public boolean canSee(Boid b) {
 		if (new Double(this.pos.getDistanceToEdgeEnd()).compareTo(this.visionRange) >= 0) {
 			// Vision is completely inside the edge
-
 			if (!b.pos.isSameEdge(this.pos)) {
 				return false;
 			}
@@ -68,7 +67,6 @@ public class AchieverBoid extends Boid {
 
 		} else {
 			// Vision exceeds edge
-
 			if (b.pos.isSameEdge(this.pos)) {
 				Double difference = b.getPos().getDistance() - this.pos.getDistance();
 
@@ -101,7 +99,7 @@ public class AchieverBoid extends Boid {
 			added = true;
 		}
 
-		if (this.pathQueue.isEmpty()) { // this.goalEvaluator.isGoal(getGraph(), this.pathTaken)) {
+		if (this.pathQueue.isEmpty()) {
 			if (checkSegmentOccupation(getSegment(new Position(loadEdge(this.pathToFollow.get(0),
 					this.pathToFollow.get(1)), 0d)))) {
 				respawn();
@@ -115,26 +113,10 @@ public class AchieverBoid extends Boid {
 		}
 
 		int currentNode = this.getPos().edge.getTo();
-		// int nodeIndex = this.pathToFollow.indexOf(currentNode);
-		// int nextNode = this.pathToFollow.get(nodeIndex + 1);
 		int nextNode = this.pathQueue.peek();
-		while (nextNode == currentNode) {
-			if (this.pathQueue.isEmpty()) {
-				if (checkSegmentOccupation(getSegment(new Position(loadEdge(this.pathToFollow.get(0),
-						this.pathToFollow.get(1)), 0d)))) {
-					respawn();
-				} else {
-					this.pathQueue.offer(nextNode);
-					if (added) {
-						this.pathTaken.locations.remove(this.pathTaken.locations.size() - 1);
-						added = false;
-					}
-				}
-				return;
-			}
-			nextNode = this.pathQueue.poll();
+		if (nextNode == currentNode) {
+			throw new RuntimeException("Node Selection Glitch");
 		}
-
 		Edge nextEdge = loadEdge(currentNode, nextNode);
 		if (nextEdge.getLength() < 0) {
 			throw new RuntimeException("Bad edge");
@@ -159,8 +141,6 @@ public class AchieverBoid extends Boid {
 	}
 
 	public void respawn() {
-
-		// System.out.println(this.pathToFollow.toString());
 		this.pathTaken.clear();
 
 		this.pathQueue.clear();
@@ -171,7 +151,6 @@ public class AchieverBoid extends Boid {
 
 		this.setPosition(new Position(loadEdge(firstNode, secondNode), 0d));
 		this.pathTaken.offer(firstNode);
-
 	}
 
 	@Override
@@ -203,7 +182,6 @@ public class AchieverBoid extends Boid {
 		}
 
 		// 4) Move as before
-
 		super.tryToMove(distance);
 	}
 
@@ -229,24 +207,7 @@ public class AchieverBoid extends Boid {
 		Set<AchieverBoid> boidsInSight = new HashSet<>();
 
 		for (AchieverBoid b : this.environment.getAllAchievers()) {
-
 			if (canSee(b)) {
-				// if (b.pos.edge == this.pos.edge) {
-				// if (b.pos.getTo() == this.pos.getTo()) {
-				// // same edge, same direction
-				// } else if (b.pos.getFrom() == this.pos.getTo()) {
-				// // same edge, opposite directions
-				// } else {
-				// throw new RuntimeException("BUM! Unforeseen case.");
-				// }
-				// } else if (this.pos.getTo() == b.pos.getTo()) {
-				// // converging different edges
-				// } else if (this.pos.getTo() == b.pos.getFrom()) {
-				// // sequential different edges
-				// } else {
-				// throw new RuntimeException("BUM! Unforeseen case.");
-				// }
-
 				boidsInSight.add(b);
 			}
 		}

@@ -3,8 +3,8 @@ package controller;
 import graph.FlockingGraph;
 import graph.Tour;
 import graph.TraditionalGraph;
+import agent.EndNodeGoalEvaluator;
 import agent.GoalEvaluator;
-import agent.TSPGoalEvaluator;
 
 /**
  * Main program controller and entry point. Starts everything.
@@ -16,7 +16,7 @@ public class MainController {
 	static boolean displaySteps = true; // show boids' movement on each iteration
 
 	// Constants I believe their optimal values depend on the number of cities
-	static int numberOfCities = 8;
+	static int numberOfCities = 5;
 	static int maxAgents = numberOfCities * 31;
 	static float multiplierBoidSpawn = 1f;
 	static float densityThreshold = 0.7f;
@@ -24,20 +24,22 @@ public class MainController {
 	// Constants I believe do not depend on the number of cities
 	static float weightOfDistance = 3f;
 	static float weightOfOccupancy = 1f;
-	static float boidSpeed = 2f;
+	static float boidSpeed = 0.5f;
 	static float boidVisionRange = boidSpeed * 2;
 
 	static int segmentCapacity = 3;
 	static float segmentLength = 1f;
 
-	// static GoalEvaluator goal = new EndNodeGoalEvaluator(3);
-	static GoalEvaluator goal = new TSPGoalEvaluator();
+	static GoalEvaluator goal = new EndNodeGoalEvaluator(3);
+	// static GoalEvaluator goal = new TSPGoalEvaluator();
 
-	// static TraditionalGraph graph = GenerateBasicInstance.GenerateBasicGraph(); // Sparse
-	static TraditionalGraph graph = GenerateSparseInstance.GenerateSparseGraph(numberOfCities); // Sparse
+	static TraditionalGraph graph = GenerateBasicInstance.GenerateBasicGraph(); // Sparse
+	// static TraditionalGraph graph = GenerateSparseInstance.GenerateSparseGraph(numberOfCities); // Sparse
 	// static TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully connected
 
-	static Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
+	// static Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
+	static Problem problem = new WollowskiProblem(new FlockingGraph(graph, segmentLength, segmentCapacity),
+			maxIterations);
 
 	public static void main(String[] args) {
 		long startTime = System.nanoTime();
