@@ -69,16 +69,16 @@ public class WollowskiBoid extends Boid {
 	protected Double getPartialChoiceProbability(Edge edge, List<Edge> possibleEdges) {
 
 		// Pruning when one edge is already full
-		for (Edge e : possibleEdges) {
-
-			if (getGraph().isEdgeFull(e)) {
-				if (!e.equals(edge)) {
-					return 0d;
-				} else {
-					return 1d;
-				}
-			}
-		}
+//		for (Edge e : possibleEdges) {
+//
+//			if (getGraph().isEdgeFull(e)) {
+//				if (!e.equals(edge)) {
+//					return 0d;
+//				} else {
+//					return 1d;
+//				}
+//			}
+//		}
 
 		// No option is full, go probabilities
 		Set<Boid> visibleBoidsInEdge = new HashSet<>();
