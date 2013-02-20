@@ -20,13 +20,11 @@ public class Environment {
 
 	private FlockingGraph graph;
 	private HashMap<Tour, Integer> foundToursPopulations;
-	private int maxAgents;
 
 	public Environment(FlockingGraph graph, int maxAgents) {
 		this.freeBoids = new HashSet<>();
 		this.achievers = new HashSet<>();
 		this.graph = graph;
-		this.maxAgents = maxAgents;
 		this.foundToursPopulations = new HashMap<>();
 	}
 
@@ -54,6 +52,10 @@ public class Environment {
 		return allBoids;
 	}
 
+	public int countAllBoids() {
+		return this.freeBoids.size() + this.achievers.size();
+	}
+
 	public FlockingGraph getFlockingGraph() {
 		return this.graph;
 	}
@@ -62,7 +64,7 @@ public class Environment {
 		ArrayList<SortableKeyValue<Tour, Double>> densities = new ArrayList<SortableKeyValue<Tour, Double>>();
 		for (Tour t : this.foundToursPopulations.keySet()) {
 			densities.add(new SortableKeyValue<Tour, Double>(t, this.foundToursPopulations.get(t)
-					/ (double) this.maxAgents));
+					/ (double) countAllBoids()));
 		}
 		if (densities.isEmpty()) {
 			return null;
