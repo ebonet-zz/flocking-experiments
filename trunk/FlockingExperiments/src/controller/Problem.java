@@ -94,7 +94,7 @@ public class Problem {
 				b.tryToMove(b.getSpeed());
 			}
 
-			Tour result = testAlgorithmTermination(environment, densityThreshold);
+			Tour result = testAlgorithmTermination(environment, densityThreshold, goal);
 			if (result != null) {
 				System.out.println("Converged in Iteration " + t);
 				return result;
@@ -114,7 +114,7 @@ public class Problem {
 		return null;
 	}
 
-	protected Tour testAlgorithmTermination(Environment environment, double densityThreshold) {
+	protected Tour testAlgorithmTermination(Environment environment, double densityThreshold, GoalEvaluator goal) {
 		SortableKeyValue<Tour, Double> mostDensePath = environment.getMostDensePath();
 		if (mostDensePath != null) {
 			Double density = mostDensePath.valueToUseOnSorting;

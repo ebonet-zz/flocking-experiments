@@ -31,19 +31,19 @@ public class WollowskiProblem extends Problem {
 	}
 
 	@Override
-	protected Tour testAlgorithmTermination(Environment environment, double densityThreshold) {
+	protected Tour testAlgorithmTermination(Environment environment, double densityThreshold, GoalEvaluator goal) {
 		List<Integer> neighborsOf0 = environment.getFlockingGraph().getNeighborsOf(0);
 		for (Integer n : neighborsOf0) {
 			Edge e = environment.getFlockingGraph().getEdge(0, n);
 
 			if (environment.getFlockingGraph().isEdgeFull(e)) {
-				return traceTourFoundByAlgorithm(environment);
+				return traceTourFoundByAlgorithm(environment, goal);
 			}
 		}
 		return null;
 	}
 
-	private Tour traceTourFoundByAlgorithm(Environment environment) {
+	private Tour traceTourFoundByAlgorithm(Environment environment, GoalEvaluator goal) {
 		Tour t = new Tour();
 
 		int currentNode = 0;
@@ -65,7 +65,7 @@ public class WollowskiProblem extends Problem {
 				}
 			}
 
-		} while (linking && currentNode != 0);
+		} while (linking && !goal.isGoal(environment.getFlockingGraph(), t));
 
 		t.calculateCost(environment.getFlockingGraph());
 
