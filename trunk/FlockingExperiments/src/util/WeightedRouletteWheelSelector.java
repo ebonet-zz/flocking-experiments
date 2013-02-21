@@ -4,17 +4,16 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Weighted Roulette Wheel Selector
+ * Weighted Roulette Wheel Selector.
  * 
  * @author Balthazar. Created Dec 10, 2012.
  */
 public class WeightedRouletteWheelSelector {
-	/**
-	 * The items that might be selected
-	 */
+
+	/** The items that might be selected. */
 	List<SortableKeyValue<?, Double>> items;
 
-	@SuppressWarnings("javadoc")
+	/** The random instance. */
 	Random rand = null;
 
 	/**
@@ -23,9 +22,12 @@ public class WeightedRouletteWheelSelector {
 	double totalSum = 0;
 
 	/**
-	 * Constructor that calculates the totalSum
+	 * Constructor that calculates the totalSum.
 	 * 
 	 * @param items
+	 *            the items
+	 * @param r
+	 *            the r
 	 */
 	public WeightedRouletteWheelSelector(List<SortableKeyValue<?, Double>> items, Random r) {
 		this.rand = r;
@@ -36,7 +38,7 @@ public class WeightedRouletteWheelSelector {
 	}
 
 	/**
-	 * Selects one item at random based on the weighted probabilities
+	 * Selects one item at random based on the weighted probabilities.
 	 * 
 	 * @return the selected item
 	 */

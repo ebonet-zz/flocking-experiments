@@ -16,6 +16,9 @@ import problem.WollowskiProblem;
  */
 public class MainController {
 
+	/**
+	 * Solve Shortest Path with Wollowski boids in the basic graph.
+	 */
 	public static void solveWollowskiSP() {
 		int maxIterations = 5000; // Max iterations
 		boolean displaySteps = true; // show boids' movement on each iteration
@@ -44,6 +47,9 @@ public class MainController {
 				visibleBoidsInPathWeight, boidVisionRange, boidSpeed, goal, displaySteps));
 	}
 
+	/**
+	 * Solve TSP with Wollowski boids in the basic graph.
+	 */
 	public static void solveWollowskiTSPBasicGraph() {
 		int maxIterations = 5000; // Max iterations
 		boolean displaySteps = true; // show boids' movement on each iteration
@@ -72,6 +78,9 @@ public class MainController {
 				visibleBoidsInPathWeight, boidVisionRange, boidSpeed, goal, displaySteps));
 	}
 
+	/**
+	 * Solve TSP with Wollowski boids in the 4 cities fully connected graph.
+	 */
 	public static void solveWollowskiTSP4CitiesFullConnectedGraph() {
 		int maxIterations = 5000; // Max iterations
 		boolean displaySteps = true; // show boids' movement on each iteration
@@ -93,7 +102,8 @@ public class MainController {
 
 		GoalEvaluator goal = new TSPGoalEvaluator();
 
-		TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully connected
+		TraditionalGraph graph = GenerateFullyConnectedInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully
+																												// connected
 
 		Problem problem = new WollowskiProblem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
 
@@ -101,6 +111,9 @@ public class MainController {
 				visibleBoidsInPathWeight, boidVisionRange, boidSpeed, goal, displaySteps));
 	}
 
+	/**
+	 * Solve TSP with Wollowski boids in the 4 cities sparse graph.
+	 */
 	public static void solveWollowskiTSP4CitiesSparseGraph() {
 		int maxIterations = 5000; // Max iterations
 		boolean displaySteps = true; // show boids' movement on each iteration
@@ -130,6 +143,9 @@ public class MainController {
 				visibleBoidsInPathWeight, boidVisionRange, boidSpeed, goal, displaySteps));
 	}
 
+	/**
+	 * Solve Shortest Path with Optimized boids in the basic graph.
+	 */
 	public static void solveOptimizedSP() {
 		int maxIterations = 5000; // Max iterations
 		boolean displaySteps = true; // show boids' movement on each iteration
@@ -159,6 +175,9 @@ public class MainController {
 				weightOfOccupancy, boidVisionRange, boidSpeed, goal, displaySteps));
 	}
 
+	/**
+	 * Solve TSP with Optimized boids in the basic graph.
+	 */
 	public static void solveOptimizedTSPBasicGraph() {
 		int maxIterations = 5000; // Max iterations
 		boolean displaySteps = true; // show boids' movement on each iteration
@@ -188,6 +207,9 @@ public class MainController {
 				weightOfOccupancy, boidVisionRange, boidSpeed, goal, displaySteps));
 	}
 
+	/**
+	 * Solve TSP with Optimized boids in the 4 cities fully connected graph.
+	 */
 	public static void solveOptimizedTSP4CitiesFullConnectedGraph() {
 		int maxIterations = 5000; // Max iterations
 		boolean displaySteps = true; // show boids' movement on each iteration
@@ -210,7 +232,8 @@ public class MainController {
 		// GoalEvaluator goal = new EndNodeGoalEvaluator(3);
 		GoalEvaluator goal = new TSPGoalEvaluator();
 
-		TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully connected
+		TraditionalGraph graph = GenerateFullyConnectedInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully
+																												// connected
 
 		Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
 
@@ -218,6 +241,9 @@ public class MainController {
 				weightOfOccupancy, boidVisionRange, boidSpeed, goal, displaySteps));
 	}
 
+	/**
+	 * Solve TSP with Optimized boids in the 4 cities sparse graph.
+	 */
 	public static void solveOptimizedTSP4CitiesSparseGraph() {
 		int maxIterations = 5000; // Max iterations
 		boolean displaySteps = true; // show boids' movement on each iteration
@@ -247,6 +273,9 @@ public class MainController {
 				weightOfOccupancy, boidVisionRange, boidSpeed, goal, displaySteps));
 	}
 
+	/**
+	 * Solve TSP with Optimized boids in the 8 cities fully connected graph.
+	 */
 	public static void solveOptimizedTSP8CitiesFullConnectedGraph() {
 		int maxIterations = 5000; // Max iterations
 		boolean displaySteps = true; // show boids' movement on each iteration
@@ -268,7 +297,8 @@ public class MainController {
 
 		GoalEvaluator goal = new TSPGoalEvaluator();
 
-		TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully connected
+		TraditionalGraph graph = GenerateFullyConnectedInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully
+																												// connected
 
 		Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
 
@@ -276,6 +306,9 @@ public class MainController {
 				weightOfOccupancy, boidVisionRange, boidSpeed, goal, displaySteps));
 	}
 
+	/**
+	 * Solve TSP with Optimized boids in the 8 cities sparse graph.
+	 */
 	public static void solveOptimizedTSP8CitiesSparseGraph() {
 		int maxIterations = 5000; // Max iterations
 		boolean displaySteps = true; // show boids' movement on each iteration
@@ -305,6 +338,9 @@ public class MainController {
 				weightOfOccupancy, boidVisionRange, boidSpeed, goal, displaySteps));
 	}
 
+	/**
+	 * Solve TSP with Optimized boids in the 30 cities fully connected graph.
+	 */
 	public static void solveOptimizedTSP30CitiesFullConnectedGraph() {
 		int maxIterations = 5000; // Max iterations
 		boolean displaySteps = true; // show boids' movement on each iteration
@@ -326,7 +362,8 @@ public class MainController {
 
 		GoalEvaluator goal = new TSPGoalEvaluator();
 
-		TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully connected
+		TraditionalGraph graph = GenerateFullyConnectedInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully
+																												// connected
 
 		Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
 
@@ -334,10 +371,16 @@ public class MainController {
 				weightOfOccupancy, boidVisionRange, boidSpeed, goal, displaySteps));
 	}
 
+	/**
+	 * The main method of the whole system.
+	 * 
+	 * @param args
+	 *            the arguments
+	 */
 	public static void main(String[] args) {
 		long startTime = System.nanoTime();
 
-		solveWollowskiSP();
+		// solveWollowskiSP();
 		// solveWollowskiTSPBasicGraph();
 		// solveWollowskiTSP4CitiesFullConnectedGraph();
 		// solveWollowskiTSP4CitiesSparseGraph();
@@ -348,7 +391,7 @@ public class MainController {
 		// solveOptimizedTSP4CitiesSparseGraph();
 
 		// solveOptimizedTSP8CitiesFullConnectedGraph();
-		// solveOptimizedTSP8CitiesSparseGraph();
+		 solveOptimizedTSP8CitiesSparseGraph();
 		// solveOptimizedTSP30CitiesFullConnectedGraph();
 
 		// testWD();
@@ -363,7 +406,10 @@ public class MainController {
 		System.out.println("Execution Time: " + estimatedTime / 1000000000.0f + " seconds.");
 	}
 
-	private static void testWD() {
+	/**
+	 * Test weight of distance.
+	 */
+	public static void testWD() {
 		int maxIterations = 5000; // Max iterations
 		boolean displaySteps = false; // show boids' movement on each iteration
 
@@ -383,7 +429,8 @@ public class MainController {
 
 		GoalEvaluator goal = new TSPGoalEvaluator();
 
-		TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully connected
+		TraditionalGraph graph = GenerateFullyConnectedInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully
+																												// connected
 
 		Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
 
@@ -407,7 +454,10 @@ public class MainController {
 		}
 	}
 
-	private static void testWO() {
+	/**
+	 * Test weight of occupancy.
+	 */
+	public static void testWO() {
 		int maxIterations = 5000; // Max iterations
 		boolean displaySteps = false; // show boids' movement on each iteration
 
@@ -427,7 +477,8 @@ public class MainController {
 
 		GoalEvaluator goal = new TSPGoalEvaluator();
 
-		TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully connected
+		TraditionalGraph graph = GenerateFullyConnectedInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully
+																												// connected
 
 		Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
 
@@ -451,7 +502,10 @@ public class MainController {
 		}
 	}
 
-	private static void testBoidSpeed() {
+	/**
+	 * Test boid speed.
+	 */
+	public static void testBoidSpeed() {
 		int maxIterations = 5000; // Max iterations
 		boolean displaySteps = false; // show boids' movement on each iteration
 
@@ -471,7 +525,8 @@ public class MainController {
 
 		GoalEvaluator goal = new TSPGoalEvaluator();
 
-		TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully connected
+		TraditionalGraph graph = GenerateFullyConnectedInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully
+																												// connected
 
 		Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
 
@@ -495,7 +550,10 @@ public class MainController {
 		}
 	}
 
-	private static void testBoidVision() {
+	/**
+	 * Test boid vision.
+	 */
+	public static void testBoidVision() {
 		int maxIterations = 5000; // Max iterations
 		boolean displaySteps = false; // show boids' movement on each iteration
 
@@ -515,7 +573,8 @@ public class MainController {
 
 		GoalEvaluator goal = new TSPGoalEvaluator();
 
-		TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully connected
+		TraditionalGraph graph = GenerateFullyConnectedInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully
+																												// connected
 
 		Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
 
@@ -540,7 +599,10 @@ public class MainController {
 		}
 	}
 
-	private static void testMaxAgents() {
+	/**
+	 * Test max agents.
+	 */
+	public static void testMaxAgents() {
 		int maxIterations = 5000; // Max iterations
 		boolean displaySteps = false; // show boids' movement on each iteration
 
@@ -560,7 +622,8 @@ public class MainController {
 
 		GoalEvaluator goal = new TSPGoalEvaluator();
 
-		TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully connected
+		TraditionalGraph graph = GenerateFullyConnectedInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully
+																												// connected
 
 		Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
 
@@ -586,7 +649,10 @@ public class MainController {
 		}
 	}
 
-	private static void testSegmentCapacity() {
+	/**
+	 * Test segment capacity.
+	 */
+	public static void testSegmentCapacity() {
 		int maxIterations = 5000; // Max iterations
 		boolean displaySteps = false; // show boids' movement on each iteration
 
@@ -606,7 +672,8 @@ public class MainController {
 
 		GoalEvaluator goal = new TSPGoalEvaluator();
 
-		TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully connected
+		TraditionalGraph graph = GenerateFullyConnectedInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully
+																												// connected
 
 		for (int capacity = 1; capacity <= 10; capacity += 1) {
 			float average = 0f;
@@ -629,7 +696,10 @@ public class MainController {
 		}
 	}
 
-	private static void testSegmentLength() {
+	/**
+	 * Test segment length.
+	 */
+	public static void testSegmentLength() {
 		int maxIterations = 5000; // Max iterations
 		boolean displaySteps = false; // show boids' movement on each iteration
 
@@ -649,7 +719,8 @@ public class MainController {
 
 		GoalEvaluator goal = new TSPGoalEvaluator();
 
-		TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully connected
+		TraditionalGraph graph = GenerateFullyConnectedInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully
+																												// connected
 
 		for (float segmentLength = 1; segmentLength <= 10; segmentLength += 1) {
 			float average = 0f;

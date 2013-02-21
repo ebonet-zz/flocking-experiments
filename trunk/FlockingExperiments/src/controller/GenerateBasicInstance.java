@@ -3,12 +3,18 @@ package controller;
 import graph.TraditionalGraph;
 
 /**
- * Generates the most basic shortest path problem graph
+ * Generates the most basic shortest path problem graph.
  * 
  * @author Balthazar. Created Jan 28, 2013.
  */
 public class GenerateBasicInstance {
 
+	/**
+	 * The main method, for testing only.
+	 * 
+	 * @param args
+	 *            the arguments
+	 */
 	public static void main(String args[]) {
 
 		TraditionalGraph world = GenerateBasicGraph();
@@ -25,6 +31,11 @@ public class GenerateBasicInstance {
 		}
 	}
 
+	/**
+	 * Generate basic graph.
+	 * 
+	 * @return the traditional graph
+	 */
 	public static TraditionalGraph GenerateBasicGraph() {
 
 		TraditionalGraph world = new TraditionalGraph(5);

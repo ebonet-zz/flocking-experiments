@@ -13,17 +13,21 @@ import util.SortableKeyValue;
  * @author Balthazar. Created Jan 22, 2013.
  */
 public class TraditionalGraph {
+
+	/** The Constant INVALID_VALUE for inexistant edges. */
 	public static final int INVALID_VALUE = -1;
 
+	/** The distance matrix. */
 	public int[][] distanceMatrix;
+
+	/** The number of nodes. */
 	int numberOfNodes;
 
 	/**
 	 * Fixed width graph constructor.
 	 * 
 	 * @param numberOfNodes
-	 * @param segmentLenght
-	 * @param segmentCapacity
+	 *            the number of nodes
 	 */
 	public TraditionalGraph(int numberOfNodes) {
 		this.numberOfNodes = numberOfNodes;
@@ -36,7 +40,9 @@ public class TraditionalGraph {
 	 * Fills every matrix cell with the given value.
 	 * 
 	 * @param value
+	 *            the value
 	 * @param matrix
+	 *            the matrix
 	 */
 	public void fillAll(int value, int[][] matrix) {
 		for (int i = 0; i < matrix.length; i++)
@@ -56,7 +62,9 @@ public class TraditionalGraph {
 	 * Retrieves the distances between two nodes.
 	 * 
 	 * @param nodeIndexA
+	 *            the node index a
 	 * @param nodeIndexB
+	 *            the node index b
 	 * @return The distance
 	 */
 	public int getEdgeLength(int nodeIndexA, int nodeIndexB) {
@@ -67,8 +75,11 @@ public class TraditionalGraph {
 	 * Creates a new link between the nodes with the current edge value for both ways.
 	 * 
 	 * @param nodeIndexA
+	 *            the node index a
 	 * @param nodeIndexB
+	 *            the node index b
 	 * @param edgeValue
+	 *            the edge value
 	 */
 	public void setEdgeLength(int nodeIndexA, int nodeIndexB, int edgeValue) {
 		this.distanceMatrix[nodeIndexA][nodeIndexB] = edgeValue;
@@ -79,6 +90,7 @@ public class TraditionalGraph {
 	 * Returns an array with the indexes that are neighbors to this one.
 	 * 
 	 * @param nodeIndex
+	 *            the node index
 	 * @return The array of neighbor indexes
 	 */
 	public Integer[] getArrayOfNeighborsOf(int nodeIndex) {
@@ -90,6 +102,7 @@ public class TraditionalGraph {
 	 * Returns an array with the indexes that are neighbors to this one.
 	 * 
 	 * @param nodeIndex
+	 *            the node index
 	 * @return The array of neighbor indexes
 	 */
 	public ArrayList<Integer> getNeighborsOf(int nodeIndex) {
@@ -107,6 +120,7 @@ public class TraditionalGraph {
 	 * Sorts the neighbors by edge value (distance) and returns the sorted set.
 	 * 
 	 * @param nodeIndex
+	 *            the node index
 	 * @return an ArrayList with the neighbors sorted by distance
 	 */
 	public ArrayList<Integer> getClosestNeighborsSortedByDistance(int nodeIndex) {
@@ -117,7 +131,9 @@ public class TraditionalGraph {
 	 * Sorts the neighbors by edge value (distance) and returns the sorted set.
 	 * 
 	 * @param nodeIndex
+	 *            the node index
 	 * @param maxListSize
+	 *            the max list size
 	 * @return an ArrayList with the neighbors sorted by distance
 	 */
 	public ArrayList<Integer> getClosestNeighborsSortedByDistance(int nodeIndex, int maxListSize) {
@@ -139,9 +155,10 @@ public class TraditionalGraph {
 	}
 
 	/**
-	 * Helper method to print a matrix line
+	 * Helper method to print a matrix line.
 	 * 
 	 * @param lineNumber
+	 *            the line number
 	 * @return a matrix line
 	 */
 	private String printLine(int lineNumber) {
@@ -158,6 +175,11 @@ public class TraditionalGraph {
 		return sb.toString();
 	}
 
+	/**
+	 * To string.
+	 * 
+	 * @return the string
+	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
