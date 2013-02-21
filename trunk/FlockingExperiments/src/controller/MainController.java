@@ -351,9 +351,9 @@ public class MainController {
 
 		// solveOptimizedTSP8CitiesFullConnectedGraph();
 		// solveOptimizedTSP8CitiesSparseGraph();
-		solveOptimizedTSP30CitiesFullConnectedGraph();
+		// solveOptimizedTSP30CitiesFullConnectedGraph();
 
-		// testWD();
+		testWD();
 		// testWO();
 		// testBoidSpeed();
 		// testMaxAgents();
@@ -367,10 +367,10 @@ public class MainController {
 
 	private static void testWD() {
 		int maxIterations = 5000; // Max iterations
-		boolean displaySteps = true; // show boids' movement on each iteration
+		boolean displaySteps = false; // show boids' movement on each iteration
 
 		// Constants I believe their optimal values depend on the number of cities
-		int numberOfCities = 8;
+		int numberOfCities = 30;
 		int maxAgents = 3 * numberOfCities * numberOfCities;
 		float multiplierBoidSpawn = 1f;
 		float densityThreshold = 0.7f;
@@ -411,7 +411,7 @@ public class MainController {
 
 	private static void testWO() {
 		int maxIterations = 5000; // Max iterations
-		boolean displaySteps = true; // show boids' movement on each iteration
+		boolean displaySteps = false; // show boids' movement on each iteration
 
 		// Constants I believe their optimal values depend on the number of cities
 		int numberOfCities = 8;
@@ -455,7 +455,7 @@ public class MainController {
 
 	private static void testBoidSpeed() {
 		int maxIterations = 5000; // Max iterations
-		boolean displaySteps = true; // show boids' movement on each iteration
+		boolean displaySteps = false; // show boids' movement on each iteration
 
 		// Constants I believe their optimal values depend on the number of cities
 		int numberOfCities = 8;
@@ -499,7 +499,7 @@ public class MainController {
 
 	private static void testBoidVision() {
 		int maxIterations = 5000; // Max iterations
-		boolean displaySteps = true; // show boids' movement on each iteration
+		boolean displaySteps = false; // show boids' movement on each iteration
 
 		// Constants I believe their optimal values depend on the number of cities
 		int numberOfCities = 8;
@@ -544,7 +544,7 @@ public class MainController {
 
 	private static void testMaxAgents() {
 		int maxIterations = 5000; // Max iterations
-		boolean displaySteps = true; // show boids' movement on each iteration
+		boolean displaySteps = false; // show boids' movement on each iteration
 
 		// Constants I believe their optimal values depend on the number of cities
 		int numberOfCities = 8;
@@ -590,7 +590,7 @@ public class MainController {
 
 	private static void testSegmentCapacity() {
 		int maxIterations = 5000; // Max iterations
-		boolean displaySteps = true; // show boids' movement on each iteration
+		boolean displaySteps = false; // show boids' movement on each iteration
 
 		// Constants I believe their optimal values depend on the number of cities
 		int numberOfCities = 8;
@@ -633,7 +633,7 @@ public class MainController {
 
 	private static void testSegmentLength() {
 		int maxIterations = 5000; // Max iterations
-		boolean displaySteps = true; // show boids' movement on each iteration
+		boolean displaySteps = false; // show boids' movement on each iteration
 
 		// Constants I believe their optimal values depend on the number of cities
 		int numberOfCities = 8;

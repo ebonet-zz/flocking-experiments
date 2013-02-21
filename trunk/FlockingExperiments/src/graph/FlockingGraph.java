@@ -11,6 +11,7 @@ import java.util.Map;
  * @author Balthazar. Created Jan 25, 2013.
  */
 public class FlockingGraph extends TraditionalGraph {
+	public static final double MINIMUM_DISTANCE_MARGIN = 0.01d;
 	public static final int DEFAULT_SEGMENT_LENGTH = 1;
 	public static final int DEFAULT_SEGMENT_CAPACITY = 3;
 
@@ -68,6 +69,7 @@ public class FlockingGraph extends TraditionalGraph {
 				s = new Segment(s.exclusiveEndLocation, this.segmentLength, this.getEdgeCapacity(edge));
 			} while (!s.contains(segmentEnd));
 
+			s = new Segment(s.startLocation, MINIMUM_DISTANCE_MARGIN, this.getEdgeCapacity(edge));
 			segmentList.offer(s);
 
 			this.edgeSegments.put(edge, segmentList);
@@ -143,7 +145,7 @@ public class FlockingGraph extends TraditionalGraph {
 	public boolean isEdgeFull(Edge e) {
 		LinkedList<Segment> segmentsForEdge = new LinkedList<>();
 		segmentsForEdge.addAll(getSegmentsForEdge(e));
-		
+
 		segmentsForEdge.removeLast();
 
 		for (Segment s : segmentsForEdge) {

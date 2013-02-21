@@ -22,8 +22,6 @@ import util.WeightedRouletteWheelSelector;
  * @author Balthazar. Created Jan 22, 2013.
  */
 public class Boid {
-	public static final double MINIMUM_DISTANCE_MARGIN = 0.01d;
-
 	protected Environment environment;
 	protected Position pos;
 	protected Double speed;
@@ -232,7 +230,11 @@ public class Boid {
 
 				Position minEdgePosition = this.pos;
 				Position maxEdgePosition = new Position(this.pos.edge, this.pos.distanceFromStart + distanceWithin
-						- MINIMUM_DISTANCE_MARGIN);
+						- FlockingGraph.MINIMUM_DISTANCE_MARGIN);
+
+				if (minEdgePosition.isAfterOrEqual(maxEdgePosition)) {
+					maxEdgePosition = minEdgePosition;
+				}
 
 				Segment minSegmentHere = getSegment(minEdgePosition);
 				Segment maxSegmentHere = getSegment(maxEdgePosition);
@@ -241,7 +243,7 @@ public class Boid {
 			} else {
 				if (distanceOnNext >= farthestAvailableOnNext.exclusiveEndLocation.distanceFromStart) {
 					double distance = farthestAvailableOnNext.exclusiveEndLocation.distanceFromStart
-							- MINIMUM_DISTANCE_MARGIN;
+							- FlockingGraph.MINIMUM_DISTANCE_MARGIN;
 					this.traveledDistance += distance;
 					this.setPosition(new Position(edge, distance));
 				} else {
@@ -304,7 +306,7 @@ public class Boid {
 		Segment farthestAvailable = getGraph().getFarthestAvailableSegment(current, limit);
 		double endOfTheSegment = farthestAvailable.exclusiveEndLocation.distanceFromStart;
 		// get to right before the end of the segment
-		double diff = endOfTheSegment - MINIMUM_DISTANCE_MARGIN - this.pos.distanceFromStart;
+		double diff = endOfTheSegment - FlockingGraph.MINIMUM_DISTANCE_MARGIN - this.pos.distanceFromStart;
 		double distance = diff < this.speed ? diff : this.speed;
 		if (distance > 0d) {
 			moveDistance(distance);
