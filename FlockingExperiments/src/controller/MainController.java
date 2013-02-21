@@ -21,8 +21,7 @@ public class MainController {
 		boolean displaySteps = true; // show boids' movement on each iteration
 
 		// Constants I believe their optimal values depend on the number of cities
-		int numberOfCities = 5;
-		int maxAgents = 3 * numberOfCities * numberOfCities * 1000;
+		int maxAgents = Integer.MAX_VALUE;
 		float multiplierBoidSpawn = 1f;
 		float densityThreshold = 0.7f;
 
@@ -50,8 +49,7 @@ public class MainController {
 		boolean displaySteps = true; // show boids' movement on each iteration
 
 		// Constants I believe their optimal values depend on the number of cities
-		int numberOfCities = 5;
-		int maxAgents = 3 * numberOfCities * numberOfCities * 1000;
+		int maxAgents = Integer.MAX_VALUE;
 		float multiplierBoidSpawn = 1f;
 		float densityThreshold = 0.7f;
 
@@ -80,7 +78,7 @@ public class MainController {
 
 		// Constants I believe their optimal values depend on the number of cities
 		int numberOfCities = 4;
-		int maxAgents = 3 * numberOfCities * numberOfCities * 1000;
+		int maxAgents = Integer.MAX_VALUE;
 		float multiplierBoidSpawn = 1f;
 		float densityThreshold = 0.7f;
 
@@ -109,7 +107,7 @@ public class MainController {
 
 		// Constants I believe their optimal values depend on the number of cities
 		int numberOfCities = 4;
-		int maxAgents = 3 * numberOfCities * numberOfCities * 1000;
+		int maxAgents = Integer.MAX_VALUE;
 		float multiplierBoidSpawn = 1f;
 		float densityThreshold = 0.7f;
 
@@ -339,7 +337,7 @@ public class MainController {
 	public static void main(String[] args) {
 		long startTime = System.nanoTime();
 
-		 solveWollowskiSP();
+		solveWollowskiSP();
 		// solveWollowskiTSPBasicGraph();
 		// solveWollowskiTSP4CitiesFullConnectedGraph();
 		// solveWollowskiTSP4CitiesSparseGraph();
