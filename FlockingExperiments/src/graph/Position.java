@@ -59,12 +59,12 @@ public final class Position implements Cloneable, Comparable<Position> {
 		return isBefore(p.distanceFromStart);
 	}
 
-	public boolean isSameEdge(int from, int to) {
-		return this.edge.isSameEdge(from, to);
-	}
-
 	public boolean isSameEdge(Position p) {
 		return this.edge.isSameEdge(p.edge);
+	}
+
+	public boolean isStrictlySameEdge(Position pos) {
+		return this.edge.isStrictlySameEdge(pos.edge);
 	}
 
 	@Override
@@ -123,4 +123,5 @@ public final class Position implements Cloneable, Comparable<Position> {
 		formatter.format("%.0f, ", this.distanceFromStart);
 		return sb.toString();
 	}
+
 }

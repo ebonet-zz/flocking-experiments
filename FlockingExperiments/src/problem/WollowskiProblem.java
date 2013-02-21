@@ -1,15 +1,15 @@
 package problem;
 
 import goal.GoalEvaluator;
-import graph.Edge;
 import graph.FlockingGraph;
 import graph.Position;
 import graph.Tour;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
-import util.SolutionBacktracker;
 import agent.Boid;
 import agent.Environment;
 import agent.WollowskiBoid;
@@ -30,25 +30,26 @@ public class WollowskiProblem extends Problem {
 	@Override
 	protected Tour testAlgorithmTermination(Environment environment, double densityThreshold, GoalEvaluator goal) {
 		List<Integer> neighborsOf0 = environment.getFlockingGraph().getNeighborsOf(0);
+		Set<Boid> boids = environment.getAllBoids();
 		for (Integer n : neighborsOf0) {
-			Edge e = environment.getFlockingGraph().getEdge(0, n);
+			for (Boid b : boids) {
+				WollowskiBoid boid = (WollowskiBoid) b;
+				if (!boid.citiesChecked.isEmpty() && boid.citiesChecked.getLast() == n) {
+					Tour t = new Tour();
+					t.offer(0);
+					Iterator<Integer> it = boid.citiesChecked.descendingIterator();
+					while (it.hasNext()) {
+						t.offer(it.next());
+					}
 
-			if (environment.getFlockingGraph().isEdgeFull(e)) {
-				// TODO: The pruning is making this end before it should, because boids get clogged in subtours
-				Tour t = traceTourFoundByAlgorithm(environment, goal);
-				if (t != null) {
-					t.calculateCost(environment.getFlockingGraph());
-					return t;
+					if (goal.isGoal(environment.getFlockingGraph(), t)) {
+						t.calculateCost(environment.getFlockingGraph());
+						return t;
+					}
 				}
 			}
 		}
 		return null;
-	}
-
-	private Tour traceTourFoundByAlgorithm(Environment environment, GoalEvaluator goal) {
-		Tour t = new SolutionBacktracker(environment, goal).doBacktrack();
-
-		return t;
 	}
 
 	private int countOccurences(Tour t, Integer index) {

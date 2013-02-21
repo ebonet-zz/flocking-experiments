@@ -3,7 +3,7 @@ package agent;
 import goal.GoalEvaluator;
 import graph.Edge;
 import graph.Position;
-import graph.Segment;
+import graph.Tour;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-
 public class WollowskiBoid extends Boid {
 
+	public LinkedList<Integer> citiesChecked;
 	double visibleBoidsInPathWeight;
 	double numberOfChoicesWeight;
 
@@ -22,6 +22,7 @@ public class WollowskiBoid extends Boid {
 		super(otherBoid);
 		this.visibleBoidsInPathWeight = this.occupancyChoiceWeight;
 		this.numberOfChoicesWeight = this.distanceChoiceWeight;
+		this.citiesChecked = new LinkedList<Integer>();
 	}
 
 	public WollowskiBoid(Position position, Double speed, Double visionRange, Double distanceChoiceWeight,
@@ -29,6 +30,41 @@ public class WollowskiBoid extends Boid {
 		super(position, speed, visionRange, distanceChoiceWeight, occupancyChoiceWeight, enviroment, goalEvaluator, r);
 		this.visibleBoidsInPathWeight = this.occupancyChoiceWeight;
 		this.numberOfChoicesWeight = this.distanceChoiceWeight;
+		this.citiesChecked = new LinkedList<Integer>();
+	}
+
+	private Set<Boid> getBoidsInSight() {
+		Set<Boid> boidsInSight = new HashSet<>();
+
+		for (Boid b : this.environment.getAllBoids()) {
+			if (canSee(b)) {
+				boidsInSight.add(b);
+			}
+		}
+
+		boidsInSight.remove(this);
+		return boidsInSight;
+	}
+
+	@Override
+	public void tryToMove(double distance) {
+
+		// 1) Check for other boids around
+		Set<Boid> boidsInSight = getBoidsInSight();
+
+		// 2) Compare
+		for (Boid boid : boidsInSight) {
+			if (boid.pos.isStrictlySameEdge(this.pos)) {
+				WollowskiBoid b = (WollowskiBoid) boid;
+				if (b.citiesChecked.contains(this.pos.getTo())) {
+					this.citiesChecked.clear();
+					this.citiesChecked.addAll(b.citiesChecked);
+				}
+			}
+		}
+
+		// 4) Move as before
+		super.tryToMove(distance);
 	}
 
 	@Override
@@ -40,20 +76,23 @@ public class WollowskiBoid extends Boid {
 		}
 
 		if (this.goalEvaluator.isGoal(getGraph(), this.pathTaken)) {
-			// if (checkSegmentOccupation(getSegment(new Position(loadEdge(this.pathTaken.get(0),
-			// this.pathTaken.get(1)),
-			// 0d)))) {
-			// becomeAchiever();
-			// } else {
+
+			if (!this.citiesChecked.contains(this.pos.edge.getTo())) {
+				this.citiesChecked.add(this.pos.edge.getTo());
+			}
+
 			if (added) {
 				this.pathTaken.locations.remove(this.pathTaken.locations.size() - 1);
 				added = false;
 			}
-			// }
+
+			super.tryToMove(this.pos.getDistanceToEdgeEnd() - MINIMUM_DISTANCE_MARGIN);
 			return;
 		}
 
 		List<Edge> possibleEdges = generatePossibleNextEdges();
+
+		updateCheckedCities(possibleEdges);
 
 		if (possibleEdges.isEmpty()) {
 			die();
@@ -65,29 +104,60 @@ public class WollowskiBoid extends Boid {
 		moveToNextEdge(nextEgde);
 	}
 
+	private void updateCheckedCities(List<Edge> possibleEdges) {
+		Set<Boid> visibleBoids = getBoidsInSight();
+		for (Edge e : possibleEdges) {
+			// for each possible next edge
+			if (getGraph().isEdgeFull(e)) {
+				// if is a full edge
+				Set<Boid> visibleBoidsInEdge = new HashSet<>();
+				visibleBoidsInEdge.addAll(visibleBoids);
+
+				Iterator<Boid> it = visibleBoidsInEdge.iterator();
+				while (it.hasNext()) {
+					Boid b = it.next();
+					if (!b.pos.edge.isStrictlySameEdge(e)) {
+						it.remove();
+					}
+				}
+				// get the visible boids in this edge
+
+				for (Boid boid : visibleBoidsInEdge) {
+					// for each visible boid in this edge
+					WollowskiBoid b = (WollowskiBoid) boid;
+					// if the boid has a checked city that I dont have
+					Iterator<Integer> i = b.citiesChecked.descendingIterator();
+					Tour t = new Tour(this.pathTaken);
+					while (i.hasNext()) {
+						t.offer(i.next());
+					}
+
+					// if is all I need
+					if (this.goalEvaluator.isGoal(getGraph(), t)) {
+						// I mark this potential new city as checked
+						this.citiesChecked.clear();
+						this.citiesChecked.addAll(b.citiesChecked);
+						this.citiesChecked.add(e.getFrom());
+						// and chose this edge
+						possibleEdges.clear();
+						possibleEdges.add(e);
+						return;
+					}
+				}
+			}
+		}
+	}
+
 	@Override
 	protected Double getPartialChoiceProbability(Edge edge, List<Edge> possibleEdges) {
 
-		// Pruning when one edge is already full
-//		for (Edge e : possibleEdges) {
-//
-//			if (getGraph().isEdgeFull(e)) {
-//				if (!e.equals(edge)) {
-//					return 0d;
-//				} else {
-//					return 1d;
-//				}
-//			}
-//		}
-
-
 		Set<Boid> visibleBoidsInEdge = new HashSet<>();
-		visibleBoidsInEdge.addAll(this.environment.getAllBoids());
+		visibleBoidsInEdge.addAll(getBoidsInSight());
 
 		Iterator<Boid> it = visibleBoidsInEdge.iterator();
 		while (it.hasNext()) {
 			Boid b = it.next();
-			if (!b.pos.edge.isSameEdge(edge) || !canSee(b)) {
+			if (!b.pos.edge.isStrictlySameEdge(edge)) {
 				it.remove();
 			}
 		}
@@ -102,17 +172,11 @@ public class WollowskiBoid extends Boid {
 		return probability;
 	}
 
-	private LinkedList<Segment> getVisibleSegments(Edge edge, Double visibleDistance) {
-		Position lastVisiblePosition = new Position(edge, visibleDistance);
-		LinkedList<Segment> segmentsForEdge = this.getGraph().getSegmentsUpToPosition(lastVisiblePosition);
-		return segmentsForEdge;
-	}
-
 	@Override
 	protected boolean canSee(Boid b) {
 		if (new Double(this.pos.getDistanceToEdgeEnd()).compareTo(this.visionRange) >= 0) {
 			// Vision is completely inside the edge
-			if (!b.pos.isSameEdge(this.pos)) {
+			if (!b.pos.isStrictlySameEdge(this.pos)) {
 				return false;
 			}
 
@@ -126,7 +190,7 @@ public class WollowskiBoid extends Boid {
 
 		} else {
 			// Vision exceeds edge
-			if (b.pos.isSameEdge(this.pos)) {
+			if (b.pos.isStrictlySameEdge(this.pos)) {
 				Double difference = b.getPos().getDistance() - this.pos.getDistance();
 
 				if (difference.compareTo(0d) >= 0) {
@@ -139,7 +203,7 @@ public class WollowskiBoid extends Boid {
 				Double visibleDistance = this.visionRange - this.pos.getDistanceToEdgeEnd();
 
 				for (Edge e : neighbors) {
-					if (b.pos.edge.isSameEdge(e)) {
+					if (b.pos.edge.isStrictlySameEdge(e)) {
 						if (visibleDistance.compareTo(b.pos.distanceFromStart) >= 0) {
 							return true;
 						}

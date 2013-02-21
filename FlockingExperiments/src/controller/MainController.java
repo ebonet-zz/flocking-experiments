@@ -1,5 +1,6 @@
 package controller;
 
+import goal.EndNodeGoalEvaluator;
 import goal.GoalEvaluator;
 import goal.TSPGoalEvaluator;
 import graph.FlockingGraph;
@@ -14,47 +15,289 @@ import problem.WollowskiProblem;
  * @author Balthazar. Created Jan 28, 2013.
  */
 public class MainController {
-	static int maxIterations = 5000; // Max iterations
-	static boolean displaySteps = true; // show boids' movement on each iteration
 
-	// Constants I believe their optimal values depend on the number of cities
-	static int numberOfCities = 5;
-	static int maxAgents = 3 * numberOfCities * numberOfCities * 10000;
-	static float multiplierBoidSpawn = 1f;
-	static float densityThreshold = 0.7f;
+	public static void solveWollowskiSP() {
+		int maxIterations = 5000; // Max iterations
+		boolean displaySteps = true; // show boids' movement on each iteration
 
-	// Constants I believe do not depend on the number of cities
-	static float weightOfDistance = 3f;
-	static float weightOfOccupancy = 1f;
-	static float boidSpeed = 2 * multiplierBoidSpawn;
-	static float boidVisionRange = boidSpeed * 2;
+		// Constants I believe their optimal values depend on the number of cities
+		int numberOfCities = 5;
+		int maxAgents = 3 * numberOfCities * numberOfCities * 1000;
+		float multiplierBoidSpawn = 1f;
+		float densityThreshold = 0.7f;
 
-	static int segmentCapacity = 1;
-	static float segmentLength = 1f;
+		// Constants I believe do not depend on the number of cities
+		float weightOfDistance = 3f;
+		float weightOfOccupancy = 1f;
+		float boidSpeed = 2 * multiplierBoidSpawn;
+		float boidVisionRange = boidSpeed * 3;
 
-	// static GoalEvaluator goal = new EndNodeGoalEvaluator(3);
-	static GoalEvaluator goal = new TSPGoalEvaluator();
+		int segmentCapacity = 1;
+		float segmentLength = 1f;
 
-	static TraditionalGraph graph = GenerateBasicInstance.GenerateBasicGraph(); // Sparse
-	// static TraditionalGraph graph = GenerateSparseInstance.GenerateSparseGraph(numberOfCities); // Sparse
-	// static TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully connected
+		GoalEvaluator goal = new EndNodeGoalEvaluator(3);
 
-	// static Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
+		TraditionalGraph graph = GenerateBasicInstance.GenerateBasicGraph(); // Sparse
 
-	static Problem problem = new WollowskiProblem(new FlockingGraph(graph, segmentLength, segmentCapacity),
-			maxIterations);
+		Problem problem = new WollowskiProblem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
+
+		System.out.println(problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance,
+				weightOfOccupancy, boidVisionRange, boidSpeed, goal, displaySteps));
+	}
+
+	public static void solveWollowskiTSPBasicGraph() {
+		int maxIterations = 5000; // Max iterations
+		boolean displaySteps = true; // show boids' movement on each iteration
+
+		// Constants I believe their optimal values depend on the number of cities
+		int numberOfCities = 5;
+		int maxAgents = 3 * numberOfCities * numberOfCities * 1000;
+		float multiplierBoidSpawn = 1f;
+		float densityThreshold = 0.7f;
+
+		// Constants I believe do not depend on the number of cities
+		float weightOfDistance = 3f;
+		float weightOfOccupancy = 1f;
+		float boidSpeed = 2 * multiplierBoidSpawn;
+		float boidVisionRange = boidSpeed * 4;
+
+		int segmentCapacity = 1;
+		float segmentLength = 1f;
+
+		GoalEvaluator goal = new TSPGoalEvaluator();
+
+		TraditionalGraph graph = GenerateBasicInstance.GenerateBasicGraph(); // Sparse
+
+		Problem problem = new WollowskiProblem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
+
+		System.out.println(problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance,
+				weightOfOccupancy, boidVisionRange, boidSpeed, goal, displaySteps));
+	}
+
+	public static void solveWollowskiTSP4CitiesFullConnectedGraph() {
+		int maxIterations = 5000; // Max iterations
+		boolean displaySteps = true; // show boids' movement on each iteration
+
+		// Constants I believe their optimal values depend on the number of cities
+		int numberOfCities = 4;
+		int maxAgents = 3 * numberOfCities * numberOfCities * 1000;
+		float multiplierBoidSpawn = 1f;
+		float densityThreshold = 0.7f;
+
+		// Constants I believe do not depend on the number of cities
+		float weightOfDistance = 3f;
+		float weightOfOccupancy = 1f;
+		float boidSpeed = 2 * multiplierBoidSpawn;
+		float boidVisionRange = boidSpeed * 3;
+
+		int segmentCapacity = 1;
+		float segmentLength = 1f;
+
+		GoalEvaluator goal = new TSPGoalEvaluator();
+
+		TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully connected
+
+		Problem problem = new WollowskiProblem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
+
+		System.out.println(problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance,
+				weightOfOccupancy, boidVisionRange, boidSpeed, goal, displaySteps));
+	}
+
+	public static void solveOptimizedSP() {
+		int maxIterations = 5000; // Max iterations
+		boolean displaySteps = true; // show boids' movement on each iteration
+
+		// Constants I believe their optimal values depend on the number of cities
+		int numberOfCities = 5;
+		int maxAgents = 3 * numberOfCities * numberOfCities;
+		float multiplierBoidSpawn = 1f;
+		float densityThreshold = 0.7f;
+
+		// Constants I believe do not depend on the number of cities
+		float weightOfDistance = 3f;
+		float weightOfOccupancy = 1f;
+		float boidSpeed = 2 * multiplierBoidSpawn;
+		float boidVisionRange = boidSpeed * 3;
+
+		int segmentCapacity = 3;
+		float segmentLength = 1f;
+
+		GoalEvaluator goal = new EndNodeGoalEvaluator(3);
+
+		TraditionalGraph graph = GenerateBasicInstance.GenerateBasicGraph(); // Sparse
+
+		Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
+
+		System.out.println(problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance,
+				weightOfOccupancy, boidVisionRange, boidSpeed, goal, displaySteps));
+	}
+
+	public static void solveOptimizedTSPBasicGraph() {
+		int maxIterations = 5000; // Max iterations
+		boolean displaySteps = true; // show boids' movement on each iteration
+
+		// Constants I believe their optimal values depend on the number of cities
+		int numberOfCities = 5;
+		int maxAgents = 3 * numberOfCities * numberOfCities;
+		float multiplierBoidSpawn = 1f;
+		float densityThreshold = 0.7f;
+
+		// Constants I believe do not depend on the number of cities
+		float weightOfDistance = 3f;
+		float weightOfOccupancy = 1f;
+		float boidSpeed = 2 * multiplierBoidSpawn;
+		float boidVisionRange = boidSpeed * 3;
+
+		int segmentCapacity = 3;
+		float segmentLength = 1f;
+
+		GoalEvaluator goal = new TSPGoalEvaluator();
+
+		TraditionalGraph graph = GenerateBasicInstance.GenerateBasicGraph(); // Sparse
+
+		Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
+
+		System.out.println(problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance,
+				weightOfOccupancy, boidVisionRange, boidSpeed, goal, displaySteps));
+	}
+
+	public static void solveOptimizedTSP4CitiesFullConnectedGraph() {
+		int maxIterations = 5000; // Max iterations
+		boolean displaySteps = true; // show boids' movement on each iteration
+
+		// Constants I believe their optimal values depend on the number of cities
+		int numberOfCities = 4;
+		int maxAgents = 3 * numberOfCities * numberOfCities;
+		float multiplierBoidSpawn = 1f;
+		float densityThreshold = 0.7f;
+
+		// Constants I believe do not depend on the number of cities
+		float weightOfDistance = 3f;
+		float weightOfOccupancy = 1f;
+		float boidSpeed = 2 * multiplierBoidSpawn;
+		float boidVisionRange = boidSpeed * 3;
+
+		int segmentCapacity = 3;
+		float segmentLength = 1f;
+
+		// GoalEvaluator goal = new EndNodeGoalEvaluator(3);
+		GoalEvaluator goal = new TSPGoalEvaluator();
+
+		TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully connected
+
+		Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
+
+		System.out.println(problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance,
+				weightOfOccupancy, boidVisionRange, boidSpeed, goal, displaySteps));
+	}
+
+	public static void solveOptimizedTSP8CitiesFullConnectedGraph() {
+		int maxIterations = 5000; // Max iterations
+		boolean displaySteps = true; // show boids' movement on each iteration
+
+		// Constants I believe their optimal values depend on the number of cities
+		int numberOfCities = 8;
+		int maxAgents = 3 * numberOfCities * numberOfCities;
+		float multiplierBoidSpawn = 1f;
+		float densityThreshold = 0.7f;
+
+		// Constants I believe do not depend on the number of cities
+		float weightOfDistance = 3f;
+		float weightOfOccupancy = 1f;
+		float boidSpeed = 2 * multiplierBoidSpawn;
+		float boidVisionRange = boidSpeed * 3;
+
+		int segmentCapacity = 3;
+		float segmentLength = 1f;
+
+		GoalEvaluator goal = new TSPGoalEvaluator();
+
+		TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully connected
+
+		Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
+
+		System.out.println(problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance,
+				weightOfOccupancy, boidVisionRange, boidSpeed, goal, displaySteps));
+	}
+
+	public static void solveOptimizedTSP8CitiesSparseGraph() {
+		int maxIterations = 5000; // Max iterations
+		boolean displaySteps = true; // show boids' movement on each iteration
+
+		// Constants I believe their optimal values depend on the number of cities
+		int numberOfCities = 8;
+		int maxAgents = 3 * numberOfCities * numberOfCities;
+		float multiplierBoidSpawn = 1f;
+		float densityThreshold = 0.7f;
+
+		// Constants I believe do not depend on the number of cities
+		float weightOfDistance = 3f;
+		float weightOfOccupancy = 1f;
+		float boidSpeed = 2 * multiplierBoidSpawn;
+		float boidVisionRange = boidSpeed * 3;
+
+		int segmentCapacity = 3;
+		float segmentLength = 1f;
+
+		GoalEvaluator goal = new TSPGoalEvaluator();
+
+		TraditionalGraph graph = GenerateSparseInstance.GenerateSparseGraph(numberOfCities); // Sparse
+
+		Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
+
+		System.out.println(problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance,
+				weightOfOccupancy, boidVisionRange, boidSpeed, goal, displaySteps));
+	}
+	
+	public static void solveOptimizedTSP30CitiesFullConnectedGraph() {
+		int maxIterations = 5000; // Max iterations
+		boolean displaySteps = true; // show boids' movement on each iteration
+
+		// Constants I believe their optimal values depend on the number of cities
+		int numberOfCities = 30;
+		int maxAgents = 3 * numberOfCities * numberOfCities;
+		float multiplierBoidSpawn = 1f;
+		float densityThreshold = 0.7f;
+
+		// Constants I believe do not depend on the number of cities
+		float weightOfDistance = 3f;
+		float weightOfOccupancy = 1f;
+		float boidSpeed = 2 * multiplierBoidSpawn;
+		float boidVisionRange = boidSpeed * 3;
+
+		int segmentCapacity = 3;
+		float segmentLength = 1f;
+
+		GoalEvaluator goal = new TSPGoalEvaluator();
+
+		TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully connected
+
+		Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
+
+		System.out.println(problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance,
+				weightOfOccupancy, boidVisionRange, boidSpeed, goal, displaySteps));
+	}
 
 	public static void main(String[] args) {
 		long startTime = System.nanoTime();
 
-		System.out.println(problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance,
-				weightOfOccupancy, boidVisionRange, boidSpeed, goal, displaySteps));
+//		solveWollowskiSP();
+//		solveWollowskiTSPBasicGraph();
+//		solveWollowskiTSP4CitiesFullConnectedGraph();
 
-		// testWD(problem);
-		// testWO(problem);
-		// testBoidSpeed(problem);
-		// testMaxAgents(problem);
-		// testBoidVision(problem);
+//		solveOptimizedSP();
+//		solveOptimizedTSPBasicGraph();
+//		solveOptimizedTSP4CitiesFullConnectedGraph();
+
+//		solveOptimizedTSP8CitiesFullConnectedGraph();
+//		solveOptimizedTSP8CitiesSparseGraph();
+		solveOptimizedTSP30CitiesFullConnectedGraph();
+		
+		// testWD();
+		// testWO();
+		// testBoidSpeed();
+		// testMaxAgents();
+		// testBoidVision();
 		// testSegmentCapacity();
 		// testSegmentLength();
 
@@ -62,7 +305,30 @@ public class MainController {
 		System.out.println("Execution Time: " + estimatedTime / 1000000000.0f + " seconds.");
 	}
 
-	private static void testWD(Problem problem) {
+	private static void testWD() {
+		int maxIterations = 5000; // Max iterations
+		boolean displaySteps = true; // show boids' movement on each iteration
+
+		// Constants I believe their optimal values depend on the number of cities
+		int numberOfCities = 8;
+		int maxAgents = 3 * numberOfCities * numberOfCities;
+		float multiplierBoidSpawn = 1f;
+		float densityThreshold = 0.7f;
+
+		// Constants I believe do not depend on the number of cities
+		float weightOfOccupancy = 1f;
+		float boidSpeed = 2 * multiplierBoidSpawn;
+		float boidVisionRange = boidSpeed * 3;
+
+		int segmentCapacity = 3;
+		float segmentLength = 1f;
+
+		GoalEvaluator goal = new TSPGoalEvaluator();
+
+		TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully connected
+
+		Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
+
 		for (float wD = 2.0f; wD <= 5f; wD += 0.5f) {
 			float average = 0f;
 			float divider = 100f;
@@ -83,7 +349,30 @@ public class MainController {
 		}
 	}
 
-	private static void testWO(Problem problem) {
+	private static void testWO() {
+		int maxIterations = 5000; // Max iterations
+		boolean displaySteps = true; // show boids' movement on each iteration
+
+		// Constants I believe their optimal values depend on the number of cities
+		int numberOfCities = 8;
+		int maxAgents = 3 * numberOfCities * numberOfCities;
+		float multiplierBoidSpawn = 1f;
+		float densityThreshold = 0.7f;
+
+		// Constants I believe do not depend on the number of cities
+		float weightOfDistance = 3f;
+		float boidSpeed = 2 * multiplierBoidSpawn;
+		float boidVisionRange = boidSpeed * 3;
+
+		int segmentCapacity = 3;
+		float segmentLength = 1f;
+
+		GoalEvaluator goal = new TSPGoalEvaluator();
+
+		TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully connected
+
+		Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
+
 		for (float wO = 0.0f; wO <= 5f; wO += 0.5f) {
 			float average = 0f;
 			float divider = 100f;
@@ -104,7 +393,30 @@ public class MainController {
 		}
 	}
 
-	private static void testBoidSpeed(Problem problem) {
+	private static void testBoidSpeed() {
+		int maxIterations = 5000; // Max iterations
+		boolean displaySteps = true; // show boids' movement on each iteration
+
+		// Constants I believe their optimal values depend on the number of cities
+		int numberOfCities = 8;
+		int maxAgents = 3 * numberOfCities * numberOfCities;
+		float multiplierBoidSpawn = 1f;
+		float densityThreshold = 0.7f;
+
+		// Constants I believe do not depend on the number of cities
+		float weightOfDistance = 3f;
+		float weightOfOccupancy = 1f;
+		float boidVisionRange = 2 * multiplierBoidSpawn * 3;
+
+		int segmentCapacity = 3;
+		float segmentLength = 1f;
+
+		GoalEvaluator goal = new TSPGoalEvaluator();
+
+		TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully connected
+
+		Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
+
 		for (float speed = 1.0f; speed <= 10f; speed += 1f) {
 			float average = 0f;
 			float divider = 100f;
@@ -125,7 +437,30 @@ public class MainController {
 		}
 	}
 
-	private static void testBoidVision(Problem problem) {
+	private static void testBoidVision() {
+		int maxIterations = 5000; // Max iterations
+		boolean displaySteps = true; // show boids' movement on each iteration
+
+		// Constants I believe their optimal values depend on the number of cities
+		int numberOfCities = 8;
+		int maxAgents = 3 * numberOfCities * numberOfCities;
+		float multiplierBoidSpawn = 1f;
+		float densityThreshold = 0.7f;
+
+		// Constants I believe do not depend on the number of cities
+		float weightOfDistance = 3f;
+		float weightOfOccupancy = 1f;
+		float boidSpeed = 2 * multiplierBoidSpawn;
+
+		int segmentCapacity = 3;
+		float segmentLength = 1f;
+
+		GoalEvaluator goal = new TSPGoalEvaluator();
+
+		TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully connected
+
+		Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
+
 		for (float visionMultiplier = 1.0f; visionMultiplier <= 10f; visionMultiplier += 1f) {
 			float average = 0f;
 			float divider = 100f;
@@ -147,7 +482,30 @@ public class MainController {
 		}
 	}
 
-	private static void testMaxAgents(Problem problem) {
+	private static void testMaxAgents() {
+		int maxIterations = 5000; // Max iterations
+		boolean displaySteps = true; // show boids' movement on each iteration
+
+		// Constants I believe their optimal values depend on the number of cities
+		int numberOfCities = 8;
+		float multiplierBoidSpawn = 1f;
+		float densityThreshold = 0.7f;
+
+		// Constants I believe do not depend on the number of cities
+		float weightOfDistance = 3f;
+		float weightOfOccupancy = 1f;
+		float boidSpeed = 2 * multiplierBoidSpawn;
+		float boidVisionRange = boidSpeed * 3;
+
+		int segmentCapacity = 3;
+		float segmentLength = 1f;
+
+		GoalEvaluator goal = new TSPGoalEvaluator();
+
+		TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully connected
+
+		Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
+
 		for (int maxAgentsMultiplier = 1; maxAgentsMultiplier <= 100; maxAgentsMultiplier += 10) {
 			float average = 0f;
 			float divider = 100f;
@@ -171,6 +529,27 @@ public class MainController {
 	}
 
 	private static void testSegmentCapacity() {
+		int maxIterations = 5000; // Max iterations
+		boolean displaySteps = true; // show boids' movement on each iteration
+
+		// Constants I believe their optimal values depend on the number of cities
+		int numberOfCities = 8;
+		int maxAgents = 3 * numberOfCities * numberOfCities;
+		float multiplierBoidSpawn = 1f;
+		float densityThreshold = 0.7f;
+
+		// Constants I believe do not depend on the number of cities
+		float weightOfDistance = 3f;
+		float weightOfOccupancy = 1f;
+		float boidSpeed = 2 * multiplierBoidSpawn;
+		float boidVisionRange = boidSpeed * 3;
+
+		float segmentLength = 1f;
+
+		GoalEvaluator goal = new TSPGoalEvaluator();
+
+		TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully connected
+
 		for (int capacity = 1; capacity <= 10; capacity += 1) {
 			float average = 0f;
 			float divider = 100f;
@@ -193,6 +572,27 @@ public class MainController {
 	}
 
 	private static void testSegmentLength() {
+		int maxIterations = 5000; // Max iterations
+		boolean displaySteps = true; // show boids' movement on each iteration
+
+		// Constants I believe their optimal values depend on the number of cities
+		int numberOfCities = 8;
+		int maxAgents = 3 * numberOfCities * numberOfCities;
+		float multiplierBoidSpawn = 1f;
+		float densityThreshold = 0.7f;
+
+		// Constants I believe do not depend on the number of cities
+		float weightOfDistance = 3f;
+		float weightOfOccupancy = 1f;
+		float boidSpeed = 2 * multiplierBoidSpawn;
+		float boidVisionRange = boidSpeed * 3;
+
+		int segmentCapacity = 3;
+
+		GoalEvaluator goal = new TSPGoalEvaluator();
+
+		TraditionalGraph graph = GenerateInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully connected
+
 		for (float segmentLength = 1; segmentLength <= 10; segmentLength += 1) {
 			float average = 0f;
 			float divider = 100f;

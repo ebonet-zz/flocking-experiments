@@ -33,8 +33,16 @@ public final class Edge implements Comparable<Edge> {
 	}
 
 	public boolean isSameEdge(int from, int to) {
-		return (from == this.fromNodeIndex && to == this.toNodeIndex)/*
-				|| (from == this.toNodeIndex && to == this.fromNodeIndex)*/;
+		return (from == this.fromNodeIndex && to == this.toNodeIndex)
+				|| (from == this.toNodeIndex && to == this.fromNodeIndex);
+	}
+
+	public boolean isStrictlySameEdge(Edge e) {
+		return isStrictlySameEdge(e.fromNodeIndex, e.toNodeIndex);
+	}
+
+	public boolean isStrictlySameEdge(int from, int to) {
+		return (from == this.fromNodeIndex && to == this.toNodeIndex);
 	}
 
 	@Override
@@ -86,4 +94,5 @@ public final class Edge implements Comparable<Edge> {
 	public String toString() {
 		return this.getFrom() + "->" + this.getTo() + "[length:" + this.getLength() + "]";
 	}
+
 }

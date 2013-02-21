@@ -29,11 +29,11 @@ public class GenerateBasicInstance {
 
 		TraditionalGraph world = new TraditionalGraph(5);
 
-		world.setEdgeLength(0, 1, 5);
-		world.setEdgeLength(1, 4, 10);
-		world.setEdgeLength(1, 2, 5);
-		world.setEdgeLength(2, 3, 5);
-		world.setEdgeLength(4, 3, 10);
+		world.setEdgeLength(0, 1, 10);
+		world.setEdgeLength(1, 4, 20);
+		world.setEdgeLength(1, 2, 12);
+		world.setEdgeLength(2, 3, 15);
+		world.setEdgeLength(4, 3, 9);
 
 		return world;
 	}

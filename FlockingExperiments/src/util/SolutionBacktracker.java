@@ -111,7 +111,8 @@ public class SolutionBacktracker {
 				neighbors.remove(l);
 			}
 		}
-		neighbors.addAll(repeated);
+		if (neighbors.isEmpty())
+			neighbors.addAll(repeated);
 
 		if (neighbors.isEmpty()) {
 			return null;
@@ -137,7 +138,8 @@ public class SolutionBacktracker {
 				neighbors.remove(l);
 			}
 		}
-		neighbors.addAll(repeated);
+		if (neighbors.isEmpty())
+			neighbors.addAll(repeated);
 
 		if (neighbors.isEmpty()) {
 			return null;
@@ -158,7 +160,7 @@ public class SolutionBacktracker {
 	}
 
 	private boolean accept(Tour t) {
-		return this.goal.isGoal(environment.getFlockingGraph(), t);
+		return this.goal.isGoal(this.environment.getFlockingGraph(), t);
 	}
 
 	private List<Integer> getFullNeighborsOf(Integer from) {
