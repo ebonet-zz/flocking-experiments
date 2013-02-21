@@ -8,19 +8,19 @@ public class MovingObject {
 
 	private Color mColor;
 	private Position mPosition;
-	
-	public MovingObject(Position position,Color color){
-		mColor = color;
-		mPosition = position.clone();
+
+	public MovingObject(Position position, Color color) {
+		this.mColor = color;
+		this.mPosition = position.clone();
 	}
-	
-	public MovingObject(MovingObject otherObject){
-		mColor = otherObject.getColor();
-		mPosition = otherObject.getPosition();
+
+	public MovingObject(MovingObject otherObject) {
+		this.mColor = otherObject.getColor();
+		this.mPosition = otherObject.getPosition();
 	}
 
 	public Color getColor() {
-		return mColor;
+		return this.mColor;
 	}
 
 	public void setColor(Color color) {
@@ -28,12 +28,11 @@ public class MovingObject {
 	}
 
 	public Position getPosition() {
-		return mPosition;
+		return this.mPosition;
 	}
 
 	public void setmPosition(Position position) {
 		this.mPosition = position.clone();
 	}
-	
-	
+
 }

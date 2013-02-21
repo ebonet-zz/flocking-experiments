@@ -4,8 +4,17 @@ import graph.TraditionalGraph;
 
 import java.util.Random;
 
-public class GenerateInstance {
+/**
+ * Generates Fully Connected graphs.
+ */
+public class GenerateFullyConnectedInstance {
 
+	/**
+	 * The main method, for testing only.
+	 * 
+	 * @param args
+	 *            the arguments
+	 */
 	public static void main(String args[]) {
 
 		int numberOfCities = 300;
@@ -24,6 +33,13 @@ public class GenerateInstance {
 		}
 	}
 
+	/**
+	 * Generate fully connected graph.
+	 * 
+	 * @param numberOfCities
+	 *            the number of cities
+	 * @return the traditional graph
+	 */
 	public static TraditionalGraph GenerateFullyConnectedGraph(int numberOfCities) {
 
 		// Ok, I am fixing the seed, so that instead of reading in the

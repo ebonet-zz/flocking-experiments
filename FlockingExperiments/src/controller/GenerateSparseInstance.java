@@ -4,8 +4,17 @@ import graph.TraditionalGraph;
 
 import java.util.Random;
 
+/**
+ * The Class GenerateSparseInstance.
+ */
 public class GenerateSparseInstance {
 
+	/**
+	 * The main method, for testing only.
+	 * 
+	 * @param args
+	 *            the arguments
+	 */
 	public static void main(String args[]) {
 
 		int numberOfCities = 100;
@@ -24,6 +33,13 @@ public class GenerateSparseInstance {
 		}
 	}
 
+	/**
+	 * Generate sparse graph.
+	 * 
+	 * @param numberOfCities
+	 *            the number of cities
+	 * @return the traditional graph
+	 */
 	public static TraditionalGraph GenerateSparseGraph(int numberOfCities) {
 		TraditionalGraph world = new TraditionalGraph(numberOfCities);
 

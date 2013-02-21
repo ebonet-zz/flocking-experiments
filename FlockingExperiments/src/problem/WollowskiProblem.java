@@ -14,19 +14,63 @@ import agent.Boid;
 import agent.Environment;
 import agent.WollowskiBoid;
 
+/**
+ * The adapted version of the problem class to be solved by wollowski boids.
+ */
 public class WollowskiProblem extends Problem {
 
+	/**
+	 * Instantiates a new wollowski problem.
+	 * 
+	 * @param distanceGraph
+	 *            the distance graph
+	 * @param tMax
+	 *            the t max
+	 */
 	public WollowskiProblem(FlockingGraph distanceGraph, int tMax) {
 		super(distanceGraph, tMax);
 	}
 
+	/**
+	 * Creates the new boid.
+	 * 
+	 * @param newWouldBePos
+	 *            the new would be pos
+	 * @param speed
+	 *            the speed
+	 * @param visionRange
+	 *            the vision range
+	 * @param numberOfChoicesWeight
+	 *            the weight of number of choices in the formula
+	 * @param visibleBoidsInPathWeight
+	 *            the weight of visible boids in path in the formula
+	 * @param environment
+	 *            the environment
+	 * @param goal
+	 *            the goal
+	 * @param r
+	 *            the random instance
+	 * @return the boid
+	 */
 	@Override
-	protected Boid createNewBoid(Position newWouldBePos, double speed, double visionRange, double weightOfDistance,
-			double weightOfOccupancy, Environment environment, GoalEvaluator goal, Random r) {
-		return new WollowskiBoid(newWouldBePos, speed, visionRange, weightOfDistance, weightOfOccupancy, environment,
-				goal, r);
+	protected Boid createNewBoid(Position newWouldBePos, double speed, double visionRange,
+			double numberOfChoicesWeight, double visibleBoidsInPathWeight, Environment environment, GoalEvaluator goal,
+			Random r) {
+		return new WollowskiBoid(newWouldBePos, speed, visionRange, numberOfChoicesWeight, visibleBoidsInPathWeight,
+				environment, goal, r);
 	}
 
+	/**
+	 * Test algorithm termination.
+	 * 
+	 * @param environment
+	 *            the environment
+	 * @param densityThreshold
+	 *            the density threshold
+	 * @param goal
+	 *            the goal
+	 * @return the tour
+	 */
 	@Override
 	protected Tour testAlgorithmTermination(Environment environment, double densityThreshold, GoalEvaluator goal) {
 		List<Integer> neighborsOf0 = environment.getFlockingGraph().getNeighborsOf(0);
@@ -51,14 +95,4 @@ public class WollowskiProblem extends Problem {
 		}
 		return null;
 	}
-
-	private int countOccurences(Tour t, Integer index) {
-		int r = 0;
-		for (Integer i : t.locations) {
-			if (i.equals(index))
-				r++;
-		}
-		return r;
-	}
-
 }

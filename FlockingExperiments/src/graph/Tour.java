@@ -8,47 +8,47 @@ import java.util.ArrayList;
  * @author Balthazar. Created Dec 10, 2012.
  */
 public class Tour {
-	/**
-	 * The visited locations for this tour, in order
-	 */
+
+	/** The visited locations for this tour, in order. */
 	public ArrayList<Integer> locations;
 
-	/**
-	 * The total cost of the tour
-	 */
+	/** The total cost of the tour. */
 	public double lastCalculatedCost;
 
+	/**
+	 * Instantiates a new tour copying the values from another tour.
+	 * 
+	 * @param t
+	 *            the tour to copy
+	 */
 	public Tour(Tour t) {
 		this.lastCalculatedCost = t.lastCalculatedCost;
 		this.locations = new ArrayList<Integer>();
 		this.locations.addAll(t.locations);
 	}
 
-	// /**
-	// * The iteration when this tour was found
-	// */
-	// int foundInIteration;
-
 	/**
-	 * Basic constructor
+	 * Basic constructor.
 	 */
 	public Tour() {
 		this.locations = new ArrayList<Integer>();
 	}
 
 	/**
-	 * Adds a location to this tour history
+	 * Adds a location to this tour history.
 	 * 
 	 * @param locationIndex
+	 *            the location index
 	 */
 	public void offer(int locationIndex) {
 		this.locations.add(locationIndex);
 	}
 
 	/**
-	 * Finds the position of the given location in the list
+	 * Finds the position of the given location in the list.
 	 * 
 	 * @param location
+	 *            the location
 	 * @return the position index inside the list
 	 */
 	public int indexOf(Integer location) {
@@ -56,9 +56,10 @@ public class Tour {
 	}
 
 	/**
-	 * Gets the location by the given index
+	 * Gets the location by the given index.
 	 * 
 	 * @param index
+	 *            the index
 	 * @return the node index in under the sequence index passed in
 	 */
 	public int get(int index) {
@@ -72,11 +73,10 @@ public class Tour {
 	public void clear() {
 		this.locations.clear();
 		this.lastCalculatedCost = 0;
-		// this.foundInIteration = 0;
 	}
 
 	/**
-	 * Gets size (the amount of locations) of the Tour
+	 * Gets size (the amount of locations) of the Tour.
 	 * 
 	 * @return The amount of locations in the Tour
 	 */
@@ -88,6 +88,7 @@ public class Tour {
 	 * Calculates the distance cost of the tour given a distance graph.
 	 * 
 	 * @param distanceGraph
+	 *            the distance graph
 	 * @return The total cost of the tour
 	 */
 	public Integer getCost(TraditionalGraph distanceGraph) {
@@ -99,9 +100,10 @@ public class Tour {
 	}
 
 	/**
-	 * Calculates and stores the total cost of this tour using the given graph
+	 * Calculates and stores the total cost of this tour using the given graph.
 	 * 
 	 * @param distanceGraph
+	 *            the distance graph
 	 */
 	public void calculateCost(TraditionalGraph distanceGraph) {
 		this.lastCalculatedCost = getCost(distanceGraph);
@@ -149,11 +151,23 @@ public class Tour {
 		}
 	}
 
+	/**
+	 * Hash code.
+	 * 
+	 * @return the int
+	 */
 	@Override
 	public int hashCode() {
 		return this.locations.hashCode();
 	}
 
+	/**
+	 * Equals.
+	 * 
+	 * @param obj
+	 *            the obj
+	 * @return true, if successful
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null)
@@ -166,6 +180,11 @@ public class Tour {
 		return this.locations.equals(other.locations);
 	}
 
+	/**
+	 * To string.
+	 * 
+	 * @return the string
+	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -179,9 +198,6 @@ public class Tour {
 		sb.append("Size: ");
 		sb.append(this.locations.size());
 		sb.append("\n");
-		// sb.append("Found in iteration: ");
-		// sb.append(this.foundInIteration);
-		// sb.append("\n");
 		return sb.toString();
 	}
 }
