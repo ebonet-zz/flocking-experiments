@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-
 import util.SortableKeyValue;
 import viewer.FlockingGraphViewer;
 import viewer.MovingObject;
@@ -56,7 +55,8 @@ public class Problem {
 
 	/**
 	 * Attempts to solve the problem given the constant values below
-	 * @param displaySteps 
+	 * 
+	 * @param displaySteps
 	 * 
 	 * @return The information about the best found Tour (path)
 	 */
@@ -66,7 +66,7 @@ public class Problem {
 		System.out.println("Algorithm started!");
 		System.gc();
 
-	    this.graphics = displaySteps;
+		this.graphics = displaySteps;
 		this.distanceGraph.resetAndBuildSegments();
 
 		FlockingGraphViewer viewer = null;
@@ -92,9 +92,11 @@ public class Problem {
 					try {
 						spawnBoid(r, environment, goal, speed, vision, wDist, wOccup);
 					} catch (Exception exception) {
-						System.out.println("Skept a boid creation because initial paths are too crowded.");
-						System.out.println("This indicates a possible 'clogged graph' deadlock.");
-						System.out.println("Consider using less agents for this problem config.\n");
+						if (this.graphics) {
+							System.out.println("Skept a boid creation because initial paths are too crowded.");
+							System.out.println("This indicates a possible 'clogged graph' deadlock.");
+							System.out.println("Consider using less agents for this problem config.\n");
+						}
 					}
 					currentBoidCreationProgress -= 1d;
 				}

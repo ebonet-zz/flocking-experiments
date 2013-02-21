@@ -2,6 +2,7 @@ package agent;
 
 import goal.GoalEvaluator;
 import graph.Edge;
+import graph.FlockingGraph;
 import graph.Position;
 import graph.Tour;
 
@@ -87,7 +88,7 @@ public class WollowskiBoid extends Boid {
 				added = false;
 			}
 
-			super.tryToMove(this.pos.getDistanceToEdgeEnd() - MINIMUM_DISTANCE_MARGIN);
+			super.tryToMove(this.pos.getDistanceToEdgeEnd() - FlockingGraph.MINIMUM_DISTANCE_MARGIN);
 			return;
 		}
 
