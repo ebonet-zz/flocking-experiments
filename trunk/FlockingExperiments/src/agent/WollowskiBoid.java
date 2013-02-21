@@ -80,7 +80,7 @@ public class WollowskiBoid extends Boid {
 //			}
 //		}
 
-		// No option is full, go probabilities
+
 		Set<Boid> visibleBoidsInEdge = new HashSet<>();
 		visibleBoidsInEdge.addAll(this.environment.getAllBoids());
 
