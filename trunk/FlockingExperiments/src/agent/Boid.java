@@ -130,7 +130,8 @@ public class Boid {
 
 	protected void decide() {
 		boolean added = false;
-		if (this.pathTaken.lastLocation() != this.pos.edge.getTo()) {
+		if (this.pathTaken.lastLocation() != this.pos.edge.getTo()
+				|| this.getGraph().getEdgeLength(this.pathTaken.lastLocation(), this.pathTaken.lastLocation()) != -1) {
 			this.pathTaken.offer(this.pos.edge.getTo());
 			added = true;
 		}

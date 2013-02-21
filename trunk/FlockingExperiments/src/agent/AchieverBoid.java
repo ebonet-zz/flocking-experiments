@@ -91,7 +91,8 @@ public class AchieverBoid extends Boid {
 	@Override
 	public void decide() {
 		boolean added = false;
-		if (this.pathTaken.lastLocation() != this.pos.edge.getTo()) {
+		if (this.pathTaken.lastLocation() != this.pos.edge.getTo()
+				|| this.getGraph().getEdgeLength(this.pathTaken.lastLocation(), this.pathTaken.lastLocation()) != -1) {
 			this.pathTaken.offer(this.pos.edge.getTo());
 			added = true;
 		}
@@ -111,9 +112,7 @@ public class AchieverBoid extends Boid {
 
 		int currentNode = this.getPos().edge.getTo();
 		int nextNode = this.pathQueue.peek();
-		if (nextNode == currentNode) {
-			throw new RuntimeException("Node Selection Glitch");
-		}
+
 		Edge nextEdge = loadEdge(currentNode, nextNode);
 		if (nextEdge.getLength() < 0) {
 			throw new RuntimeException("Bad edge");

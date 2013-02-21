@@ -103,6 +103,35 @@ public class MainController {
 				weightOfOccupancy, boidVisionRange, boidSpeed, goal, displaySteps));
 	}
 
+	public static void solveWollowskiTSP4CitiesSparseGraph() {
+		int maxIterations = 5000; // Max iterations
+		boolean displaySteps = true; // show boids' movement on each iteration
+
+		// Constants I believe their optimal values depend on the number of cities
+		int numberOfCities = 4;
+		int maxAgents = 3 * numberOfCities * numberOfCities * 1000;
+		float multiplierBoidSpawn = 1f;
+		float densityThreshold = 0.7f;
+
+		// Constants I believe do not depend on the number of cities
+		float weightOfDistance = 3f;
+		float weightOfOccupancy = 1f;
+		float boidSpeed = 2 * multiplierBoidSpawn;
+		float boidVisionRange = boidSpeed * 3;
+
+		int segmentCapacity = 1;
+		float segmentLength = 1f;
+
+		GoalEvaluator goal = new TSPGoalEvaluator();
+
+		TraditionalGraph graph = GenerateSparseInstance.GenerateSparseGraph(numberOfCities);
+
+		Problem problem = new WollowskiProblem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
+
+		System.out.println(problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance,
+				weightOfOccupancy, boidVisionRange, boidSpeed, goal, displaySteps));
+	}
+
 	public static void solveOptimizedSP() {
 		int maxIterations = 5000; // Max iterations
 		boolean displaySteps = true; // show boids' movement on each iteration
@@ -191,6 +220,35 @@ public class MainController {
 				weightOfOccupancy, boidVisionRange, boidSpeed, goal, displaySteps));
 	}
 
+	public static void solveOptimizedTSP4CitiesSparseGraph() {
+		int maxIterations = 5000; // Max iterations
+		boolean displaySteps = true; // show boids' movement on each iteration
+
+		// Constants I believe their optimal values depend on the number of cities
+		int numberOfCities = 4;
+		int maxAgents = 3 * numberOfCities * numberOfCities;
+		float multiplierBoidSpawn = 1f;
+		float densityThreshold = 0.7f;
+
+		// Constants I believe do not depend on the number of cities
+		float weightOfDistance = 3f;
+		float weightOfOccupancy = 1f;
+		float boidSpeed = 2 * multiplierBoidSpawn;
+		float boidVisionRange = boidSpeed * 3;
+
+		int segmentCapacity = 3;
+		float segmentLength = 1f;
+
+		GoalEvaluator goal = new TSPGoalEvaluator();
+
+		TraditionalGraph graph = GenerateSparseInstance.GenerateSparseGraph(numberOfCities); // Sparse
+
+		Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
+
+		System.out.println(problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance,
+				weightOfOccupancy, boidVisionRange, boidSpeed, goal, displaySteps));
+	}
+
 	public static void solveOptimizedTSP8CitiesFullConnectedGraph() {
 		int maxIterations = 5000; // Max iterations
 		boolean displaySteps = true; // show boids' movement on each iteration
@@ -248,7 +306,7 @@ public class MainController {
 		System.out.println(problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance,
 				weightOfOccupancy, boidVisionRange, boidSpeed, goal, displaySteps));
 	}
-	
+
 	public static void solveOptimizedTSP30CitiesFullConnectedGraph() {
 		int maxIterations = 5000; // Max iterations
 		boolean displaySteps = true; // show boids' movement on each iteration
@@ -281,18 +339,20 @@ public class MainController {
 	public static void main(String[] args) {
 		long startTime = System.nanoTime();
 
-//		solveWollowskiSP();
-//		solveWollowskiTSPBasicGraph();
-//		solveWollowskiTSP4CitiesFullConnectedGraph();
+		// solveWollowskiSP();
+		// solveWollowskiTSPBasicGraph();
+		// solveWollowskiTSP4CitiesFullConnectedGraph();
+		// solveWollowskiTSP4CitiesSparseGraph();
 
-//		solveOptimizedSP();
-//		solveOptimizedTSPBasicGraph();
-//		solveOptimizedTSP4CitiesFullConnectedGraph();
+		// solveOptimizedSP();
+		// solveOptimizedTSPBasicGraph();
+		// solveOptimizedTSP4CitiesFullConnectedGraph();
+		// solveOptimizedTSP4CitiesSparseGraph();
 
-//		solveOptimizedTSP8CitiesFullConnectedGraph();
-//		solveOptimizedTSP8CitiesSparseGraph();
+		// solveOptimizedTSP8CitiesFullConnectedGraph();
+		// solveOptimizedTSP8CitiesSparseGraph();
 		solveOptimizedTSP30CitiesFullConnectedGraph();
-		
+
 		// testWD();
 		// testWO();
 		// testBoidSpeed();
