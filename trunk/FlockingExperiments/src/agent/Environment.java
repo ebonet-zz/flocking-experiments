@@ -19,7 +19,7 @@ public class Environment {
 	private FlockingGraph graph;
 	private HashMap<Tour, Integer> foundToursPopulations;
 
-	public Environment(FlockingGraph graph, int maxAgents) {
+	public Environment(FlockingGraph graph) {
 		this.freeBoids = new HashSet<>();
 		this.achievers = new HashSet<>();
 		this.graph = graph;

@@ -80,7 +80,7 @@ public class Problem {
 		// Random and seed
 		Random r = new Random();
 
-		Environment environment = new Environment(this.distanceGraph, maxBoids);
+		Environment environment = new Environment(this.distanceGraph);
 
 		double currentBoidCreationProgress = 0d;
 		// Main Loop
