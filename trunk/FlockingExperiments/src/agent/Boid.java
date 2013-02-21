@@ -304,9 +304,6 @@ public class Boid {
 		double endOfTheSegment = farthestAvailable.exclusiveEndLocation.distanceFromStart;
 		// get to right before the end of the segment
 		double diff = endOfTheSegment - MINIMUM_DISTANCE_MARGIN - this.pos.distanceFromStart;
-		if (diff < -0.1d) {
-			throw new RuntimeException("Walking backwards");
-		}
 		double distance = diff < this.speed ? diff : this.speed;
 		if (distance > 0d) {
 			moveDistance(distance);
