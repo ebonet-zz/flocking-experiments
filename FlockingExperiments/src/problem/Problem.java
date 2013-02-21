@@ -63,7 +63,9 @@ public class Problem {
 	public Tour solve(double boidsPerIteration, int maxBoids, double densityThreshold, double wDist, double wOccup,
 			double vision, double speed, GoalEvaluator goal, boolean displaySteps) {
 
-		System.out.println("Algorithm started!");
+		if (this.graphics) {
+			System.out.println("Algorithm started!");
+		}
 		System.gc();
 
 		this.graphics = displaySteps;
@@ -109,7 +111,9 @@ public class Problem {
 
 			Tour result = testAlgorithmTermination(environment, densityThreshold, goal);
 			if (result != null) {
-				System.out.println("Converged in Iteration " + t);
+				if (this.graphics) {
+					System.out.println("Converged in Iteration " + t);
+				}
 				return result;
 			}
 
