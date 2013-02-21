@@ -27,8 +27,8 @@ public class MainController {
 		float densityThreshold = 0.7f;
 
 		// Constants I believe do not depend on the number of cities
-		float weightOfDistance = 3f;
-		float weightOfOccupancy = 1f;
+		float numberOfChoicesWeight = 1f;
+		float visibleBoidsInPathWeight = 0.1f;
 		float boidSpeed = 2 * multiplierBoidSpawn;
 		float boidVisionRange = boidSpeed * 3;
 
@@ -41,8 +41,8 @@ public class MainController {
 
 		Problem problem = new WollowskiProblem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
 
-		System.out.println(problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance,
-				weightOfOccupancy, boidVisionRange, boidSpeed, goal, displaySteps));
+		System.out.println(problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, numberOfChoicesWeight,
+				visibleBoidsInPathWeight, boidVisionRange, boidSpeed, goal, displaySteps));
 	}
 
 	public static void solveWollowskiTSPBasicGraph() {
@@ -56,8 +56,8 @@ public class MainController {
 		float densityThreshold = 0.7f;
 
 		// Constants I believe do not depend on the number of cities
-		float weightOfDistance = 3f;
-		float weightOfOccupancy = 1f;
+		float numberOfChoicesWeight = 1f;
+		float visibleBoidsInPathWeight = 0.1f;
 		float boidSpeed = 2 * multiplierBoidSpawn;
 		float boidVisionRange = boidSpeed * 4;
 
@@ -70,8 +70,8 @@ public class MainController {
 
 		Problem problem = new WollowskiProblem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
 
-		System.out.println(problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance,
-				weightOfOccupancy, boidVisionRange, boidSpeed, goal, displaySteps));
+		System.out.println(problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, numberOfChoicesWeight,
+				visibleBoidsInPathWeight, boidVisionRange, boidSpeed, goal, displaySteps));
 	}
 
 	public static void solveWollowskiTSP4CitiesFullConnectedGraph() {
@@ -85,8 +85,8 @@ public class MainController {
 		float densityThreshold = 0.7f;
 
 		// Constants I believe do not depend on the number of cities
-		float weightOfDistance = 3f;
-		float weightOfOccupancy = 1f;
+		float numberOfChoicesWeight = 1f;
+		float visibleBoidsInPathWeight = 0.1f;
 		float boidSpeed = 2 * multiplierBoidSpawn;
 		float boidVisionRange = boidSpeed * 3;
 
@@ -99,8 +99,8 @@ public class MainController {
 
 		Problem problem = new WollowskiProblem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
 
-		System.out.println(problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance,
-				weightOfOccupancy, boidVisionRange, boidSpeed, goal, displaySteps));
+		System.out.println(problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, numberOfChoicesWeight,
+				visibleBoidsInPathWeight, boidVisionRange, boidSpeed, goal, displaySteps));
 	}
 
 	public static void solveWollowskiTSP4CitiesSparseGraph() {
@@ -114,8 +114,8 @@ public class MainController {
 		float densityThreshold = 0.7f;
 
 		// Constants I believe do not depend on the number of cities
-		float weightOfDistance = 3f;
-		float weightOfOccupancy = 1f;
+		float numberOfChoicesWeight = 1f;
+		float visibleBoidsInPathWeight = 0.1f;
 		float boidSpeed = 2 * multiplierBoidSpawn;
 		float boidVisionRange = boidSpeed * 3;
 
@@ -128,8 +128,8 @@ public class MainController {
 
 		Problem problem = new WollowskiProblem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
 
-		System.out.println(problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance,
-				weightOfOccupancy, boidVisionRange, boidSpeed, goal, displaySteps));
+		System.out.println(problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, numberOfChoicesWeight,
+				visibleBoidsInPathWeight, boidVisionRange, boidSpeed, goal, displaySteps));
 	}
 
 	public static void solveOptimizedSP() {
@@ -143,7 +143,7 @@ public class MainController {
 		float densityThreshold = 0.7f;
 
 		// Constants I believe do not depend on the number of cities
-		float weightOfDistance = 3f;
+		float weightOfDistance = 5f;
 		float weightOfOccupancy = 1f;
 		float boidSpeed = 2 * multiplierBoidSpawn;
 		float boidVisionRange = boidSpeed * 3;
@@ -172,7 +172,7 @@ public class MainController {
 		float densityThreshold = 0.7f;
 
 		// Constants I believe do not depend on the number of cities
-		float weightOfDistance = 3f;
+		float weightOfDistance = 5f;
 		float weightOfOccupancy = 1f;
 		float boidSpeed = 2 * multiplierBoidSpawn;
 		float boidVisionRange = boidSpeed * 3;
@@ -201,7 +201,7 @@ public class MainController {
 		float densityThreshold = 0.7f;
 
 		// Constants I believe do not depend on the number of cities
-		float weightOfDistance = 3f;
+		float weightOfDistance = 5f;
 		float weightOfOccupancy = 1f;
 		float boidSpeed = 2 * multiplierBoidSpawn;
 		float boidVisionRange = boidSpeed * 3;
@@ -231,7 +231,7 @@ public class MainController {
 		float densityThreshold = 0.7f;
 
 		// Constants I believe do not depend on the number of cities
-		float weightOfDistance = 3f;
+		float weightOfDistance = 5f;
 		float weightOfOccupancy = 1f;
 		float boidSpeed = 2 * multiplierBoidSpawn;
 		float boidVisionRange = boidSpeed * 3;
@@ -260,7 +260,7 @@ public class MainController {
 		float densityThreshold = 0.7f;
 
 		// Constants I believe do not depend on the number of cities
-		float weightOfDistance = 3f;
+		float weightOfDistance = 5f;
 		float weightOfOccupancy = 1f;
 		float boidSpeed = 2 * multiplierBoidSpawn;
 		float boidVisionRange = boidSpeed * 3;
@@ -289,7 +289,7 @@ public class MainController {
 		float densityThreshold = 0.7f;
 
 		// Constants I believe do not depend on the number of cities
-		float weightOfDistance = 3f;
+		float weightOfDistance = 5f;
 		float weightOfOccupancy = 1f;
 		float boidSpeed = 2 * multiplierBoidSpawn;
 		float boidVisionRange = boidSpeed * 3;
@@ -318,7 +318,7 @@ public class MainController {
 		float densityThreshold = 0.7f;
 
 		// Constants I believe do not depend on the number of cities
-		float weightOfDistance = 3f;
+		float weightOfDistance = 5f;
 		float weightOfOccupancy = 1f;
 		float boidSpeed = 2 * multiplierBoidSpawn;
 		float boidVisionRange = boidSpeed * 3;
@@ -339,7 +339,7 @@ public class MainController {
 	public static void main(String[] args) {
 		long startTime = System.nanoTime();
 
-		// solveWollowskiSP();
+		 solveWollowskiSP();
 		// solveWollowskiTSPBasicGraph();
 		// solveWollowskiTSP4CitiesFullConnectedGraph();
 		// solveWollowskiTSP4CitiesSparseGraph();
@@ -353,7 +353,7 @@ public class MainController {
 		// solveOptimizedTSP8CitiesSparseGraph();
 		// solveOptimizedTSP30CitiesFullConnectedGraph();
 
-		testWD();
+		// testWD();
 		// testWO();
 		// testBoidSpeed();
 		// testMaxAgents();
@@ -420,7 +420,7 @@ public class MainController {
 		float densityThreshold = 0.7f;
 
 		// Constants I believe do not depend on the number of cities
-		float weightOfDistance = 3f;
+		float weightOfDistance = 5f;
 		float boidSpeed = 2 * multiplierBoidSpawn;
 		float boidVisionRange = boidSpeed * 3;
 
@@ -464,7 +464,7 @@ public class MainController {
 		float densityThreshold = 0.7f;
 
 		// Constants I believe do not depend on the number of cities
-		float weightOfDistance = 3f;
+		float weightOfDistance = 5f;
 		float weightOfOccupancy = 1f;
 		float boidVisionRange = 2 * multiplierBoidSpawn * 3;
 
@@ -508,7 +508,7 @@ public class MainController {
 		float densityThreshold = 0.7f;
 
 		// Constants I believe do not depend on the number of cities
-		float weightOfDistance = 3f;
+		float weightOfDistance = 5f;
 		float weightOfOccupancy = 1f;
 		float boidSpeed = 2 * multiplierBoidSpawn;
 
@@ -552,7 +552,7 @@ public class MainController {
 		float densityThreshold = 0.7f;
 
 		// Constants I believe do not depend on the number of cities
-		float weightOfDistance = 3f;
+		float weightOfDistance = 5f;
 		float weightOfOccupancy = 1f;
 		float boidSpeed = 2 * multiplierBoidSpawn;
 		float boidVisionRange = boidSpeed * 3;
@@ -599,7 +599,7 @@ public class MainController {
 		float densityThreshold = 0.7f;
 
 		// Constants I believe do not depend on the number of cities
-		float weightOfDistance = 3f;
+		float weightOfDistance = 5f;
 		float weightOfOccupancy = 1f;
 		float boidSpeed = 2 * multiplierBoidSpawn;
 		float boidVisionRange = boidSpeed * 3;
@@ -642,7 +642,7 @@ public class MainController {
 		float densityThreshold = 0.7f;
 
 		// Constants I believe do not depend on the number of cities
-		float weightOfDistance = 3f;
+		float weightOfDistance = 5f;
 		float weightOfOccupancy = 1f;
 		float boidSpeed = 2 * multiplierBoidSpawn;
 		float boidVisionRange = boidSpeed * 3;
