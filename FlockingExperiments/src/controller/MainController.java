@@ -1,5 +1,7 @@
 package controller;
 
+import java.io.IOException;
+
 import goal.EndNodeGoalEvaluator;
 import goal.GoalEvaluator;
 import goal.TSPGoalEvaluator;
@@ -372,6 +374,44 @@ public class MainController {
 	}
 
 	/**
+	 * Solve TSP with Optimized boids in the Eil51 graph.
+	 */
+	public static void solveOptimizedTSPEil51() {
+		int maxIterations = 5000; // Max iterations
+		boolean displaySteps = true; // show boids' movement on each iteration
+
+		// Constants I believe their optimal values depend on the number of cities
+		int numberOfCities = 51;
+		int maxAgents = 3 * numberOfCities * numberOfCities;
+		float multiplierBoidSpawn = 1f;
+		float densityThreshold = 0.7f;
+
+		// Constants I believe do not depend on the number of cities
+		float weightOfDistance = 5f;
+		float weightOfOccupancy = 1f;
+		float boidSpeed = 2 * multiplierBoidSpawn;
+		float boidVisionRange = boidSpeed * 3;
+
+		int segmentCapacity = 3;
+		float segmentLength = 1f;
+
+		GoalEvaluator goal = new TSPGoalEvaluator();
+
+		TraditionalGraph graph;
+		try {
+			graph = GraphReaderTSPLIB.generateGraphFromFile(GraphReaderTSPLIB.EIL_51);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return;
+		}
+
+		Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
+
+		System.out.println(problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance,
+				weightOfOccupancy, boidVisionRange, boidSpeed, goal, displaySteps));
+	}
+	/**
 	 * The main method of the whole system.
 	 * 
 	 * @param args
@@ -391,9 +431,10 @@ public class MainController {
 		// solveOptimizedTSP4CitiesSparseGraph();
 
 		// solveOptimizedTSP8CitiesFullConnectedGraph();
-		 solveOptimizedTSP8CitiesSparseGraph();
+		// solveOptimizedTSP8CitiesSparseGraph();
 		// solveOptimizedTSP30CitiesFullConnectedGraph();
-
+		
+		solveOptimizedTSPEil51();
 		// testWD();
 		// testWO();
 		// testBoidSpeed();
