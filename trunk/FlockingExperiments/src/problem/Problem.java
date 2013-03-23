@@ -75,6 +75,7 @@ public class Problem {
 	 */
 	public Tour solve(double boidsPerIteration, int maxBoids, double densityThreshold, double wDist, double wOccup,
 			double vision, double speed, GoalEvaluator goal, boolean displaySteps) {
+		this.graphics = displaySteps;
 
 		if (this.graphics) {
 			System.out.println("Algorithm started!");
@@ -82,7 +83,6 @@ public class Problem {
 
 		System.gc();
 
-		this.graphics = displaySteps;
 		this.distanceGraph.resetAndBuildSegments();
 
 		FlockingGraphViewer viewer = null;
