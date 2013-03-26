@@ -12,7 +12,7 @@ public class EuclideanGraph extends TraditionalGraph {
 	
 	private double[][] nodeCoords;
 	
-	private EuclideanGraph(int numberOfNodes) {
+	public EuclideanGraph(int numberOfNodes) {
 		super(numberOfNodes);
 		nodeCoords = new double[numberOfNodes][2];
 	}
@@ -53,7 +53,7 @@ public class EuclideanGraph extends TraditionalGraph {
 		return graph;
 	}
 
-	private void addCity(int cityId, double cityX, double cityY) {
+	public void addCity(int cityId, double cityX, double cityY) {
 		nodeCoords[cityId][0] = cityX;
 		nodeCoords[cityId][1] = cityY;
 		for (int i=0; i<cityId; i++) {
