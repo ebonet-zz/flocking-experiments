@@ -11,7 +11,7 @@ import javax.swing.JPanel;
  * @author ewertbe
  * 
  */
-public class FlockinGraphViewerPanel extends JPanel {
+public class GraphViewerPanel extends JPanel {
 
 	/**
 	 * The serialVersionUID
@@ -35,7 +35,7 @@ public class FlockinGraphViewerPanel extends JPanel {
 	 * @param goal
 	 * @param start
 	 */
-	public FlockinGraphViewerPanel(int height, int width, int[][] graph, int[][] centers, int numberOfNodes, int goal,
+	public GraphViewerPanel(int height, int width, int[][] graph, int[][] centers, int numberOfNodes, int goal,
 			int start) {
 
 		this.mHeight = height;
