@@ -1,5 +1,6 @@
 package controller;
 
+import graph.EuclideanGraph;
 import graph.TraditionalGraph;
 
 import java.io.BufferedReader;
@@ -47,7 +48,15 @@ public class GraphReaderTSPLIB {
 				j++;
 			}
 		}
-			
+		
+		int[] path = new int[] {1, 22, 8, 26, 31, 28, 3, 36, 35, 20, 2, 29, 21, 16, 50, 34, 30, 9, 49, 10, 39, 33, 45, 15, 44, 42, 40, 19, 41, 13, 25, 14, 24, 43, 7, 23, 48, 6, 27, 51, 46, 12, 47, 18, 4, 17, 37, 5, 38, 11, 32};
+		int length = 0;
+		for (int i=0; i<path.length-1; i++) {
+			length += world.getEdgeLength(path[i]-1, path[i+1]-1);
+		}
+		System.out.println("Path length: " + length + ", path size: " + path.length);
+		System.out.println("Close cycle: " + world.getEdgeLength(path[path.length-1] - 1, path[0]-1) );
+				
 	}
 
 	/**
@@ -59,58 +68,10 @@ public class GraphReaderTSPLIB {
 	 * @throws IOException
 	 * 				if there are any issues while reading the file
 	 */
-	public static TraditionalGraph generateGraphFromFile(String filepath) throws IOException {
-
-		BufferedReader reader = null;
-		try {
-			FileReader fileReader = new FileReader(new File(filepath));
-			reader = new BufferedReader(fileReader);
-			
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			return null;
-		}
-
-		int numberOfCities = 0;
-		String line = "";
-		while (!line.contains(DIMENSION_STRING)) {
-			// keep reading header
-			line = reader.readLine();
-		}
-		
-		// read number of cities
-		int numberStart = line.lastIndexOf(' ');
-		numberOfCities = Integer.parseInt(line.substring(numberStart+1));
-		
-		// go through the rest of the header
-		while(!line.startsWith("1 ")) {
-			line = reader.readLine();
-		}
-		
-		TraditionalGraph world = new TraditionalGraph(numberOfCities);
-		double[][] citiesCoords = new double[numberOfCities][2];
-		
-		int currentCity = 0;
-		while(!line.equals("EOF") && currentCity < numberOfCities) {
-			line = line.trim();
-			int firstCoordIdx = line.indexOf(' ') + 1;
-			int secondCoordIdx = line.lastIndexOf(' ') + 1;
-			citiesCoords[currentCity][0] = Double.parseDouble(line.substring(firstCoordIdx, secondCoordIdx-1));
-			citiesCoords[currentCity][1] = Double.parseDouble(line.substring(secondCoordIdx));
-			for (int i=0; i<currentCity; i++) {
-				// add edges from the new city to all the old ones
-				int distance = Math.round(((getDistance(citiesCoords[currentCity], citiesCoords[i]))));
-				world.setEdgeLength(i, currentCity, distance);
-			}
-			
-			line = reader.readLine();
-			currentCity++;
-		}
-
-		return world;
+	public static EuclideanGraph generateGraphFromFile(String filepath) throws IOException {
+		File graphFile = new File(filepath);
+		EuclideanGraph graph = EuclideanGraph.loadGraph(graphFile);
+		return graph;
 	}
 	
-	private static float getDistance(double[] coords1, double[] coords2) {
-		return (float)Math.sqrt((coords1[0] - coords2[0])*(coords1[0] - coords2[0]) + (coords1[1] - coords2[1])*(coords1[1] - coords2[1])); 
-	}
 }

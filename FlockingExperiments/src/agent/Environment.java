@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -118,16 +119,22 @@ public class Environment {
 	 * @return the most dense path
 	 */
 	public SortableKeyValue<Tour, Double> getMostDensePath() {
+		List<SortableKeyValue<Tour, Double>> densities = getAllPaths();
+		if(densities == null || densities.isEmpty()) {
+			return null;
+		}
+		return densities.get(densities.size() - 1);
+	}
+
+	public List<SortableKeyValue<Tour, Double>> getAllPaths() {
 		ArrayList<SortableKeyValue<Tour, Double>> densities = new ArrayList<SortableKeyValue<Tour, Double>>();
 		for (Tour t : this.foundToursPopulations.keySet()) {
 			densities.add(new SortableKeyValue<Tour, Double>(t, this.foundToursPopulations.get(t)
 					/ (double) countAllBoids()));
 		}
-		if (densities.isEmpty()) {
-			return null;
-		}
+		
 		Collections.sort(densities);
-		return densities.get(densities.size() - 1);
+		return densities;
 	}
 
 	/**

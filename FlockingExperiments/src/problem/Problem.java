@@ -27,6 +27,9 @@ public class Problem {
 	/** The graphics. */
 	boolean graphics = false;
 
+	/** Verbose output */
+	boolean verbose = true;
+	
 	/** Distances between nodes. */
 	FlockingGraph distanceGraph;
 
@@ -70,14 +73,18 @@ public class Problem {
 	 * @param goal
 	 *            the goal
 	 * @param displaySteps
-	 *            the display steps
+	 *            show graphical representation of steps
+	 * @param viewer
+	 * 			  A UI object used for graphical representation of the steps. If displaySteps is false, this can be null.
+	 * @param verbose
+	 * 			  print detailed information to standard output
 	 * @return The information about the best found Tour (path)
 	 */
 	public Tour solve(double boidsPerIteration, int maxBoids, double densityThreshold, double wDist, double wOccup,
-			double vision, double speed, GoalEvaluator goal, boolean displaySteps) {
+			double vision, double speed, GoalEvaluator goal, boolean displaySteps, FlockingGraphViewer viewer, boolean verbose) {
 		this.graphics = displaySteps;
-
-		if (this.graphics) {
+		this.verbose = verbose;
+		if (this.verbose) {
 			System.out.println("Algorithm started!");
 		}
 
@@ -85,9 +92,7 @@ public class Problem {
 
 		this.distanceGraph.resetAndBuildSegments();
 
-		FlockingGraphViewer viewer = null;
 		if (this.graphics) {
-			viewer = new FlockingGraphViewer(this.distanceGraph);
 			viewer.openViewer();
 		}
 
@@ -110,7 +115,7 @@ public class Problem {
 					try {
 						spawnBoid(r, environment, goal, speed, vision, wDist, wOccup);
 					} catch (Exception exception) {
-						if (this.graphics) {
+						if (this.verbose) {
 							System.out.println("Skept a boid creation because initial paths are too crowded.");
 							System.out.println("This indicates a possible 'clogged graph' deadlock.");
 							System.out.println("Consider using less agents for this problem config.\n");
@@ -128,7 +133,7 @@ public class Problem {
 
 			Tour result = testAlgorithmTermination(environment, densityThreshold, goal);
 			if (result != null) {
-				if (this.graphics) {
+				if (this.verbose) {
 					System.out.println("Converged in Iteration " + t);
 				}
 				return result;
@@ -144,7 +149,26 @@ public class Problem {
 			}
 		}
 
+		if (this.verbose) {
+			System.out.println("The algorithm did not converge in " + this.maxIterations + " iterations.");
+			System.out.println("Current flocks:");
+			for (SortableKeyValue<Tour, Double> tour : environment.getAllPaths()) {
+				System.out.println(tour.keyObject.toString());
+				System.out.println("Density: " + tour.valueToUseOnSorting);
+				System.out.println();
+			}
+		}
+			
 		return null;
+	}
+	
+	public Tour solve(double boidsPerIteration, int maxBoids, double densityThreshold, double wDist, double wOccup,
+			double vision, double speed, GoalEvaluator goal, boolean displaySteps) {
+		FlockingGraphViewer viewer = null;
+		if (displaySteps == true) {
+			viewer = new FlockingGraphViewer(this.distanceGraph);
+		}
+		return this.solve(boidsPerIteration, maxBoids, densityThreshold, wDist, wOccup, vision, speed, goal, displaySteps, viewer, true);
 	}
 
 	/**
