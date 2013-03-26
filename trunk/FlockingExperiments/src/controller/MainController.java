@@ -5,11 +5,13 @@ import java.io.IOException;
 import goal.EndNodeGoalEvaluator;
 import goal.GoalEvaluator;
 import goal.TSPGoalEvaluator;
+import graph.EuclideanGraph;
 import graph.FlockingGraph;
 import graph.Tour;
 import graph.TraditionalGraph;
 import problem.Problem;
 import problem.WollowskiProblem;
+import viewer.FlockingGraphViewer;
 
 /**
  * Main program controller and entry point. Starts everything.
@@ -374,14 +376,15 @@ public class MainController {
 	}
 
 	/**
-	 * Solve TSP with Optimized boids in the Eil51 graph.
+	 * Solve TSP with Optimized boids in an Euclidean graph instance from TSPLIB.
 	 */
-	public static void solveOptimizedTSPEil51() {
+	public static void solveOptimizedTSPLib(String pathToGraph, int numberOfCities) {
 		int maxIterations = 5000; // Max iterations
-		boolean displaySteps = true; // show boids' movement on each iteration
-
+		boolean displaySteps = false; // show boids' movement on each iteration
+		boolean verbose = true; // print detailed information to std out
+		
 		// Constants I believe their optimal values depend on the number of cities
-		int numberOfCities = 51;
+//		int numberOfCities = 51;
 		int maxAgents = 3 * numberOfCities * numberOfCities;
 		float multiplierBoidSpawn = 1f;
 		float densityThreshold = 0.7f;
@@ -397,19 +400,24 @@ public class MainController {
 
 		GoalEvaluator goal = new TSPGoalEvaluator();
 
-		TraditionalGraph graph;
+		EuclideanGraph eucGraph;
 		try {
-			graph = GraphReaderTSPLIB.generateGraphFromFile(GraphReaderTSPLIB.EIL_51);
+			eucGraph = GraphReaderTSPLIB.generateGraphFromFile(pathToGraph);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return;
 		}
-
-		Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
+		FlockingGraph flockingGraph = new FlockingGraph(eucGraph, segmentLength, segmentCapacity);
+		// create an EuclideanGraph Viewer here, something like
+		// FlockingGraphViewer viewer = new EuclideanGraphViewer(eucGraph);
+		FlockingGraphViewer viewer = new FlockingGraphViewer(flockingGraph);
+		
+		
+		Problem problem = new Problem(flockingGraph, maxIterations);
 
 		System.out.println(problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance,
-				weightOfOccupancy, boidVisionRange, boidSpeed, goal, displaySteps));
+				weightOfOccupancy, boidVisionRange, boidSpeed, goal, displaySteps, viewer, verbose));
 	}
 	/**
 	 * The main method of the whole system.
@@ -431,10 +439,15 @@ public class MainController {
 		// solveOptimizedTSP4CitiesSparseGraph();
 
 		// solveOptimizedTSP8CitiesFullConnectedGraph();
-		// solveOptimizedTSP8CitiesSparseGraph();
+		 solveOptimizedTSP8CitiesSparseGraph();
 		// solveOptimizedTSP30CitiesFullConnectedGraph();
-		
-		solveOptimizedTSPEil51();
+		String filepath = GraphReaderTSPLIB.EIL_51;
+		int numberOfCities = 51;
+		if (args.length > 0) {
+			filepath = args[0];
+			numberOfCities = Integer.parseInt(args[1]);
+		}
+		solveOptimizedTSPLib(filepath, numberOfCities);
 		// testWD();
 		// testWO();
 		// testBoidSpeed();
