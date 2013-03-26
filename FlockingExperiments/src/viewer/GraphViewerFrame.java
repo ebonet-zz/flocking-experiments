@@ -4,9 +4,9 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
-public class FlockinGraphViewerFrame extends JFrame {
+public class GraphViewerFrame extends JFrame {
 
-	FlockinGraphViewerPanel mPanel;
+	GraphViewerPanel mPanel;
 
 	/**
 	 * Creates the frame that will display the graph.
@@ -26,10 +26,10 @@ public class FlockinGraphViewerFrame extends JFrame {
 	 * @param start
 	 *            - -1 if there's no start
 	 */
-	public FlockinGraphViewerFrame(int height, int width, int[][] graph, int[][] centers, int numberOfNodes, int goal,
+	public GraphViewerFrame(int height, int width, int[][] graph, int[][] centers, int numberOfNodes, int goal,
 			int start) {
 
-		this.mPanel = new FlockinGraphViewerPanel(height, width, graph, centers, numberOfNodes, goal, start);
+		this.mPanel = new GraphViewerPanel(height, width, graph, centers, numberOfNodes, goal, start);
 
 		initializeComponents(width, height);
 	}

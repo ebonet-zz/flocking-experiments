@@ -67,6 +67,10 @@ public class EuclideanGraph extends TraditionalGraph {
 		return nodeCoords[city];
 	}
 	
+	public double[][] getAllCitiesCoords() {
+		return nodeCoords;
+	}
+	
 	private static int readGraphDimensions(BufferedReader reader)
 			throws IOException {
 		int numberOfCities = 0;

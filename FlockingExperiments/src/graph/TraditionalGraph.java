@@ -33,7 +33,17 @@ public class TraditionalGraph {
 		this.numberOfNodes = numberOfNodes;
 		this.distanceMatrix = new int[numberOfNodes][numberOfNodes];
 		fillAll(INVALID_VALUE, this.distanceMatrix);
-
+	}
+	
+	/**
+	 * Creates a graph from a distance matrix.
+	 * 
+	 * @param dMatrix
+	 *            The distance matrix
+	 */
+	public TraditionalGraph(int[][] dMatrix) {
+		this.numberOfNodes = dMatrix[0].length;
+		this.distanceMatrix = dMatrix.clone();
 	}
 
 	/**
@@ -197,6 +207,10 @@ public class TraditionalGraph {
 			sb.append(printLine(i) + "\n");
 		}
 		return sb.toString();
+	}
+	
+	public int [][] getDistanceMatrix(){
+		return distanceMatrix;
 	}
 
 }

@@ -1,6 +1,7 @@
 package viewer;
 
-import graph.FlockingGraph;
+
+import graph.EuclideanGraph;
 import graph.TraditionalGraph;
 
 
@@ -12,12 +13,12 @@ import graph.TraditionalGraph;
  *         but has control over the frame.
  * 
  */
-public class FlockingGraphViewer extends GraphViewer{
+public class EuclideanGraphViewer extends GraphViewer{
 
 	/**
 	 * Creates an example of viewer for a 4 node fully connected graph. Window has size (600,600).
 	 */
-	public FlockingGraphViewer() {
+	public EuclideanGraphViewer() {
 
 		super();
 		computeCenters();
@@ -38,7 +39,7 @@ public class FlockingGraphViewer extends GraphViewer{
 	 * @param numberOfNodes
 	 *            - the number of nodes
 	 */
-	public FlockingGraphViewer(int[][] graph, int start, int goal) {
+	public EuclideanGraphViewer(int[][] graph, int start, int goal) {
 
 		super(new TraditionalGraph(graph));
 		this.mStart = start;
@@ -56,7 +57,7 @@ public class FlockingGraphViewer extends GraphViewer{
 	 * @param graph
 	 *            - The graph to be displayed
 	 */
-	public FlockingGraphViewer(FlockingGraph graph) {
+	public EuclideanGraphViewer(EuclideanGraph graph) {
 		super(graph);
 		
 		this.mGoal = -1;
@@ -68,18 +69,25 @@ public class FlockingGraphViewer extends GraphViewer{
 	}
 
 	/**
-	 * Computes the centers with the nodes forming a circle.
+	 * Computes the centers of the nodes according to their euclidean positions.
 	 */
 	protected void computeCenters() {
-		this.mCenters = new int[this.mNumberOfNodes][2];
-		int radius = this.mHeight / 2 - 30;
-
-		double ratio = 2 * Math.PI / this.mNumberOfNodes;
+		double [][] coords = ((EuclideanGraph) mGraph).getAllCitiesCoords();
+		double maxX=-1,minX=Double.MAX_VALUE,maxY=-1,minY=Double.MAX_VALUE;
+		
+		for(int i = 0; i < coords[0].length ; i++){
+			if(coords[i][0] > maxX) maxX = coords[i][0];
+			else if(coords[i][0] < minX) minX = coords[i][0];
+			
+			if(coords[i][1] > maxY) maxY = coords[i][1];
+			else if(coords[i][1] < minY) minY = coords[i][1];
+		}
+		
 
 		for (int i = 0; i < this.mNumberOfNodes; i++) {
 
-			this.mCenters[i][0] = (int) (this.mHeight / 2 - radius * Math.cos(ratio * i));
-			this.mCenters[i][1] = (int) (this.mWidth / 2 + radius * Math.sin(ratio * i));
+			this.mCenters[i][0] = (int) ((coords[i][0]-minX)/(maxX-minX)*(this.mWidth-60)+30);
+			this.mCenters[i][1] = (int) ((coords[i][1]-minY)/(maxY-minY)*(this.mHeight-60)+30);
 		}
 	}
 
