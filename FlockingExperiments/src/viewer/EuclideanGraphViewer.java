@@ -25,6 +25,15 @@ public class EuclideanGraphViewer extends GraphViewer{
 
 		this.mFrame = new GraphViewerFrame(this.mHeight, this.mWidth, this.mDistances, this.mCenters,
 				this.mNumberOfNodes, this.mGoal, this.mStart);
+		
+		for(int i = 0;i<mNumberOfNodes;i++){
+			for(int j = 0;j<mNumberOfNodes;i++){
+				System.out.print(mDistances[i][j]+" ");
+				
+			}
+			System.out.print(" ");
+		}
+		
 	}
 
 	/**
@@ -64,6 +73,13 @@ public class EuclideanGraphViewer extends GraphViewer{
 		this.mStart = -1;
 		computeCenters();
 
+		for(int i = 0;i<mNumberOfNodes;i++){
+			for(int j = 0;j<mNumberOfNodes;j++){
+				System.out.print(mDistances[i][j]+" ");
+				
+			}
+		}
+		
 		this.mFrame = new GraphViewerFrame(this.mHeight, this.mWidth, this.mDistances, this.mCenters,
 				this.mNumberOfNodes, this.mGoal, this.mStart);
 	}
@@ -75,7 +91,7 @@ public class EuclideanGraphViewer extends GraphViewer{
 		double [][] coords = ((EuclideanGraph) mGraph).getAllCitiesCoords();
 		double maxX=-1,minX=Double.MAX_VALUE,maxY=-1,minY=Double.MAX_VALUE;
 		
-		for(int i = 0; i < coords[0].length ; i++){
+		for(int i = 0; i < mNumberOfNodes ; i++){
 			if(coords[i][0] > maxX) maxX = coords[i][0];
 			else if(coords[i][0] < minX) minX = coords[i][0];
 			
@@ -83,7 +99,7 @@ public class EuclideanGraphViewer extends GraphViewer{
 			else if(coords[i][1] < minY) minY = coords[i][1];
 		}
 		
-
+		mCenters = new int[this.mNumberOfNodes][2];
 		for (int i = 0; i < this.mNumberOfNodes; i++) {
 
 			this.mCenters[i][0] = (int) ((coords[i][0]-minX)/(maxX-minX)*(this.mWidth-60)+30);
@@ -91,8 +107,14 @@ public class EuclideanGraphViewer extends GraphViewer{
 		}
 	}
 
-	public static void main(String[] args) {
-		FlockingGraphViewer f = new FlockingGraphViewer();
+	public static void main(String [] args) {
+		
+		EuclideanGraph world = new EuclideanGraph(4);
+		world.addCity(0, 30, 30);
+		world.addCity(1, 10, 80);
+		world.addCity(2, 80, 10);
+		world.addCity(3, 0, 0);
+		EuclideanGraphViewer f = new EuclideanGraphViewer(world);
 		f.openViewer();
 	}
 
