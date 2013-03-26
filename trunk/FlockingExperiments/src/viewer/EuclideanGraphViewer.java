@@ -26,13 +26,6 @@ public class EuclideanGraphViewer extends GraphViewer{
 		this.mFrame = new GraphViewerFrame(this.mHeight, this.mWidth, this.mDistances, this.mCenters,
 				this.mNumberOfNodes, this.mGoal, this.mStart);
 		
-		for(int i = 0;i<mNumberOfNodes;i++){
-			for(int j = 0;j<mNumberOfNodes;i++){
-				System.out.print(mDistances[i][j]+" ");
-				
-			}
-			System.out.print(" ");
-		}
 		
 	}
 
@@ -100,11 +93,6 @@ public class EuclideanGraphViewer extends GraphViewer{
 		}
 		
 		mCenters = new int[this.mNumberOfNodes][2];
-		for (int i = 0; i < this.mNumberOfNodes; i++) {
-
-			this.mCenters[i][0] = (int) ((coords[i][0]-minX)/(maxX-minX)*(this.mWidth-60)+30);
-			this.mCenters[i][1] = (int) ((coords[i][1]-minY)/(maxY-minY)*(this.mHeight-60)+30);
-		}
 	}
 
 	public static void main(String [] args) {
