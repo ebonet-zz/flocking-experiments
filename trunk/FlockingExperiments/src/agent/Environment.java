@@ -119,14 +119,6 @@ public class Environment {
 	 * @return the most dense path
 	 */
 	public SortableKeyValue<Tour, Double> getMostDensePath() {
-		List<SortableKeyValue<Tour, Double>> densities = getAllPaths();
-		if(densities == null || densities.isEmpty()) {
-			return null;
-		}
-		return densities.get(densities.size() - 1);
-	}
-
-	public List<SortableKeyValue<Tour, Double>> getAllPaths() {
 		ArrayList<SortableKeyValue<Tour, Double>> densities = new ArrayList<SortableKeyValue<Tour, Double>>();
 		for (Tour t : this.foundToursPopulations.keySet()) {
 			densities.add(new SortableKeyValue<Tour, Double>(t, this.foundToursPopulations.get(t)
@@ -134,7 +126,20 @@ public class Environment {
 		}
 		
 		Collections.sort(densities);
-		return densities;
+		if(densities.isEmpty()) {
+			return null;
+		}
+		return densities.get(densities.size() - 1);
+	}
+
+	public List<SortableKeyValue<Tour, Integer>> getAllPaths() {
+		ArrayList<SortableKeyValue<Tour, Integer>> toursPopulation = new ArrayList<SortableKeyValue<Tour, Integer>>();
+		for (Tour t : this.foundToursPopulations.keySet()) {
+			toursPopulation.add(new SortableKeyValue<Tour, Integer>(t, this.foundToursPopulations.get(t)));
+		}
+		
+		Collections.sort(toursPopulation);
+		return toursPopulation;
 	}
 
 	/**
