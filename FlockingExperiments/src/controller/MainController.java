@@ -2,6 +2,8 @@ package controller;
 
 import java.io.IOException;
 
+import log.TestsLogger;
+
 import goal.EndNodeGoalEvaluator;
 import goal.GoalEvaluator;
 import goal.TSPGoalEvaluator;
@@ -11,6 +13,7 @@ import graph.Tour;
 import graph.TraditionalGraph;
 import problem.Problem;
 import problem.WollowskiProblem;
+import viewer.EuclideanGraphViewer;
 import viewer.FlockingGraphViewer;
 
 /**
@@ -379,7 +382,7 @@ public class MainController {
 	 * Solve TSP with Optimized boids in an Euclidean graph instance from TSPLIB.
 	 */
 	public static void solveOptimizedTSPLib(String pathToGraph, int numberOfCities) {
-		int maxIterations = 5000; // Max iterations
+		int maxIterations = 15000; // Max iterations
 		boolean displaySteps = false; // show boids' movement on each iteration
 		boolean verbose = true; // print detailed information to std out
 		
@@ -411,7 +414,8 @@ public class MainController {
 		FlockingGraph flockingGraph = new FlockingGraph(eucGraph, segmentLength, segmentCapacity);
 		// create an EuclideanGraph Viewer here, something like
 		// FlockingGraphViewer viewer = new EuclideanGraphViewer(eucGraph);
-		FlockingGraphViewer viewer = new FlockingGraphViewer(flockingGraph);
+		// FlockingGraphViewer viewer = new FlockingGraphViewer(flockingGraph);
+		EuclideanGraphViewer viewer = new EuclideanGraphViewer(eucGraph);
 		
 		
 		Problem problem = new Problem(flockingGraph, maxIterations);
@@ -439,7 +443,7 @@ public class MainController {
 		// solveOptimizedTSP4CitiesSparseGraph();
 
 		// solveOptimizedTSP8CitiesFullConnectedGraph();
-		 solveOptimizedTSP8CitiesSparseGraph();
+		// solveOptimizedTSP8CitiesSparseGraph();
 		// solveOptimizedTSP30CitiesFullConnectedGraph();
 		String filepath = GraphReaderTSPLIB.EIL_51;
 		int numberOfCities = 51;
@@ -447,7 +451,8 @@ public class MainController {
 			filepath = args[0];
 			numberOfCities = Integer.parseInt(args[1]);
 		}
-		solveOptimizedTSPLib(filepath, numberOfCities);
+		//solveOptimizedTSPLib(filepath, numberOfCities);
+		testBoidSpeed(numberOfCities, filepath, 45);
 		// testWD();
 		// testWO();
 		// testBoidSpeed();
@@ -559,54 +564,71 @@ public class MainController {
 	/**
 	 * Test boid speed.
 	 */
-	public static void testBoidSpeed() {
-		int maxIterations = 5000; // Max iterations
+	public static void testBoidSpeed(int numberOfCities, String pathToGraph, float initialSpeed) {
+		int maxIterations = 15000; // Max iterations
 		boolean displaySteps = false; // show boids' movement on each iteration
-
+		boolean verbose = true; // print detailed information to std out
+		
 		// Constants I believe their optimal values depend on the number of cities
-		int numberOfCities = 8;
+//		int numberOfCities = 51;
 		int maxAgents = 3 * numberOfCities * numberOfCities;
 		float multiplierBoidSpawn = 1f;
 		float densityThreshold = 0.7f;
 
 		// Constants I believe do not depend on the number of cities
-		float weightOfDistance = 5f;
+		float weightOfDistance = 13f;
 		float weightOfOccupancy = 1f;
-		float boidVisionRange = 2 * multiplierBoidSpawn * 3;
 
 		int segmentCapacity = 3;
 		float segmentLength = 1f;
 
 		GoalEvaluator goal = new TSPGoalEvaluator();
 
-		TraditionalGraph graph = GenerateFullyConnectedInstance.GenerateFullyConnectedGraph(numberOfCities); // Fully
-																												// connected
+		EuclideanGraph eucGraph;
+		try {
+			eucGraph = GraphReaderTSPLIB.generateGraphFromFile(pathToGraph);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return;
+		}
+		FlockingGraph flockingGraph = new FlockingGraph(eucGraph, segmentLength, segmentCapacity);
+		// create an EuclideanGraph Viewer here, something like
+		// FlockingGraphViewer viewer = new EuclideanGraphViewer(eucGraph);
+		// FlockingGraphViewer viewer = new FlockingGraphViewer(flockingGraph);
+		EuclideanGraphViewer viewer = null;
+		if (displaySteps)
+			viewer = new EuclideanGraphViewer(eucGraph);
+		
+		
+		Problem problem = new Problem(flockingGraph, maxIterations);
 
-		Problem problem = new Problem(new FlockingGraph(graph, segmentLength, segmentCapacity), maxIterations);
-
-		for (float speed = 1.0f; speed <= 10f; speed += 1f) {
+		int runsPerValue = 15;
+		for (float speed = initialSpeed; speed <= initialSpeed + 20; speed += 10) {
+			TestsLogger.logMessage("Starting tests with speed=" + speed);
 			float average = 0f;
-			float divider = 100f;
-			for (int i = 0; i < 100; i++) {
+			float divider = runsPerValue;
+			float boidVisionRange = 3*speed;
+			for (int i = 0; i < runsPerValue; i++) {
 				Tour solution = problem.solve(multiplierBoidSpawn, maxAgents, densityThreshold, weightOfDistance,
 						weightOfOccupancy, boidVisionRange, speed, goal, displaySteps);
 				if (solution != null) {
 					average += solution.lastCalculatedCost;
+					TestsLogger.logMessage("Tour found: " + solution.toString());
 				} else {
 					divider--;
+					// TestsLogger.logMessage("No tour found.");
 				}
 			}
 
 			average /= divider;
-			System.out.println("For speed = " + speed + " " + divider + "% of the problems had a solution");
-			System.out.println("For speed = " + speed + " the average path was " + average);
-			System.out.println();
+			TestsLogger.logSpeedTest(speed, divider*100/runsPerValue, average);
 		}
 	}
 
 	/**
 	 * Test boid vision.
-	 */
+	 */ 
 	public static void testBoidVision() {
 		int maxIterations = 5000; // Max iterations
 		boolean displaySteps = false; // show boids' movement on each iteration

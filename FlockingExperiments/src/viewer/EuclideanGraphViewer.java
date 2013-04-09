@@ -81,6 +81,7 @@ public class EuclideanGraphViewer extends GraphViewer{
 	 * Computes the centers of the nodes according to their euclidean positions.
 	 */
 	protected void computeCenters() {
+		mCenters = new int[this.mNumberOfNodes][2];
 		double [][] coords = ((EuclideanGraph) mGraph).getAllCitiesCoords();
 		double maxX=-1,minX=Double.MAX_VALUE,maxY=-1,minY=Double.MAX_VALUE;
 		
@@ -90,9 +91,13 @@ public class EuclideanGraphViewer extends GraphViewer{
 			
 			if(coords[i][1] > maxY) maxY = coords[i][1];
 			else if(coords[i][1] < minY) minY = coords[i][1];
+			
 		}
 		
-		mCenters = new int[this.mNumberOfNodes][2];
+		for(int i=0; i<mNumberOfNodes; i++) {
+			mCenters[i][0] = (int) ((coords[i][0]-minX)*this.mWidth/(maxX-minX));
+			mCenters[i][1] = (int) ((coords[i][1]-minY)*this.mHeight/(maxY-minY));
+		}
 	}
 
 	public static void main(String [] args) {

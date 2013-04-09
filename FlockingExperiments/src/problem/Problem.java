@@ -11,8 +11,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import log.GraphLogger;
+
 import util.SortableKeyValue;
 import viewer.FlockingGraphViewer;
+import viewer.GraphViewer;
 import viewer.MovingObject;
 import agent.Boid;
 import agent.Environment;
@@ -81,11 +84,11 @@ public class Problem {
 	 * @return The information about the best found Tour (path)
 	 */
 	public Tour solve(double boidsPerIteration, int maxBoids, double densityThreshold, double wDist, double wOccup,
-			double vision, double speed, GoalEvaluator goal, boolean displaySteps, FlockingGraphViewer viewer, boolean verbose) {
+			double vision, double speed, GoalEvaluator goal, boolean displaySteps, GraphViewer viewer, boolean verbose) {
 		this.graphics = displaySteps;
 		this.verbose = verbose;
 		if (this.verbose) {
-			System.out.println("Algorithm started!");
+			GraphLogger.logMessage("Algorithm started!");
 		}
 
 		System.gc();
@@ -116,9 +119,7 @@ public class Problem {
 						spawnBoid(r, environment, goal, speed, vision, wDist, wOccup);
 					} catch (Exception exception) {
 						if (this.verbose) {
-							System.out.println("Skept a boid creation because initial paths are too crowded.");
-							System.out.println("This indicates a possible 'clogged graph' deadlock.");
-							System.out.println("Consider using less agents for this problem config.\n");
+							GraphLogger.logBoidSpawnSkipped();
 						}
 					}
 					currentBoidCreationProgress -= 1d;
@@ -134,7 +135,8 @@ public class Problem {
 			Tour result = testAlgorithmTermination(environment, densityThreshold, goal);
 			if (result != null) {
 				if (this.verbose) {
-					System.out.println("Converged in Iteration " + t);
+					GraphLogger.logConverged(true, t);
+					// GraphLogger.logFlocksMap(environment.getAllPaths());
 				}
 				return result;
 			}
@@ -150,13 +152,8 @@ public class Problem {
 		}
 
 		if (this.verbose) {
-			System.out.println("The algorithm did not converge in " + this.maxIterations + " iterations.");
-			System.out.println("Current flocks:");
-			for (SortableKeyValue<Tour, Double> tour : environment.getAllPaths()) {
-				System.out.println(tour.keyObject.toString());
-				System.out.println("Density: " + tour.valueToUseOnSorting);
-				System.out.println();
-			}
+			GraphLogger.logConverged(false, this.maxIterations);
+			GraphLogger.logFlocksMap(environment.getAllPaths());
 		}
 			
 		return null;
@@ -307,7 +304,7 @@ public class Problem {
 	 * @param boids
 	 *            the boids
 	 */
-	private void draw(FlockingGraphViewer viewer, Set<Boid> boids) {
+	private void draw(GraphViewer viewer, Set<Boid> boids) {
 		viewer.updateViewer(extractBoidPositions(boids));
 	}
 
