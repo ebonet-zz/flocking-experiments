@@ -3,6 +3,8 @@ package graph;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Formatter;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import util.SortableKeyValue;
@@ -23,6 +25,9 @@ public class TraditionalGraph {
 	/** The number of nodes. */
 	int numberOfNodes;
 
+	HashMap<Integer, ArrayList<Integer>> neighborsCache = new HashMap<Integer, ArrayList<Integer>>();
+	HashMap<Integer, ArrayList<SortableKeyValue<Integer, Integer>>> sortableNeighborsCache = new HashMap<Integer, ArrayList<SortableKeyValue<Integer, Integer>>>();
+
 	/**
 	 * Fixed width graph constructor.
 	 * 
@@ -34,7 +39,7 @@ public class TraditionalGraph {
 		this.distanceMatrix = new int[numberOfNodes][numberOfNodes];
 		fillAll(INVALID_VALUE, this.distanceMatrix);
 	}
-	
+
 	/**
 	 * Creates a graph from a distance matrix.
 	 * 
@@ -57,6 +62,8 @@ public class TraditionalGraph {
 	public void fillAll(int value, int[][] matrix) {
 		for (int i = 0; i < matrix.length; i++)
 			java.util.Arrays.fill(matrix[i], value);
+		neighborsCache.clear();
+		sortableNeighborsCache.clear();
 	}
 
 	/**
@@ -92,8 +99,41 @@ public class TraditionalGraph {
 	 *            the edge value
 	 */
 	public void setEdgeLength(int nodeIndexA, int nodeIndexB, int edgeValue) {
+		if (edgeValue != this.distanceMatrix[nodeIndexA][nodeIndexB]) {
+			this.sortableNeighborsCache.remove(nodeIndexA);
+			this.sortableNeighborsCache.remove(nodeIndexB);
+		}
+
+		if (edgeValue < 0 || this.distanceMatrix[nodeIndexA][nodeIndexB] == INVALID_VALUE) {
+			this.neighborsCache.remove(nodeIndexA);
+			this.neighborsCache.remove(nodeIndexB);
+		}
+
 		this.distanceMatrix[nodeIndexA][nodeIndexB] = edgeValue;
 		this.distanceMatrix[nodeIndexB][nodeIndexA] = edgeValue;
+	}
+
+	/**
+	 * Retrieve the neighbors and cost properties wrapped in a sortable location object
+	 * 
+	 * @param nodeIndex
+	 * @return the neighbors and cost properties
+	 */
+	public ArrayList<SortableKeyValue<Integer, Integer>> getSortableNeighborsOf(int nodeIndex) {
+		if (this.sortableNeighborsCache.containsKey(nodeIndex)) {
+			return this.sortableNeighborsCache.get(nodeIndex);
+		}
+
+		ArrayList<SortableKeyValue<Integer, Integer>> neighborIndexes = new ArrayList<SortableKeyValue<Integer, Integer>>();
+		for (int i = 0; i < this.numberOfNodes; i++) {
+			if (this.distanceMatrix[nodeIndex][i] != INVALID_VALUE) {
+				neighborIndexes.add(new SortableKeyValue<Integer, Integer>(i, this.distanceMatrix[nodeIndex][i]));
+			}
+		}
+
+		this.sortableNeighborsCache.put(nodeIndex, neighborIndexes);
+
+		return neighborIndexes;
 	}
 
 	/**
@@ -116,12 +156,18 @@ public class TraditionalGraph {
 	 * @return The array of neighbor indexes
 	 */
 	public ArrayList<Integer> getNeighborsOf(int nodeIndex) {
+		if (this.neighborsCache.containsKey(nodeIndex)) {
+			return this.neighborsCache.get(nodeIndex);
+		}
+
 		ArrayList<Integer> neighborIndexes = new ArrayList<Integer>();
 		for (int i = 0; i < this.numberOfNodes; i++) {
 			if (this.distanceMatrix[nodeIndex][i] != INVALID_VALUE) {
 				neighborIndexes.add(i);
 			}
 		}
+
+		this.neighborsCache.put(nodeIndex, neighborIndexes);
 
 		return neighborIndexes;
 	}
@@ -147,17 +193,19 @@ public class TraditionalGraph {
 	 * @return an ArrayList with the neighbors sorted by distance
 	 */
 	public ArrayList<Integer> getClosestNeighborsSortedByDistance(int nodeIndex, int maxListSize) {
-		ArrayList<Integer> neighborIndexes = getNeighborsOf(nodeIndex);
-
-		ArrayList<SortableKeyValue<Integer, Integer>> closestNeighbors = new ArrayList<SortableKeyValue<Integer, Integer>>();
-		for (Integer n : neighborIndexes) {
-			closestNeighbors.add(new SortableKeyValue<Integer, Integer>(n, getEdgeLength(nodeIndex, n)));
-		}
+		ArrayList<SortableKeyValue<Integer, Integer>> closestNeighbors = getSortableNeighborsOf(nodeIndex);
 		Collections.sort(closestNeighbors);
 
-		neighborIndexes.clear();
-		for (SortableKeyValue<Integer, Integer> c : closestNeighbors.subList(0,
-				maxListSize > closestNeighbors.size() ? closestNeighbors.size() : maxListSize)) {
+		ArrayList<Integer> neighborIndexes = new ArrayList<Integer>();
+
+		List<SortableKeyValue<Integer, Integer>> sortedNeighborsSublist = null;
+		if (maxListSize < closestNeighbors.size()) {
+			sortedNeighborsSublist = closestNeighbors.subList(0, maxListSize);
+		} else {
+			sortedNeighborsSublist = closestNeighbors;
+		}
+
+		for (SortableKeyValue<Integer, Integer> c : sortedNeighborsSublist) {
 			neighborIndexes.add(c.keyObject);
 		}
 
@@ -208,8 +256,8 @@ public class TraditionalGraph {
 		}
 		return sb.toString();
 	}
-	
-	public int [][] getDistanceMatrix(){
+
+	public int[][] getDistanceMatrix() {
 		return distanceMatrix;
 	}
 
